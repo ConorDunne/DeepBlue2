@@ -1,4 +1,4 @@
-#Deep Blue Backgammon
+Deep Blue Backgammon
 
 Team Members
     17379526    Conor Dunne
