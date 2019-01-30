@@ -1,20 +1,20 @@
 #Deep Blue Backgammon
 
-##Team Members
+Team Members
     17379526    Conor Dunne
     ########    Martynas Jagutis
     ########    Ronan Mascarenhas
-    
-##To Do
+
+To Do
     Create a game of Backgammon
-   
-##Tasks
+
+Tasks
     Build UI                Martynas
     Create Board Image      Conor
     Create Basic Objects    Ronan
     Create Command Help     Conor
-    
-##Commands & How to Play
+
+Commands & How to Play
     To be implemented:
         help
         move
@@ -22,5 +22,5 @@
         double
         possible moves
         customise
-    
+
     Implemented:
