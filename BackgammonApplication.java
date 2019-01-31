@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 //Testing commit .
+=======
+>>>>>>> branch 'master' of https://github.com/UCD-COMP20050/DeepBlue2.git
 
 import javafx.application.Application;
 import javafx.application.Platform;
