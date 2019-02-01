@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-//Testing commit .
-=======
->>>>>>> branch 'master' of https://github.com/UCD-COMP20050/DeepBlue2.git
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -17,29 +13,37 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.input.*;
-import java.awt.Label;
-
+import java.awt.*;
 import javafx.stage.Screen;
+import javafx.scene.canvas.Canvas;
 
 public class BackgammonApplication extends Application {
-	
     @Override 
     public void start( Stage stage ) {
     	
     	double SCREEN_WIDTH = Screen.getPrimary().getBounds().getWidth();
     	double SCREEN_HEIGHT = Screen.getPrimary().getBounds().getHeight();
-    	
+
+    //	Circle checker = new Circle(50, 50, 50);
+
     	//Setting up Graphics, layout ect
     	stage.setTitle("Backgammon");
     	GridPane grid = new GridPane();
         grid.setPadding(new Insets(10,10,10,10)); //Sets padding of grid to main window
     	grid.setVgap(8); //Sets Padding Vertically
     	grid.setHgap(10);
-    	
+
+    	Canvas canvas = new Canvas(250, 250);
+    	GraphicsContext gc = canvas.getGraphicsContext2D();
+
+    	gc.fillRect(50,50,50,50);
+
     	Scene scene = new Scene(grid, 700, 400);
     	stage.setScene(scene);
         stage.show();
-               
+
+
+
         grid.setGridLinesVisible(true);
             
         //GRAPHICS GO HERE 
@@ -72,13 +76,14 @@ public class BackgammonApplication extends Application {
         GridPane.setConstraints(infoPanel, 1,1);
         GridPane.setConstraints(exportBtn, 1,2);
         GridPane.setConstraints(scorePanel, 1, 0);
+        GridPane.setConstraints(canvas, 0, 0);
         
         commandPanel.setPromptText("Enter Command");       
         infoPanel.setEditable(false); //Makes user unable to enter text into the information panel   
         scorePanel.setEditable(false);
         exportBtn.setPrefWidth(1000); //***temp*** As it is not following the constraints of the columns for some reason
         
-        grid.getChildren().addAll(commandPanel, infoPanel, exportBtn, scorePanel); //Adding elements to grid
+        grid.getChildren().addAll(commandPanel, infoPanel, exportBtn, scorePanel, canvas); //Adding elements to grid
     
        
         
