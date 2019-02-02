@@ -8,12 +8,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
+
 
 public class BackgammonApplication extends Application {
 
@@ -22,13 +19,8 @@ public class BackgammonApplication extends Application {
     private TextArea scorePanel;
     private TextField commandPanel;
 
-    final double SCREEN_WIDTH = Screen.getPrimary().getBounds().getWidth();
-    final double SCREEN_HEIGHT = Screen.getPrimary().getBounds().getHeight();
-
     @Override 
     public void start( Stage stage ) {
-
-      //  BackgammonApplicationController controller = new BackgammonApplicationController();
 
         stage.setTitle("Backgammon - DeepBlue2");
         BorderPane border = new BorderPane();
@@ -38,29 +30,29 @@ public class BackgammonApplication extends Application {
         border.setBottom(addHBox());
         border.setRight(addVBox());
 
-        final double CANVAS_HEIGHT = border.getHeight() - 25;
-        final double CANVAS_WIDTH = border.getWidth() -200;
+        Pane wrapperPane = new Pane();
+        Canvas canvas = new Canvas();
 
-        Canvas canvas = new Canvas(CANVAS_WIDTH, CANVAS_HEIGHT);//510/310 WERE
-        GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc = Board.board(gc, canvas.getWidth() , canvas.getHeight());
+        border.setCenter(wrapperPane); //Border at center of screen
+        wrapperPane.getChildren().add(canvas); //Adds canvas to wrapper pane
 
-        border.setCenter(canvas);
+        //Bind width and height property to wrapper pane
+        canvas.widthProperty().bind(wrapperPane.widthProperty());
+        canvas.heightProperty().bind(wrapperPane.heightProperty());
+
+        //Uses lambda expressions to call draw() everytime the window is resized
+        canvas.widthProperty().addListener(event -> draw(canvas));
+        canvas.heightProperty().addListener(event -> draw(canvas));
 
         stage.show();
-
-
-
         System.out.println("Stage Height: " + stage.getHeight() + "Stage Width: " + stage.getWidth()
                 + "\n" + "Border Height: " + border.getHeight() + "Border Width: " + border.getWidth()
                 + "\n" + "Command Panel Height: " + commandPanel.getHeight() + "Command Panel Width: " + commandPanel.getWidth()
                 + "\n" + "InfoPanel Height: "+ infoPanel.getHeight() + "InfoPanel Height: " + infoPanel.getWidth()
                 + "\n" + "Button Height: " + exportBtn.getHeight() + "Button Width: " + exportBtn.getWidth()
-                + "\n" + "Canvas Height/Width: " + CANVAS_HEIGHT + "/" + CANVAS_WIDTH
         );
 
     }
-
 
     //Called to add hbox to border pane on bottom consisting of command panel and export button
     public HBox addHBox(){
@@ -87,6 +79,7 @@ public class BackgammonApplication extends Application {
 
         VBox.setVgrow(infoPanel, Priority.ALWAYS);
 
+        //Sizes are temp values and should probably be changed
         infoPanel.setPrefSize(200, 1000);
         scorePanel.setPrefSize(200,800);
 
@@ -115,7 +108,11 @@ public class BackgammonApplication extends Application {
         return vbox;
     }
 
-
+    //TODO DRAW GAME BOARD
+    private void draw(Canvas canvas) {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc = Board.board(gc, canvas.getWidth(), canvas.getHeight()); //Draws the board
+    }
     //CALLED WHENEVER WE START MAIN JAVA PROGRAM
     public static void main(String[] args) {
 		launch(args);
