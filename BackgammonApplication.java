@@ -1,4 +1,3 @@
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -24,25 +23,20 @@ public class BackgammonApplication extends Application {
     	double SCREEN_WIDTH = Screen.getPrimary().getBounds().getWidth();
     	double SCREEN_HEIGHT = Screen.getPrimary().getBounds().getHeight();
 
-    //	Circle checker = new Circle(50, 50, 50);
-
     	//Setting up Graphics, layout ect
-    	stage.setTitle("Backgammon");
+    	stage.setTitle("Backgammon - DeepBlue2");
     	GridPane grid = new GridPane();
         grid.setPadding(new Insets(10,10,10,10)); //Sets padding of grid to main window
     	grid.setVgap(8); //Sets Padding Vertically
     	grid.setHgap(10);
 
-    	Canvas canvas = new Canvas(250, 250);
-    	GraphicsContext gc = canvas.getGraphicsContext2D();
+        Canvas canvas = new Canvas(510, 350);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc = Board.Board(gc, canvas.getWidth() , canvas.getHeight());
 
-    	gc.fillRect(50,50,50,50);
-
-    	Scene scene = new Scene(grid, 700, 400);
-    	stage.setScene(scene);
+        Scene scene = new Scene(grid, 700, 400);
+        stage.setScene(scene);
         stage.show();
-
-
 
         grid.setGridLinesVisible(true);
             
@@ -50,8 +44,8 @@ public class BackgammonApplication extends Application {
         TextField commandPanel = new TextField();
         TextArea infoPanel = new TextArea("Welcome to Backgammon!");
         TextArea scorePanel = new TextArea("SCORE: ");
-        Button exportBtn = new Button("Export to .txt file");     
-        
+        Button exportBtn = new Button("Export to .txt file");
+
         //Sets minWidth, prefWidth and maxWidth for specified columns and rows. Used so items resize according to screen size
         ColumnConstraints column0 = new ColumnConstraints(Double.MIN_VALUE, grid.getWidth() *.75, Double.MAX_VALUE);
         ColumnConstraints column1 = new ColumnConstraints(grid.getWidth() *.05, grid.getWidth() *.25, Double.MAX_VALUE);
@@ -82,11 +76,10 @@ public class BackgammonApplication extends Application {
         infoPanel.setEditable(false); //Makes user unable to enter text into the information panel   
         scorePanel.setEditable(false);
         exportBtn.setPrefWidth(1000); //***temp*** As it is not following the constraints of the columns for some reason
-        
-        grid.getChildren().addAll(commandPanel, infoPanel, exportBtn, scorePanel, canvas); //Adding elements to grid
-    
-       
-        
+
+        grid.getChildren().addAll(commandPanel, infoPanel, exportBtn, scorePanel); //Adding elements to grid
+        grid.add(canvas, 0, 0, 1, 2);
+
         //Text entered in command panel is appended to the information panel
         commandPanel.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
