@@ -87,7 +87,8 @@ public class BackgammonApplication extends Application {
         scorePanel.setEditable(false);
 
         //Text entered in command panel is appended to the information panel
-        commandPanel.setOnKeyPressed(new EventHandler<KeyEvent>() {
+        commandPanel.setOnKeyPressed(new EventHandler<KeyEvent>()
+        {
             @Override
             public void handle(KeyEvent e) {
 
@@ -109,12 +110,15 @@ public class BackgammonApplication extends Application {
     }
 
     //TODO DRAW GAME BOARD
-    private void draw(Canvas canvas) {
+    private void draw(Canvas canvas)
+    {
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        gc = Board.board(gc, canvas.getWidth(), canvas.getHeight()); //Draws the board
+        Board.board(gc, canvas.getWidth(), canvas.getHeight()); //Draws the board
     }
+
     //CALLED WHENEVER WE START MAIN JAVA PROGRAM
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
 		launch(args);
 	}
 
