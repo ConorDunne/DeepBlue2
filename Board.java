@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+package deepBlue2r;
+
+>>>>>>> 1
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -15,6 +20,12 @@ public class Board
         Color TrianglesPlayerTwo = Color.WHITE;
         Color LogoDiamond = Color.DEEPSKYBLUE;
         Color LogoText = Color.DARKBLUE;
+<<<<<<< HEAD
+=======
+        Color counter1 = Color.DARKRED;//black
+        Color counter2 = Color.RED;//white
+        
+>>>>>>> 1
 
         background(gc, width, height, background);
         squares(gc, width, height, gamingSquares);
@@ -22,6 +33,12 @@ public class Board
         trianglesOne(gc, width, height, TrianglesPlayerOne);
         trianglesTwo(gc, width, height, TrianglesPlayerTwo);
         logo(gc, width, height, LogoDiamond, gamingSquares, LogoText);
+<<<<<<< HEAD
+=======
+        //logo(gc, width, height, diamond, background, text)
+        countersBlack(gc, width, height, counter1);
+        countersWhite(gc, width, height, counter2);
+>>>>>>> 1
     }
 
 //  Method for drawing background (Boarder)
@@ -183,4 +200,68 @@ public class Board
             gc.fillText("DB2", width*0.2125, height*0.5, width*0.325);
             gc.fillText("DB2", width*0.6375, height*0.5, width*0.325);
     }
+<<<<<<< HEAD
+=======
+    
+    //draw counters into their locations
+    public static void countersBlack(GraphicsContext gc, double width, double height, Color counter1)
+    {
+    	final int radius = 29;
+    	//width/height = radius
+    	
+    	//bottom right counters
+    	gc.setFill(counter1);
+    	gc.fillOval(371, 327, radius, radius);
+    	gc.fillOval(371, 327-radius, radius, radius);
+    	
+    	//bottom left counters
+    	gc.fillOval(25, 327, radius, radius);
+    	gc.fillOval(25, 327-radius, radius, radius);
+    	gc.fillOval(25, (327-(2*radius)), radius, radius);
+    	gc.fillOval(25, (327-(3*radius)), radius, radius);
+    	gc.fillOval(25, (327-(4*radius)), radius, radius);
+    	
+    	//top left counters
+    	gc.fillOval(133, 19, radius, radius);
+    	gc.fillOval(133, 19+radius, radius, radius);
+    	gc.fillOval(133, (19+(2*radius)), radius, radius);
+    	
+    	//top right counters
+    	gc.fillOval(237, 19, radius, radius);
+    	gc.fillOval(237, 19+radius, radius, radius);
+    	gc.fillOval(237, (19+(2*radius)), radius, radius);
+    	gc.fillOval(237, (19+(3*radius)), radius, radius);
+    	gc.fillOval(237, (19+(4*radius)), radius, radius);
+    }
+    
+    public static void countersWhite(GraphicsContext gc, double width, double height, Color counter2)
+    {
+    	final int radius = 29;
+    	//width/height = radius
+    	
+    	//top right counters
+    	gc.setFill(counter2);
+    	gc.fillOval(371, 19, radius, radius);
+    	gc.fillOval(371, 19+radius, radius, radius);
+    	
+    	//top left counters
+    	gc.fillOval(25, 19, radius, radius);
+    	gc.fillOval(25, 19+radius, radius, radius);
+    	gc.fillOval(25, (19+(2*radius)), radius, radius);
+    	gc.fillOval(25, (19+(3*radius)), radius, radius);
+    	gc.fillOval(25, (19+(4*radius)), radius, radius);
+    	
+    	//bottom left counters
+    	gc.fillOval(133, 327, radius, radius);
+    	gc.fillOval(133, 327-radius, radius, radius);
+    	gc.fillOval(133, (327-(2*radius)), radius, radius);
+    	
+    	//bottom right counters
+    	gc.fillOval(237, 327, radius, radius);
+    	gc.fillOval(237, 327-radius, radius, radius);
+    	gc.fillOval(237, (327-(2*radius)), radius, radius);
+    	gc.fillOval(237, (327-(3*radius)), radius, radius);
+    	gc.fillOval(237, (327-(4*radius)), radius, radius);
+    }
+>>>>>>> 1
 }

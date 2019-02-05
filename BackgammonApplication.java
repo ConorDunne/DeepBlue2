@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+package deepBlue2r;
+
+>>>>>>> 1
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -50,6 +55,10 @@ public class BackgammonApplication extends Application {
                 + "\n" + "Command Panel Height: " + commandPanel.getHeight() + "Command Panel Width: " + commandPanel.getWidth()
                 + "\n" + "InfoPanel Height: "+ infoPanel.getHeight() + "InfoPanel Height: " + infoPanel.getWidth()
                 + "\n" + "Button Height: " + exportBtn.getHeight() + "Button Width: " + exportBtn.getWidth()
+<<<<<<< HEAD
+=======
+                //+ "width value is: " + width;
+>>>>>>> 1
         );
 
     }
