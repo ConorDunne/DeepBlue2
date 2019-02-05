@@ -1,32 +1,37 @@
-import com.sun.corba.se.impl.orbutil.graph.Graph;
+import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
+import javafx.scene.text.Font;
 
 public class Board
 {
     public static void board(GraphicsContext gc, double width, double height)
     {
-        background(gc, width, height, 208, 157, 93);
-        squares(gc, width, height, Color.LAWNGREEN);
-        bearOff(gc, width, height, Color.DARKRED);
-        trianglesOne(gc, width, height, Color.BLACK);
-        trianglesTwo(gc, width, height, Color.WHITE);
+        Color background = Color.rgb(208,157,93);
+        Color gamingSquares = Color.DARKOLIVEGREEN;
+        Color bearOffArea = Color.DARKRED;
+        Color TrianglesPlayerOne = Color.BLACK;
+        Color TrianglesPlayerTwo = Color.WHITE;
+        Color LogoDiamond = Color.DEEPSKYBLUE;
+        Color LogoText = Color.DARKBLUE;
+
+        background(gc, width, height, background);
+        squares(gc, width, height, gamingSquares);
+        bearOff(gc, width, height, bearOffArea);
+        trianglesOne(gc, width, height, TrianglesPlayerOne);
+        trianglesTwo(gc, width, height, TrianglesPlayerTwo);
+        logo(gc, width, height, LogoDiamond, gamingSquares, LogoText);
     }
 
-//  Methods for drawing background (Takes JavaFX colour OR RGB colour)
-    public static void background(GraphicsContext gc, double width, double height, int r, int g, int b)
-    {
-        gc.setFill(Color.rgb(r, g, b));
-        gc.fillRect(0, 0, width, height);
-    }
-
+//  Method for drawing background (Boarder)
     public static void background(GraphicsContext gc, double width, double height, Color c)
     {
         gc.setFill(c);
         gc.fillRect(0, 0, width, height);
     }
 
-//  Methods for drawing squares (Takes JavaFX colour OR RGB colour)
+//  Method for drawing gaming square areas
     public static void squares(GraphicsContext gc, double width, double height, Color c)
     {
         gc.setFill(c);
@@ -34,14 +39,7 @@ public class Board
             gc.fillRect(width*0.475, height*0.05, width*0.325, height*0.9);
     }
 
-    public static void squares(GraphicsContext gc, double width, double height, int r, int g, int b)
-    {
-        gc.setFill(Color.rgb(r, g, b));
-        gc.fillRect(width*0.05, height*0.05, width*0.325, height*0.9);
-        gc.fillRect(width*0.475, height*0.05, width*0.325, height*0.9);
-    }
-
-//  Methods for drawing bear off areas (Takes JavaFX colour OR RGB colour)
+//  Method for drawing bear off areas
     public static void bearOff(GraphicsContext gc, double width, double height, Color c)
     {
         gc.setFill(c);
@@ -49,13 +47,7 @@ public class Board
             gc.fillRect(width*0.85, height*0.6, width*0.1, height*0.35);
     }
 
-    public static void bearOff(GraphicsContext gc, double width, double height, int r, int g, int b)
-    {
-        gc.setFill(Color.rgb(r, g, b));
-            gc.fillRect(width*0.85, height*0.05, width*0.1, height*0.35);
-            gc.fillRect(width*0.85, height*0.6, width*0.1, height*0.35);
-    }
-
+//  Methods for drawing the spikes (Triangles)
     public static void trianglesOne(GraphicsContext gc, double width, double height, Color c)
     {
         double i = 0.325/6;
@@ -119,14 +111,14 @@ public class Board
 
 //  Upper Left Triangles
         gc.fillPolygon( new double[]{width*(b+i), width*(b+i*2), width*((2*b + 3*i)/2)},
-                new double[]{height*0.05, height*0.05, height*0.4},
-                3);
+                        new double[]{height*0.05, height*0.05, height*0.4},
+                     3);
         gc.fillPolygon( new double[]{width*(b+i*3), width*(b+i*4), width*((2*b + 7*i)/2)},
-                new double[]{height*0.05, height*0.05, height*0.4},
-                3);
+                        new double[]{height*0.05, height*0.05, height*0.4},
+                     3);
         gc.fillPolygon( new double[]{width*(b+i*5), width*(b+i*6), width*((2*b + 11*i)/2)},
-                new double[]{height*0.05, height*0.05, height*0.4},
-                3);
+                        new double[]{height*0.05, height*0.05, height*0.4},
+                     3);
 
 //  Lower Left Triangles
         gc.fillPolygon( new double[]{width*(b), width*(b+i), width*((2*b + i)/2)},
@@ -143,24 +135,52 @@ public class Board
         b = 0.475;
 
         gc.fillPolygon( new double[]{width*(b), width*(b+i), width*((2*b + i)/2)},
-                new double[]{height*0.05, height*0.05, height*0.4},
-                3);
+                        new double[]{height*0.05, height*0.05, height*0.4},
+                     3);
         gc.fillPolygon( new double[]{width*(b+i*2), width*(b+i*3), width*((2*b + 5*i)/2)},
-                new double[]{height*0.05, height*0.05, height*0.4},
-                3);
+                        new double[]{height*0.05, height*0.05, height*0.4},
+                     3);
         gc.fillPolygon( new double[]{width*(b+i*4), width*(b+i*5), width*((2*b + 9*i)/2)},
-                new double[]{height*0.05, height*0.05, height*0.4},
-                3);
+                        new double[]{height*0.05, height*0.05, height*0.4},
+                     3);
 
 //  Lower Right Triangles
         gc.fillPolygon( new double[]{width*(b+i), width*(b+i*2), width*((2*b + 3*i)/2)},
-                new double[]{height*0.95, height*0.95, height*0.6},
-                3);
+                        new double[]{height*0.95, height*0.95, height*0.6},
+                     3);
         gc.fillPolygon( new double[]{width*(b+i*3), width*(b+i*4), width*((2*b + 7*i)/2)},
-                new double[]{height*0.95, height*0.95, height*0.6},
-                3);
+                        new double[]{height*0.95, height*0.95, height*0.6},
+                     3);
         gc.fillPolygon( new double[]{width*(b+i*5), width*(b+i*6), width*((2*b + 11*i)/2)},
-                new double[]{height*0.95, height*0.95, height*0.6},
-                3);
+                        new double[]{height*0.95, height*0.95, height*0.6},
+                     3);
+    }
+
+//  Method for drawing the logo
+    public static void logo(GraphicsContext gc, double width, double height, Color diamond, Color background, Color text)
+    {
+        gc.setFill(diamond);
+        gc.fillPolygon( new double[]{width*0.2125, width*0.05, width*0.2125, width*0.375},
+                        new double[]{height*0.4, height*0.5, height*0.6, height*0.5},
+                     4);
+        gc.fillPolygon( new double[]{width*0.6375, width*0.475, width*0.6375, width*0.8},
+                        new double[]{height*0.4, height*0.5, height*0.6, height*0.5},
+                     4);
+
+        gc.setFill(background);
+        gc.fillPolygon( new double[]{width*0.2125, width*0.1, width*0.2125, width*0.325},
+                        new double[]{height*0.4, height*0.5, height*0.6, height*0.5},
+                     4);
+        gc.fillPolygon( new double[]{width*0.6375, width*0.525, width*0.6375, width*0.75},
+                        new double[]{height*0.4, height*0.5, height*0.6, height*0.5},
+                     4);
+
+        gc.setStroke(text);
+        gc.setFill(text);
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.setTextBaseline(VPos.CENTER);
+        gc.setFont(Font.font (60));
+            gc.fillText("DB2", width*0.2125, height*0.5, width*0.325);
+            gc.fillText("DB2", width*0.6375, height*0.5, width*0.325);
     }
 }
