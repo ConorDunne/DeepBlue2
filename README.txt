@@ -3,7 +3,7 @@ Deep Blue Backgammon
 Team Members
     17379526    Conor Dunne
     ########    Martynas Jagutis
-    ########    Ronan Mascarenhas
+    17379773    Ronan Mascarenhas
 
 To Do
     Create a game of Backgammon
@@ -24,3 +24,8 @@ Commands & How to Play
         customise
 
     Implemented:
+        Board graphics/logo completed
+        Basic game layout (Score field, Input Command field, Text output)
+        Counters drawn, need to scale with the board when window size changes
+        Program exits on input "quit"
+        

@@ -1,3 +1,5 @@
+package DeepBlue2;
+
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -113,7 +115,8 @@ public class BackgammonApplication extends Application {
     private void draw(Canvas canvas)
     {
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        Board.board(gc, canvas.getWidth(), canvas.getHeight()); //Draws the board
+        Board board = new Board(gc, canvas.getWidth(), canvas.getHeight()); //Draws the board
+        board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());
     }
 
     //CALLED WHENEVER WE START MAIN JAVA PROGRAM
