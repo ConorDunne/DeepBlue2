@@ -1,4 +1,4 @@
-package DeepBlue2;
+package src;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -21,8 +21,8 @@ public class BackgammonApplication extends Application {
     private TextArea scorePanel;
     private TextField commandPanel;
 
-    @Override 
-    public void start( Stage stage ) {
+    @Override
+    public void start(Stage stage) {
 
         stage.setTitle("Backgammon - DeepBlue2");
         BorderPane border = new BorderPane();
@@ -50,19 +50,19 @@ public class BackgammonApplication extends Application {
         System.out.println("Stage Height: " + stage.getHeight() + "Stage Width: " + stage.getWidth()
                 + "\n" + "Border Height: " + border.getHeight() + "Border Width: " + border.getWidth()
                 + "\n" + "Command Panel Height: " + commandPanel.getHeight() + "Command Panel Width: " + commandPanel.getWidth()
-                + "\n" + "InfoPanel Height: "+ infoPanel.getHeight() + "InfoPanel Height: " + infoPanel.getWidth()
+                + "\n" + "InfoPanel Height: " + infoPanel.getHeight() + "InfoPanel Height: " + infoPanel.getWidth()
                 + "\n" + "Button Height: " + exportBtn.getHeight() + "Button Width: " + exportBtn.getWidth()
         );
 
     }
 
     //Called to add hbox to border pane on bottom consisting of command panel and export button
-    public HBox addHBox(){
+    public HBox addHBox() {
         HBox hbox = new HBox();
         commandPanel = new TextField();
         exportBtn = new Button("Export to .txt file");
 
-        HBox.setHgrow(commandPanel,Priority.ALWAYS);
+        HBox.setHgrow(commandPanel, Priority.ALWAYS);
         exportBtn.setPrefWidth(200);
 
         commandPanel.setPromptText("Enter Command");
@@ -73,7 +73,7 @@ public class BackgammonApplication extends Application {
     }
 
     //Called when adding Vbox to border pane on right consisting of information panel and score panel
-    public VBox addVBox(){
+    public VBox addVBox() {
 
         VBox vbox = new VBox();
         infoPanel = new TextArea("Welcome to Backgammon");
@@ -83,22 +83,21 @@ public class BackgammonApplication extends Application {
 
         //Sizes are temp values and should probably be changed
         infoPanel.setPrefSize(200, 1000);
-        scorePanel.setPrefSize(200,800);
+        scorePanel.setPrefSize(200, 800);
 
         infoPanel.setEditable(false);
         scorePanel.setEditable(false);
 
         //Text entered in command panel is appended to the information panel
-        commandPanel.setOnKeyPressed(new EventHandler<KeyEvent>()
-        {
+        commandPanel.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent e) {
 
                 //Inserts text to the information panel after the user presses enter
-                if(e.getCode() == KeyCode.ENTER) {
+                if (e.getCode() == KeyCode.ENTER) {
                     infoPanel.appendText("\n" + commandPanel.getText());
                     //Exit the program if the user enters 'quit'
-                    if(commandPanel.getText().equals("quit")) {
+                    if (commandPanel.getText().equals("quit")) {
                         System.exit(0);
                     }
                     commandPanel.clear();
@@ -112,17 +111,15 @@ public class BackgammonApplication extends Application {
     }
 
     //TODO DRAW GAME BOARD
-    private void draw(Canvas canvas)
-    {
+    private void draw(Canvas canvas) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         Board board = new Board(gc, canvas.getWidth(), canvas.getHeight()); //Draws the board
         board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());
     }
 
     //CALLED WHENEVER WE START MAIN JAVA PROGRAM
-    public static void main(String[] args)
-    {
-		launch(args);
-	}
+    public static void main(String[] args) {
+        launch(args);
+    }
 
 }
