@@ -6,8 +6,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.TextAlignment;
 import javafx.scene.text.Font;
 
-public class Board
-{
+public class Board {
     private Color background;
     private Color gamingSquares;
     private Color bearOffArea;
@@ -19,8 +18,7 @@ public class Board
     private Color logoDiamond = Color.DEEPSKYBLUE;
     private Color logoText = Color.DARKBLUE;
 
-    public Board(GraphicsContext gc, double width, double height)
-    {
+    public Board(GraphicsContext gc, double width, double height) {
         setColors();
         drawBoard(gc, width, height);
     }
@@ -36,17 +34,15 @@ public class Board
     private Color getLogoDiamond() {return logoDiamond;}
     private Color getLogoText() {return logoText;}
 
-    private void drawBoard(GraphicsContext gc, double width, double height)
-    {
+    private void drawBoard(GraphicsContext gc, double width, double height) {
         background(gc, width, height);
         squares(gc, width, height);
         bearOff(gc, width, height);
-        triangle(gc, width, height);
+        spikes(gc, width, height);
         logo(gc, width, height);
      }
 
-    private void setColors()
-    {
+    private void setColors() {
         background = Color.rgb(208,157,93);
         gamingSquares = Color.DARKOLIVEGREEN;
         bearOffArea = Color.DARKRED;
@@ -54,36 +50,57 @@ public class Board
         trianglesPlayerOne = Color.BLACK;
         trianglesPlayerTwo = Color.WHITE;
 
-        counterPlayerOne = Color.BLACK;
-        counterPlayerTwo = Color.WHITE;
+        counterPlayerOne = Color.DARKSLATEGRAY;
+        counterPlayerTwo = Color.INDIANRED;
     }
 
 //  Method for drawing background (Boarder)
-    public void background(GraphicsContext gc, double width, double height)
-    {
+    public void background(GraphicsContext gc, double width, double height) {
         gc.setFill(getBackground());
         gc.fillRect(0, 0, width, height);
     }
 
 //  Method for drawing gaming square areas
-    public void squares(GraphicsContext gc, double width, double height)
-    {
+    public void squares(GraphicsContext gc, double width, double height) {
         gc.setFill(getGamingSquares());
             gc.fillRect(width*0.05, height*0.05, width*0.325, height*0.9);
             gc.fillRect(width*0.475, height*0.05, width*0.325, height*0.9);
     }
 
 //  Method for drawing bear off areas
-    public void bearOff(GraphicsContext gc, double width, double height)
-    {
+    public void bearOff(GraphicsContext gc, double width, double height) {
         gc.setFill(getBearOffArea());
             gc.fillRect(width*0.85, height*0.05, width*0.1, height*0.35);
             gc.fillRect(width*0.85, height*0.6, width*0.1, height*0.35);
     }
 
+    public void logo(GraphicsContext gc, double width, double height) {
+        gc.setFill(getLogoDiamond());
+        gc.fillPolygon( new double[]{width*0.2125, width*0.05, width*0.2125, width*0.375},
+                new double[]{height*0.4, height*0.5, height*0.6, height*0.5},
+                4);
+        gc.fillPolygon( new double[]{width*0.6375, width*0.475, width*0.6375, width*0.8},
+                new double[]{height*0.4, height*0.5, height*0.6, height*0.5},
+                4);
+
+        gc.setFill(getGamingSquares());
+        gc.fillPolygon( new double[]{width*0.2125, width*0.1, width*0.2125, width*0.325},
+                new double[]{height*0.4, height*0.5, height*0.6, height*0.5},
+                4);
+        gc.fillPolygon( new double[]{width*0.6375, width*0.525, width*0.6375, width*0.75},
+                new double[]{height*0.4, height*0.5, height*0.6, height*0.5},
+                4);
+
+        gc.setFill(getLogoText());
+        gc.setTextAlign(TextAlignment.CENTER);
+        gc.setTextBaseline(VPos.CENTER);
+        gc.setFont(Font.font (60));
+        gc.fillText("DB2", width*0.2125, height*0.5, width*0.325);
+        gc.fillText("DB2", width*0.6375, height*0.5, width*0.325);
+    }
+
     //  Methods for drawing the spikes (Triangles)
-    public void triangle(GraphicsContext gc, double width, double height)
-    {
+    public void spikes(GraphicsContext gc, double width, double height) {
         Spike[] spike = new Spike[24];
 
 //  Initialize Object Array (Player 2)
@@ -133,92 +150,71 @@ public class Board
 //  Method for drawing the logo
     //draw counters into their locations
 
-    public void drawPlayerCounters(GraphicsContext gc, double width, double height)
-    {
-    	final double RADIUS = width*.05;
-    	//width/height = radius
-
-        Counter playerOne = new Counter();
-
-
+    public void drawPlayerCounters(GraphicsContext gc, double width, double height) {
+        Counter[] playerOne = new Counter[15];
         gc.setFill(getCounterPlayerOne());
 
-        //bottom right
-        playerOne.drawChecker(gc, width*.745, height*.875, RADIUS);
-        playerOne.drawChecker(gc, width*.745, height*.875 - (RADIUS), RADIUS);
+        for(int i=0; i<15; i++) {
+            if(i < 2)
+                playerOne[i] = new Counter(0, 0.77291);
+            else if(i < 7)
+                playerOne[i] = new Counter(11, 0.07707);
+            else if(i < 10)
+                playerOne[i] = new Counter(16, 0.29367);
+            else
+                playerOne[i] = new Counter(18, 0.50207);
+        }
 
-        //bottom left
-        playerOne.drawChecker(gc, width*.05, height*.875, RADIUS);
-        playerOne.drawChecker(gc, width*.05, height*.875- RADIUS, RADIUS);
-        playerOne.drawChecker(gc , width*.05, height*.875 - (2*RADIUS), RADIUS);
-        playerOne.drawChecker(gc,width*.05, (height*.875-(3*RADIUS)), RADIUS);
-        playerOne.drawChecker(gc, width*.05, (height*.875-(4*RADIUS)), RADIUS);
+        playerOne[0].drawChecker(gc, width, height, 0);
+        playerOne[1].drawChecker(gc, width, height, 1);
 
-        //top left counters
-        playerOne.drawChecker(gc, width*.265, height*.05, RADIUS);
-        playerOne.drawChecker(gc, width*.265, height*.05+RADIUS, RADIUS);
-        playerOne.drawChecker(gc, width*.265, (height*.05+(2*RADIUS)), RADIUS);
+        playerOne[2].drawChecker(gc, width, height, 0);
+        playerOne[3].drawChecker(gc, width, height, 1);
+        playerOne[4].drawChecker(gc, width, height, 2);
+        playerOne[5].drawChecker(gc, width, height, 3);
+        playerOne[6].drawChecker(gc, width, height, 4);
 
-        //top right counters
-        playerOne.drawChecker(gc,width*.475, height*.05, RADIUS);
-        playerOne.drawChecker(gc, width*.475, height*.05+RADIUS, RADIUS);
-        playerOne.drawChecker(gc, width*.475, (height*.05+(2*RADIUS)), RADIUS);
-        playerOne.drawChecker(gc, width*.475, (height*.05+(3*RADIUS)), RADIUS);
-        playerOne.drawChecker(gc, width*.475, (height*.05+(4*RADIUS)), RADIUS);
+        playerOne[7].drawChecker(gc, width, height, 0);
+        playerOne[8].drawChecker(gc, width, height, 1);
+        playerOne[9].drawChecker(gc, width, height, 2)
+        ;
+        playerOne[10].drawChecker(gc, width, height, 0);
+        playerOne[11].drawChecker(gc, width, height, 1);
+        playerOne[12].drawChecker(gc, width, height, 2);
+        playerOne[13].drawChecker(gc, width, height, 3);
+        playerOne[14].drawChecker(gc, width, height, 4);
 
-
-
-    	Counter playerTwo = new Counter();
-
-    	//PLAYER 2
-        //top right counters
+        Counter[] playerTwo = new Counter[15];
         gc.setFill(getCounterPlayerTwo());
-        playerTwo.drawChecker(gc, width*.745, height*.05, RADIUS);
-        playerTwo.drawChecker(gc, width*.745, (height*.05)+RADIUS, RADIUS);
 
-        //top left counters
-        playerTwo.drawChecker(gc, width*.05, height*.05, RADIUS);
-        playerTwo.drawChecker(gc, width*.05, height*.05+RADIUS, RADIUS);
-        playerTwo.drawChecker(gc, width*.05, (height*.05+(2*RADIUS)), RADIUS);
-        playerTwo.drawChecker(gc, width*.05, (height*.05+(3*RADIUS)), RADIUS);
-        playerTwo.drawChecker(gc, width*.05, (height*.05+(4*RADIUS)), RADIUS);
+        for(int i=0; i<15; i++) {
+            if(i < 2)
+                playerTwo[i] = new Counter(23, 0.77291);
+            else if(i < 7)
+                playerTwo[i] = new Counter(12, 0.07707);
+            else if(i < 10)
+                playerTwo[i] = new Counter(7, 0.29367);
+            else
+                playerTwo[i] = new Counter(5, 0.50207);
+        }
 
-        //bottom left counters
-        playerTwo.drawChecker(gc, width*.265, height*.875, RADIUS);
-        playerTwo.drawChecker(gc, width*.265, height*.875-RADIUS, RADIUS);
-        playerTwo.drawChecker(gc, width*.265, (height*.875-(2*RADIUS)), RADIUS);
+        playerTwo[0].drawChecker(gc, width, height, 0);
+        playerTwo[1].drawChecker(gc, width, height, 1);
 
-        //bottom right counters
-        playerTwo.drawChecker(gc,width*.475, height*.875, RADIUS);
-        playerTwo.drawChecker(gc, width*.475, height*.875-RADIUS, RADIUS);
-        playerTwo.drawChecker(gc, width*.475, (height*.875-(2*RADIUS)), RADIUS);
-        playerTwo.drawChecker(gc, width*.475, (height*.875-(3*RADIUS)), RADIUS);
-        playerTwo.drawChecker(gc, width*.475, (height*.875-(4*RADIUS)), RADIUS);
-    }
+        playerTwo[2].drawChecker(gc, width, height, 0);
+        playerTwo[3].drawChecker(gc, width, height, 1);
+        playerTwo[4].drawChecker(gc, width, height, 2);
+        playerTwo[5].drawChecker(gc, width, height, 3);
+        playerTwo[6].drawChecker(gc, width, height, 4);
 
-    public void logo(GraphicsContext gc, double width, double height)
-    {
-        gc.setFill(getLogoDiamond());
-        gc.fillPolygon( new double[]{width*0.2125, width*0.05, width*0.2125, width*0.375},
-                new double[]{height*0.4, height*0.5, height*0.6, height*0.5},
-                4);
-        gc.fillPolygon( new double[]{width*0.6375, width*0.475, width*0.6375, width*0.8},
-                new double[]{height*0.4, height*0.5, height*0.6, height*0.5},
-                4);
+        playerTwo[7].drawChecker(gc, width, height, 0);
+        playerTwo[8].drawChecker(gc, width, height, 1);
+        playerTwo[9].drawChecker(gc, width, height, 2);
 
-        gc.setFill(getGamingSquares());
-        gc.fillPolygon( new double[]{width*0.2125, width*0.1, width*0.2125, width*0.325},
-                new double[]{height*0.4, height*0.5, height*0.6, height*0.5},
-                4);
-        gc.fillPolygon( new double[]{width*0.6375, width*0.525, width*0.6375, width*0.75},
-                new double[]{height*0.4, height*0.5, height*0.6, height*0.5},
-                4);
-
-        gc.setFill(getLogoText());
-        gc.setTextAlign(TextAlignment.CENTER);
-        gc.setTextBaseline(VPos.CENTER);
-        gc.setFont(Font.font (60));
-        gc.fillText("DB2", width*0.2125, height*0.5, width*0.325);
-        gc.fillText("DB2", width*0.6375, height*0.5, width*0.325);
+        playerTwo[10].drawChecker(gc, width, height, 0);
+        playerTwo[11].drawChecker(gc, width, height, 1);
+        playerTwo[12].drawChecker(gc, width, height, 2);
+        playerTwo[13].drawChecker(gc, width, height, 3);
+        playerTwo[14].drawChecker(gc, width, height, 4);
     }
 }

@@ -28,13 +28,11 @@ public class Spike {
             yPoint = 0.6;
         }
 
-        if(number >6 && number < 19)
+        if(number > 6 && number < 19)
             xCenter = 0.05 + ((0.325/6) * LM) + xChange;
         else
             xCenter = 0.475 + ((0.325/6) * LM) + xChange;
     }
-
-    public double getX() { return this.xCenter; }
 
     public void drawSpike(GraphicsContext gc, double width, double height) {
             gc.fillPolygon( new double[]{width*(xCenter-xChange), width*(xCenter+xChange), width*(xCenter)},
