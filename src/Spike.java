@@ -41,6 +41,42 @@ public class Spike {
             xCenter = 0.475 + ((0.325/6) * LM) + xChange;
     }
 
+    public static void initSpike(Spike[] spike) {
+//  Initialize Object Array (Player 2)
+        spike[0] = new Spike(1, 5, 2);
+        spike[2] = new Spike(3, 3, 0);
+        spike[4] = new Spike(5, 1,0);
+
+        spike[6] = new Spike(7, 5,0);
+        spike[8] = new Spike(9, 3,0);
+        spike[10] = new Spike(11, 1,0);
+
+        spike[12] = new Spike(13, 0,5);
+        spike[14] = new Spike(15, 2,0);
+        spike[16] = new Spike(17, 4,0);
+
+        spike[18] = new Spike(19, 0,5);
+        spike[20] = new Spike(21, 2, 0);
+        spike[22] = new Spike(23, 4,0);
+
+//  Initialize Object Array (Player 1)
+        spike[1] = new Spike(2, 4,0);
+        spike[3] = new Spike(4, 2,0);
+        spike[5] = new Spike(6, 0,5);
+
+        spike[7] = new Spike(8, 4,3);
+        spike[9] = new Spike(10, 2,0);
+        spike[11] = new Spike(12, 0,5);
+
+        spike[13] = new Spike(14, 1,0);
+        spike[15] = new Spike(16, 3,3);
+        spike[17] = new Spike(18, 5,5);
+
+        spike[19] = new Spike(20, 1,0);
+        spike[21] = new Spike(22, 3,0);
+        spike[23] = new Spike(24, 5,2);
+    }
+
     public void drawSpike(GraphicsContext gc, double width, double height) {
             gc.fillPolygon( new double[]{width*(xCenter-xChange), width*(xCenter+xChange), width*(xCenter)},
                             new double[]{height*yBase, height*yBase, height*yPoint},
@@ -56,8 +92,15 @@ public class Spike {
             else
                 gc.fillText(Integer.toString(number), width*xCenter, height*(yBase-0.025));
     }
-    public void addCounter(){
+
+    public void addToSpike(Counter c) {
+        stack.push(c);
         noCounters++;
+    }
+
+    public Counter removeFromSpike() {
+        noCounters--;
+        return stack.pop();
     }
 
     public int getNumber(){ return this.number; }

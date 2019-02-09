@@ -25,6 +25,19 @@ public class Board {
 
     public Board(GraphicsContext gc, double width, double height) {
         setColors();
+
+        spike = new Spike[24];
+        Spike.initSpike(spike);
+
+        playerOne = new Counter[15];
+        playerTwo = new Counter[15];
+
+        double[] loc = {spike[0].getxCenter(), spike[5].getxCenter(), spike[7].getxCenter(), spike[11].getxCenter()};
+        Counter.initCounter(playerOne, loc, getCounterPlayerOne(), true);
+        Counter.initCounter(playerTwo, loc, getCounterPlayerTwo(), false);
+
+        initSpikeCounters();
+
         drawBoard(gc, width, height);
     }
 
@@ -79,6 +92,27 @@ public class Board {
             gc.fillRect(width*0.85, height*0.6, width*0.1, height*0.35);
     }
 
+//  Method for drawing the spikes (Triangles)
+    public void spikes(GraphicsContext gc, double width, double height) {
+        for(int i=0; i<24; i++){
+            if(i%2 == 0)
+                gc.setFill(getTrianglesPlayerTwo());
+            else
+                gc.setFill(getTrianglesPlayerOne());
+
+            spike[i].drawSpike(gc, width, height);
+        }
+    }
+
+//  Method for drawing the counters
+    public void drawPlayerCounters(GraphicsContext gc, double width, double height) {
+        for (int i = 0; i < 15; i++) {
+            playerOne[i].drawChecker(gc, width, height);
+            playerTwo[i].drawChecker(gc, width, height);
+        }
+    }
+
+//  Method for drawing the board logo
     public void logo(GraphicsContext gc, double width, double height) {
         gc.setFill(getLogoDiamond());
         gc.fillPolygon( new double[]{width*0.2125, width*0.05, width*0.2125, width*0.375},
@@ -104,122 +138,25 @@ public class Board {
         gc.fillText("DB2", width*0.6375, height*0.5, width*0.325);
     }
 
-    //  Methods for drawing the spikes (Triangles)
-    public void spikes(GraphicsContext gc, double width, double height) {
-        spike = new Spike[24];
-
-//  Initialize Object Array (Player 2)
-        spike[0] = new Spike(1, 5, 2);
-        spike[2] = new Spike(3, 3, 0);
-        spike[4] = new Spike(5, 1,0);
-
-        spike[6] = new Spike(7, 5,0);
-        spike[8] = new Spike(9, 3,0);
-        spike[10] = new Spike(11, 1,0);
-
-        spike[12] = new Spike(13, 0,5);
-        spike[14] = new Spike(15, 2,0);
-        spike[16] = new Spike(17, 4,0);
-
-        spike[18] = new Spike(19, 0,5);
-        spike[20] = new Spike(21, 2, 0);
-        spike[22] = new Spike(23, 4,0);
-
-//  Initialize Object Array (Player 1)
-        spike[1] = new Spike(2, 4,0);
-        spike[3] = new Spike(4, 2,0);
-        spike[5] = new Spike(6, 0,5);
-
-        spike[7] = new Spike(8, 4,3);
-        spike[9] = new Spike(10, 2,0);
-        spike[11] = new Spike(12, 0,5);
-
-        spike[13] = new Spike(14, 1,0);
-        spike[15] = new Spike(16, 3,3);
-        spike[17] = new Spike(18, 5,5);
-
-        spike[19] = new Spike(20, 1,0);
-        spike[21] = new Spike(22, 3,0);
-        spike[23] = new Spike(24, 5,2);
-
-        for(int i=0; i<24; i++){
-            if(i%2 == 0)
-                gc.setFill(getTrianglesPlayerTwo());
-            else
-                gc.setFill(getTrianglesPlayerOne());
-
-            spike[i].drawSpike(gc, width, height);
+    public void initSpikeCounters() {
+        for (int i = 0; i < 15; i++) {
+            if (i < 2) {
+                spike[0].addToSpike(playerOne[i]);
+                spike[23].addToSpike(playerTwo[i]);
+            }
+            else if (i < 7) {
+                spike[11].addToSpike(playerOne[i]);
+                spike[12].addToSpike(playerTwo[i]);
+            }
+            else if (i < 10) {
+                spike[16].addToSpike(playerOne[i]);
+                spike[7].addToSpike(playerTwo[i]);
+            }
+            else {
+                spike[18].addToSpike(playerOne[i]);
+                spike[5].addToSpike(playerTwo[i]);
+            }
         }
-    }
-
-//  Method for drawing the logo
-    //draw counters into their locations
-
-    public void drawPlayerCounters(GraphicsContext gc, double width, double height) {
-        playerOne = new Counter[15];
-        gc.setFill(getCounterPlayerOne());
-
-        for(int i=0; i<15; i++) {
-            if(i < 2)
-                playerOne[i] = new Counter(0, 0.77291);
-            else if(i < 7)
-                playerOne[i] = new Counter(11, 0.07707);
-            else if(i < 10)
-                playerOne[i] = new Counter(16, 0.29367);
-            else
-                playerOne[i] = new Counter(18, 0.50207);
-        }
-
-        playerOne[0].drawChecker(gc, width, height, 0);
-        playerOne[1].drawChecker(gc, width, height, 1);
-
-        playerOne[2].drawChecker(gc, width, height, 0);
-        playerOne[3].drawChecker(gc, width, height, 1);
-        playerOne[4].drawChecker(gc, width, height, 2);
-        playerOne[5].drawChecker(gc, width, height, 3);
-        playerOne[6].drawChecker(gc, width, height, 4);
-
-        playerOne[7].drawChecker(gc, width, height, 0);
-        playerOne[8].drawChecker(gc, width, height, 1);
-        playerOne[9].drawChecker(gc, width, height, 2);
-        playerOne[10].drawChecker(gc, width, height, 0);
-        playerOne[11].drawChecker(gc, width, height, 1);
-        playerOne[12].drawChecker(gc, width, height, 2);
-        playerOne[13].drawChecker(gc, width, height, 3);
-        playerOne[14].drawChecker(gc, width, height, 4);
-
-        playerTwo = new Counter[15];
-        gc.setFill(getCounterPlayerTwo());
-
-        for(int i=0; i<15; i++) {
-            if(i < 2)
-                playerTwo[i] = new Counter(23, 0.77291);
-            else if(i < 7)
-                playerTwo[i] = new Counter(12, 0.07707);
-            else if(i < 10)
-                playerTwo[i] = new Counter(7, 0.29367);
-            else
-                playerTwo[i] = new Counter(5, 0.50207);
-        }
-
-        playerTwo[0].drawChecker(gc, width, height, 0);
-        playerTwo[1].drawChecker(gc, width, height, 1);
-
-        playerTwo[2].drawChecker(gc, width, height, 0);
-        playerTwo[3].drawChecker(gc, width, height, 1);
-        playerTwo[4].drawChecker(gc, width, height, 2);
-        playerTwo[5].drawChecker(gc, width, height, 3);
-        playerTwo[6].drawChecker(gc, width, height, 4);
-
-        playerTwo[7].drawChecker(gc, width, height, 0);
-        playerTwo[8].drawChecker(gc, width, height, 1);
-        playerTwo[9].drawChecker(gc, width, height, 2);
-
-        playerTwo[10].drawChecker(gc, width, height, 0);
-        playerTwo[11].drawChecker(gc, width, height, 1);
-        playerTwo[12].drawChecker(gc, width, height, 2);
-        playerTwo[13].drawChecker(gc, width, height, 3);
-        playerTwo[14].drawChecker(gc, width, height, 4);
     }
 
     public Spike[] getSpike() { return spike; }

@@ -118,11 +118,11 @@ public class BackgammonApplication extends Application {
                        // gc.clearRect((canvas.getWidth() * f.getxCenter()) - radius / 2, canvas.getHeight() * 0.885 - (radius * (f.getNoCounters())), radius, radius);
                         if(from < 13) {
                             gc.fillOval((canvas.getWidth() * f.getxCenter()) - radius / 2, canvas.getHeight() * 0.885 - (radius * (f.getNoCounters())), radius, radius);
-                            f.addCounter();
+                       //     f.addToSpike();
                         }
                         else {
                             gc.fillOval((canvas.getWidth() * f.getxCenter()) - radius / 2, canvas.getHeight() * 0.05 + (radius * f.getNoCounters()), radius, radius);
-                            f.addCounter();
+                       //     f.addToSpike();
                         }
                         System.out.println(from);
                     }
