@@ -19,6 +19,9 @@ public class Board {
     private Color logoText = Color.DARKBLUE;
 
     private Spike[] spike;
+    private Counter[] playerOne;
+    private Counter[] playerTwo;
+
 
     public Board(GraphicsContext gc, double width, double height) {
         setColors();
@@ -106,38 +109,38 @@ public class Board {
         spike = new Spike[24];
 
 //  Initialize Object Array (Player 2)
-        spike[0] = new Spike(1, 5);
-        spike[2] = new Spike(3, 3);
-        spike[4] = new Spike(5, 1);
+        spike[0] = new Spike(1, 5, 2);
+        spike[2] = new Spike(3, 3, 0);
+        spike[4] = new Spike(5, 1,0);
 
-        spike[6] = new Spike(7, 5);
-        spike[8] = new Spike(9, 3);
-        spike[10] = new Spike(11, 1);
+        spike[6] = new Spike(7, 5,0);
+        spike[8] = new Spike(9, 3,0);
+        spike[10] = new Spike(11, 1,0);
 
-        spike[12] = new Spike(13, 0);
-        spike[14] = new Spike(15, 2);
-        spike[16] = new Spike(17, 4);
+        spike[12] = new Spike(13, 0,5);
+        spike[14] = new Spike(15, 2,0);
+        spike[16] = new Spike(17, 4,0);
 
-        spike[18] = new Spike(19, 0);
-        spike[20] = new Spike(21, 2);
-        spike[22] = new Spike(23, 4);
+        spike[18] = new Spike(19, 0,5);
+        spike[20] = new Spike(21, 2, 0);
+        spike[22] = new Spike(23, 4,0);
 
 //  Initialize Object Array (Player 1)
-        spike[1] = new Spike(2, 4);
-        spike[3] = new Spike(4, 2);
-        spike[5] = new Spike(6, 0);
+        spike[1] = new Spike(2, 4,0);
+        spike[3] = new Spike(4, 2,0);
+        spike[5] = new Spike(6, 0,5);
 
-        spike[7] = new Spike(8, 4);
-        spike[9] = new Spike(10, 2);
-        spike[11] = new Spike(12, 0);
+        spike[7] = new Spike(8, 4,3);
+        spike[9] = new Spike(10, 2,0);
+        spike[11] = new Spike(12, 0,5);
 
-        spike[13] = new Spike(14, 1);
-        spike[15] = new Spike(16, 3);
-        spike[17] = new Spike(18, 5);
+        spike[13] = new Spike(14, 1,0);
+        spike[15] = new Spike(16, 3,3);
+        spike[17] = new Spike(18, 5,5);
 
-        spike[19] = new Spike(20, 1);
-        spike[21] = new Spike(22, 3);
-        spike[23] = new Spike(24, 5);
+        spike[19] = new Spike(20, 1,0);
+        spike[21] = new Spike(22, 3,0);
+        spike[23] = new Spike(24, 5,2);
 
         for(int i=0; i<24; i++){
             if(i%2 == 0)
@@ -153,7 +156,7 @@ public class Board {
     //draw counters into their locations
 
     public void drawPlayerCounters(GraphicsContext gc, double width, double height) {
-        Counter[] playerOne = new Counter[15];
+        playerOne = new Counter[15];
         gc.setFill(getCounterPlayerOne());
 
         for(int i=0; i<15; i++) {
@@ -185,7 +188,7 @@ public class Board {
         playerOne[13].drawChecker(gc, width, height, 3);
         playerOne[14].drawChecker(gc, width, height, 4);
 
-        Counter[] playerTwo = new Counter[15];
+        playerTwo = new Counter[15];
         gc.setFill(getCounterPlayerTwo());
 
         for(int i=0; i<15; i++) {
@@ -220,4 +223,6 @@ public class Board {
     }
 
     public Spike[] getSpike() { return spike; }
+    public Counter[] getPlayerOne() { return playerOne; }
+    public Counter[] getPlayerTwo() { return playerTwo; }
 }

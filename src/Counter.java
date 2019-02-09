@@ -21,10 +21,6 @@ public class Counter {
         this.xCenter = x;
     }
 
-    public void drawChecker(GraphicsContext gc, double x, double y, double radius) {
-        gc.fillOval(x, y, radius, radius);
-    }
-
     public void drawChecker(GraphicsContext gc, double width, double height, int num) {
         double radius = height*0.065;
 
@@ -34,9 +30,13 @@ public class Counter {
             gc.fillOval((width*xCenter) - radius/2, height*0.05 + (radius*num), radius, radius);
 
     }
-    public void removeCounter(GraphicsContext gc, double width, double height, int num){
-        drawChecker(gc, width,height, num);
+    public void moveCounter(GraphicsContext gc, double width, double height, int num){
+        double radius = height*0.065;
 
+        if(num < 12)
+            gc.fillOval((width*xCenter) - radius/2, height*0.885 - (radius*num), radius, radius);
+        else
+            gc.fillOval((width*xCenter) - radius/2, height*0.05 + (radius*num), radius, radius);
     }
 
     public int getSpikeLocation() { return spikeLocation; }

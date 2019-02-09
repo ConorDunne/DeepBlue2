@@ -17,11 +17,14 @@ public class Spike {
     private double yPoint;                  //  The increase or decrease of the Y Coordinant for the point
 
 
+    private  int noCounters = 0;
+
     Stack<Counter> stack = new Stack<>();
 
-    public Spike(int number, int LM) {
+    public Spike(int number, int LM, int noCounters) {
         this.number = number;
         this.lm = LM;
+        this.noCounters = noCounters;
 
         if(number > 12) {
             yBase = 0.05;
@@ -53,6 +56,10 @@ public class Spike {
             else
                 gc.fillText(Integer.toString(number), width*xCenter, height*(yBase-0.025));
     }
+    public void addCounter(){
+        noCounters++;
+    }
+
     public int getNumber(){ return this.number; }
     public int getLm() {return this.lm; }
     public double getxCenter() { return xCenter; }
@@ -60,4 +67,5 @@ public class Spike {
     public double getyBase() { return yBase; }
     public double getyPoint() { return yPoint; }
 
+    public int getNoCounters() {return noCounters; }
 }

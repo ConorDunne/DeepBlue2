@@ -25,6 +25,9 @@ public class BackgammonApplication extends Application {
     private Spike spike;
     private Counter counter;
 
+    private GraphicsContext gc;
+    private Canvas canvas;
+
     @Override
     public void start(Stage stage) {
 
@@ -37,7 +40,8 @@ public class BackgammonApplication extends Application {
         border.setRight(addVBox());
 
         Pane wrapperPane = new Pane();
-        Canvas canvas = new Canvas();
+
+        canvas = new Canvas();
 
         border.setCenter(wrapperPane); //Border at center of screen
         wrapperPane.getChildren().add(canvas); //Adds canvas to wrapper pane
@@ -104,11 +108,23 @@ public class BackgammonApplication extends Application {
                     if (commandPanel.getText().equals("quit")) {
                         System.exit(0);
                     }
-                    else if(commandPanel.getText().matches("[1-24]*")){
+                    else if(commandPanel.getText().matches("[1-9]") || (commandPanel.getText().matches("[1-9][0-9]"))){
+                        double radius = canvas.getHeight()*0.065;
                         //TODO CALL MOVE COUNTER METHOD
-                        Spike from = board.getSpike()[(Integer.parseInt(commandPanel.getText())) - 1];
+                        int from = Integer.parseInt(commandPanel.getText());
+                        Spike f = board.getSpike()[from - 1];
+                  //      Counter p1 = board.getPlayerOne()[];
 
-                        System.out.println((Integer.parseInt(commandPanel.getText())));
+                       // gc.clearRect((canvas.getWidth() * f.getxCenter()) - radius / 2, canvas.getHeight() * 0.885 - (radius * (f.getNoCounters())), radius, radius);
+                        if(from < 13) {
+                            gc.fillOval((canvas.getWidth() * f.getxCenter()) - radius / 2, canvas.getHeight() * 0.885 - (radius * (f.getNoCounters())), radius, radius);
+                            f.addCounter();
+                        }
+                        else {
+                            gc.fillOval((canvas.getWidth() * f.getxCenter()) - radius / 2, canvas.getHeight() * 0.05 + (radius * f.getNoCounters()), radius, radius);
+                            f.addCounter();
+                        }
+                        System.out.println(from);
                     }
 
                     commandPanel.clear();
@@ -123,7 +139,7 @@ public class BackgammonApplication extends Application {
 
     //TODO DRAW GAME BOARD
     private void draw(Canvas canvas) {
-        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc = canvas.getGraphicsContext2D();
         board = new Board(gc, canvas.getWidth(), canvas.getHeight()); //Draws the board
         board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());
     }
