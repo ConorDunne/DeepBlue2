@@ -18,6 +18,8 @@ public class Board {
     private Color logoDiamond = Color.DEEPSKYBLUE;
     private Color logoText = Color.DARKBLUE;
 
+    private Spike[] spike;
+
     public Board(GraphicsContext gc, double width, double height) {
         setColors();
         drawBoard(gc, width, height);
@@ -101,7 +103,7 @@ public class Board {
 
     //  Methods for drawing the spikes (Triangles)
     public void spikes(GraphicsContext gc, double width, double height) {
-        Spike[] spike = new Spike[24];
+        spike = new Spike[24];
 
 //  Initialize Object Array (Player 2)
         spike[0] = new Spike(1, 5);
@@ -176,8 +178,7 @@ public class Board {
 
         playerOne[7].drawChecker(gc, width, height, 0);
         playerOne[8].drawChecker(gc, width, height, 1);
-        playerOne[9].drawChecker(gc, width, height, 2)
-        ;
+        playerOne[9].drawChecker(gc, width, height, 2);
         playerOne[10].drawChecker(gc, width, height, 0);
         playerOne[11].drawChecker(gc, width, height, 1);
         playerOne[12].drawChecker(gc, width, height, 2);
@@ -217,4 +218,6 @@ public class Board {
         playerTwo[13].drawChecker(gc, width, height, 3);
         playerTwo[14].drawChecker(gc, width, height, 4);
     }
+
+    public Spike[] getSpike() { return spike; }
 }

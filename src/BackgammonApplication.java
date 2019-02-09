@@ -21,6 +21,10 @@ public class BackgammonApplication extends Application {
     private TextArea scorePanel;
     private TextField commandPanel;
 
+    private Board board;
+    private Spike spike;
+    private Counter counter;
+
     @Override
     public void start(Stage stage) {
 
@@ -100,6 +104,13 @@ public class BackgammonApplication extends Application {
                     if (commandPanel.getText().equals("quit")) {
                         System.exit(0);
                     }
+                    else if(commandPanel.getText().matches("[1-24]*")){
+                        //TODO CALL MOVE COUNTER METHOD
+                        Spike from = board.getSpike()[(Integer.parseInt(commandPanel.getText())) - 1];
+
+                        System.out.println((Integer.parseInt(commandPanel.getText())));
+                    }
+
                     commandPanel.clear();
                 }
             }
@@ -113,7 +124,7 @@ public class BackgammonApplication extends Application {
     //TODO DRAW GAME BOARD
     private void draw(Canvas canvas) {
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        Board board = new Board(gc, canvas.getWidth(), canvas.getHeight()); //Draws the board
+        board = new Board(gc, canvas.getWidth(), canvas.getHeight()); //Draws the board
         board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());
     }
 

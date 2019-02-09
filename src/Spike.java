@@ -5,6 +5,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+import java.util.Stack;
 
 //java file containing the spike class
 public class Spike {
@@ -14,6 +15,9 @@ public class Spike {
     private double xChange = 0.325/12;      //  To find the edges of the Triangle
     private double yBase;                   //  Y-Coordinant for base of triangle
     private double yPoint;                  //  The increase or decrease of the Y Coordinant for the point
+
+
+    Stack<Counter> stack = new Stack<>();
 
     public Spike(int number, int LM) {
         this.number = number;
@@ -49,4 +53,11 @@ public class Spike {
             else
                 gc.fillText(Integer.toString(number), width*xCenter, height*(yBase-0.025));
     }
+    public int getNumber(){ return this.number; }
+    public int getLm() {return this.lm; }
+    public double getxCenter() { return xCenter; }
+    public double getxChange() { return xChange; }
+    public double getyBase() { return yBase; }
+    public double getyPoint() { return yPoint; }
+
 }

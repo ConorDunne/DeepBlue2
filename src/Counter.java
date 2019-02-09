@@ -4,8 +4,6 @@ import javafx.geometry.Pos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.text.TextAlignment;
 
-import javax.xml.soap.Text;
-
 
 public class Counter {
     //fields holding counter info - colour of piece, player it belongs to, starting xy pos and finishing xy pos
@@ -36,4 +34,12 @@ public class Counter {
             gc.fillOval((width*xCenter) - radius/2, height*0.05 + (radius*num), radius, radius);
 
     }
+    public void removeCounter(GraphicsContext gc, double width, double height, int num){
+        drawChecker(gc, width,height, num);
+
+    }
+
+    public int getSpikeLocation() { return spikeLocation; }
+    public double getxCenter() { return xCenter; }
+    public double getYCoordinant() { return YCoordinant; }
 }
