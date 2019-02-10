@@ -28,6 +28,12 @@ public class BackgammonApplication extends Application {
     private GraphicsContext gc;
     private Canvas canvas;
 
+    private boolean assignFrom = true;
+    private int from, to;
+    private Spike f, t;
+
+
+
     @Override
     public void start(Stage stage) {
 
@@ -103,29 +109,57 @@ public class BackgammonApplication extends Application {
 
                 //Inserts text to the information panel after the user presses enter
                 if (e.getCode() == KeyCode.ENTER) {
-                    infoPanel.appendText("\n" + commandPanel.getText());
+
                     //Exit the program if the user enters 'quit'
                     if (commandPanel.getText().equals("quit")) {
                         System.exit(0);
                     }
                     else if(commandPanel.getText().matches("[1-9]") || (commandPanel.getText().matches("[1-9][0-9]"))){
                         double radius = canvas.getHeight()*0.065;
-                        //TODO CALL MOVE COUNTER METHOD
-                        int from = Integer.parseInt(commandPanel.getText());
-                        Spike f = board.getSpike()[from - 1];
-                  //      Counter p1 = board.getPlayerOne()[];
 
-                       // gc.clearRect((canvas.getWidth() * f.getxCenter()) - radius / 2, canvas.getHeight() * 0.885 - (radius * (f.getNoCounters())), radius, radius);
-                        if(from < 13) {
-                            gc.fillOval((canvas.getWidth() * f.getxCenter()) - radius / 2, canvas.getHeight() * 0.885 - (radius * (f.getNoCounters())), radius, radius);
-                       //     f.addToSpike();
+
+
+                        /*
+                        Initial entry to command panel indicates the spike you want to move the counter from. The next time entered indicates
+                        the spike you want to move the counter too.
+                        */
+                        if(assignFrom == true) {
+                            infoPanel.appendText("\nFROM: ");
+                            from = Integer.parseInt(commandPanel.getText());
+                            f = board.getSpike()[from - 1];
+                            assignFrom = false;
+
                         }
-                        else {
-                            gc.fillOval((canvas.getWidth() * f.getxCenter()) - radius / 2, canvas.getHeight() * 0.05 + (radius * f.getNoCounters()), radius, radius);
-                       //     f.addToSpike();
+                        else if (assignFrom == false){
+
+                            infoPanel.appendText("\nTO: ");
+                            to = Integer.parseInt(commandPanel.getText());
+                            t = board.getSpike()[to - 1];
+                            assignFrom = true;
+
+                            if(f.getSizeOfSpike() > 0){
+                                if(from < 13) {
+                                    gc.clearRect((canvas.getWidth() * f.getxCenter()) - radius / 2, canvas.getHeight() * 0.885 - (radius * (f.getSizeOfSpike() -1)), radius, radius);
+                                    gc.fillOval((canvas.getWidth() * t.getxCenter()) - radius / 2, canvas.getHeight() * 0.885 - (radius * (t.getSizeOfSpike())), radius, radius);
+
+                                    t.addToSpike(f.removeFromSpike());
+
+                                }
+                                else {
+                                    gc.clearRect((canvas.getWidth() * f.getxCenter()) - radius / 2, canvas.getHeight() * 0.05 + (radius * f.getSizeOfSpike() - 1), radius, radius);
+                                    gc.fillOval((canvas.getWidth() * f.getxCenter()) - radius / 2, canvas.getHeight() * 0.05 + (radius * f.getSizeOfSpike()), radius, radius);
+                                    t.addToSpike(f.removeFromSpike());
+                                }
+                            }
                         }
-                        System.out.println(from);
+                        //draw(canvas);
+
+
+                        infoPanel.appendText("\n" + commandPanel.getText());
+                        System.out.println("The Size of Spike " + from + " is " + f.getSizeOfSpike());
+
                     }
+
 
                     commandPanel.clear();
                 }

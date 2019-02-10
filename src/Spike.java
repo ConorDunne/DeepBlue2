@@ -97,8 +97,16 @@ public class Spike {
         stack.push(c);
     }
 
+    public Counter topOfSpike(){
+        return stack.peek();
+    }
+
     public Counter removeFromSpike() {
         return stack.pop();
+    }
+
+    public int getSizeOfSpike(){
+        return stack.size();
     }
 
     public int getNumber(){ return this.number; }
