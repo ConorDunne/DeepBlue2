@@ -99,46 +99,7 @@ public class BackgammonApplication extends Application {
 
                 //Inserts text to the information panel after the user presses enter
                 if (e.getCode() == KeyCode.ENTER) {
-
-                    //Exit the program if the user enters 'quit'
-                    if (commandPanel.getText().equals("quit")) {
-                        System.exit(0);
-                    }
-                    else if(commandPanel.getText().matches("([1-9]|1[0-9]|2[0-4])")){
-                        /*
-                        Initial entry to command panel indicates the spike you want to move the counter from. The next time entered indicates
-                        the spike you want to move the counter too.
-                        */
-                        if(assignFrom == true) {
-                            infoPanel.appendText("FROM: ");
-                            from = Integer.parseInt(commandPanel.getText());
-                            f = board.getSpike()[from - 1];
-
-                            System.out.println("The Size of Spike " + from + " is " + f.getSizeOfSpike());
-
-                            assignFrom = false;
-                        }
-                        else if (assignFrom == false){
-
-                            infoPanel.appendText("TO: ");
-                            to = Integer.parseInt(commandPanel.getText());
-                            t = board.getSpike()[to - 1];
-
-                            System.out.println("The Size of Spike " + to + " is " + t.getSizeOfSpike());
-
-                            assignFrom = true;
-
-                            if(f.getSizeOfSpike() > 0){
-                                t.addToSpike(f.removeFromSpike());
-
-                                board.drawBoard(gc, canvas.getWidth(), canvas.getHeight());
-                                board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());
-                            }
-                        }
-
-
-                    }
-                    infoPanel.appendText(commandPanel.getText() + "\n");
+                    command(commandPanel.getText());
                     commandPanel.clear();
                 }
             }
@@ -156,6 +117,32 @@ public class BackgammonApplication extends Application {
 
         board.drawBoard(gc, canvas.getWidth(), canvas.getHeight());             //  Draws the Board
         board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());    //  Draws the counters
+    }
+
+    private void command(String s) {
+        if (s.equals("quit")) {
+            System.exit(0);
+        } else if (s.matches("move")) {
+            infoPanel.appendText("\n > move [from] [destination]");
+        } else if (s.startsWith("move")) {
+            String[] arg = s.split(" ");
+            int from = Integer.parseInt(arg[1]);
+            int dest = Integer.parseInt(arg[2]);
+
+            f = board.getSpike()[from-1];
+            t = board.getSpike()[dest-1];
+
+            if (f.getSizeOfSpike() > 0) {
+                t.addToSpike(f.removeFromSpike());
+
+                board.drawBoard(gc, canvas.getWidth(), canvas.getHeight());
+                board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());
+            }
+        }
+
+        commandPanel.clear();
+        infoPanel.appendText("\n" + commandPanel.getText());
+        System.out.println("The Size of Spike " + from + " is " + f.getSizeOfSpike());
     }
 
     //CALLED WHENEVER WE START MAIN JAVA PROGRAM
