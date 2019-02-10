@@ -22,7 +22,6 @@ public class Board {
     private Counter[] playerOne;
     private Counter[] playerTwo;
 
-
     public Board(GraphicsContext gc, double width, double height) {
         setColors();
 

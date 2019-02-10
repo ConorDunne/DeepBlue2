@@ -13,7 +13,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-
 public class BackgammonApplication extends Application {
 
     private Button exportBtn;
@@ -22,17 +21,14 @@ public class BackgammonApplication extends Application {
     private TextField commandPanel;
 
     private Board board;
-    private Spike spike;
-    private Counter counter;
 
     private GraphicsContext gc;
     private Canvas canvas;
 
+    //Used for moving the counters
     private boolean assignFrom = true;
     private int from, to;
     private Spike f, t;
-
-
 
     @Override
     public void start(Stage stage) {
@@ -56,17 +52,11 @@ public class BackgammonApplication extends Application {
         canvas.widthProperty().bind(wrapperPane.widthProperty());
         canvas.heightProperty().bind(wrapperPane.heightProperty());
 
-        //Uses lambda expressions to call draw() everytime the window is resized
+        //Uses lambda expressions to call draw() every time the window is resized
         canvas.widthProperty().addListener(event -> draw(canvas));
         canvas.heightProperty().addListener(event -> draw(canvas));
 
         stage.show();
-        System.out.println("Stage Height: " + stage.getHeight() + "Stage Width: " + stage.getWidth()
-                + "\n" + "Border Height: " + border.getHeight() + "Border Width: " + border.getWidth()
-                + "\n" + "Command Panel Height: " + commandPanel.getHeight() + "Command Panel Width: " + commandPanel.getWidth()
-                + "\n" + "InfoPanel Height: " + infoPanel.getHeight() + "InfoPanel Height: " + infoPanel.getWidth()
-                + "\n" + "Button Height: " + exportBtn.getHeight() + "Button Width: " + exportBtn.getWidth()
-        );
 
     }
 
@@ -90,7 +80,7 @@ public class BackgammonApplication extends Application {
     public VBox addVBox() {
 
         VBox vbox = new VBox();
-        infoPanel = new TextArea("Welcome to Backgammon");
+        infoPanel = new TextArea("Welcome to Backgammon\n");
         scorePanel = new TextArea("SCORE: ");
 
         VBox.setVgrow(infoPanel, Priority.ALWAYS);
@@ -114,27 +104,28 @@ public class BackgammonApplication extends Application {
                     if (commandPanel.getText().equals("quit")) {
                         System.exit(0);
                     }
-                    else if(commandPanel.getText().matches("[1-9]") || (commandPanel.getText().matches("[1-9][0-9]"))){
-                        double radius = canvas.getHeight()*0.065;
-
-
-
+                    else if(commandPanel.getText().matches("([1-9]|1[0-9]|2[0-4])")){
                         /*
                         Initial entry to command panel indicates the spike you want to move the counter from. The next time entered indicates
                         the spike you want to move the counter too.
                         */
                         if(assignFrom == true) {
-                            infoPanel.appendText("\nFROM: ");
+                            infoPanel.appendText("FROM: ");
                             from = Integer.parseInt(commandPanel.getText());
                             f = board.getSpike()[from - 1];
-                            assignFrom = false;
 
+                            System.out.println("The Size of Spike " + from + " is " + f.getSizeOfSpike());
+
+                            assignFrom = false;
                         }
                         else if (assignFrom == false){
 
-                            infoPanel.appendText("\nTO: ");
+                            infoPanel.appendText("TO: ");
                             to = Integer.parseInt(commandPanel.getText());
                             t = board.getSpike()[to - 1];
+
+                            System.out.println("The Size of Spike " + to + " is " + t.getSizeOfSpike());
+
                             assignFrom = true;
 
                             if(f.getSizeOfSpike() > 0){
@@ -144,15 +135,10 @@ public class BackgammonApplication extends Application {
                                 board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());
                             }
                         }
-                        //draw(canvas);
 
-
-                        infoPanel.appendText("\n" + commandPanel.getText());
-                        System.out.println("The Size of Spike " + from + " is " + f.getSizeOfSpike());
 
                     }
-
-
+                    infoPanel.appendText(commandPanel.getText() + "\n");
                     commandPanel.clear();
                 }
             }
@@ -163,7 +149,7 @@ public class BackgammonApplication extends Application {
         return vbox;
     }
 
-    //TODO DRAW GAME BOARD
+    //Redraws the updated game board
     private void draw(Canvas canvas) {
         gc = canvas.getGraphicsContext2D();
         board = new Board(gc, canvas.getWidth(), canvas.getHeight());           //  Initialises Board and Counters
@@ -176,5 +162,4 @@ public class BackgammonApplication extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
 }
