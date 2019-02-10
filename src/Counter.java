@@ -61,7 +61,7 @@ public class Counter {
 
     public void drawChecker(GraphicsContext gc, double width, double height) {
         double radius = height*0.065;
-        gc.setFill(colour);
+        gc.setFill(this.colour);
 
         if(spikeLocation < 13)
             gc.fillOval((width*xCenter) - radius/2, height*0.885 - (radius*getCounterNum()), radius, radius);

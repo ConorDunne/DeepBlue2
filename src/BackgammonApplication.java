@@ -138,18 +138,10 @@ public class BackgammonApplication extends Application {
                             assignFrom = true;
 
                             if(f.getSizeOfSpike() > 0){
-                                if(from < 13) {
-                                    gc.clearRect((canvas.getWidth() * f.getxCenter()) - radius / 2, canvas.getHeight() * 0.885 - (radius * (f.getSizeOfSpike() -1)), radius, radius);
-                                    gc.fillOval((canvas.getWidth() * t.getxCenter()) - radius / 2, canvas.getHeight() * 0.885 - (radius * (t.getSizeOfSpike())), radius, radius);
+                                t.addToSpike(f.removeFromSpike());
 
-                                    t.addToSpike(f.removeFromSpike());
-
-                                }
-                                else {
-                                    gc.clearRect((canvas.getWidth() * f.getxCenter()) - radius / 2, canvas.getHeight() * 0.05 + (radius * f.getSizeOfSpike() - 1), radius, radius);
-                                    gc.fillOval((canvas.getWidth() * f.getxCenter()) - radius / 2, canvas.getHeight() * 0.05 + (radius * f.getSizeOfSpike()), radius, radius);
-                                    t.addToSpike(f.removeFromSpike());
-                                }
+                                board.drawBoard(gc, canvas.getWidth(), canvas.getHeight());
+                                board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());
                             }
                         }
                         //draw(canvas);
