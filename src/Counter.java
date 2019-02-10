@@ -51,11 +51,19 @@ public class Counter {
         this.xCenter = x;
     }
 
+    public void setSpike(int x) {
+        this.spikeLocation = x;
+    }
+
+    public void setCounterNum(int x) {
+        CounterNum = x;
+    }
+
     public void drawChecker(GraphicsContext gc, double width, double height) {
         double radius = height*0.065;
         gc.setFill(colour);
 
-        if(spikeLocation < 12)
+        if(spikeLocation < 13)
             gc.fillOval((width*xCenter) - radius/2, height*0.885 - (radius*getCounterNum()), radius, radius);
         else
             gc.fillOval((width*xCenter) - radius/2, height*0.05 + (radius*getCounterNum()), radius, radius);

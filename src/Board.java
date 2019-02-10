@@ -52,7 +52,7 @@ public class Board {
     private Color getLogoDiamond() {return logoDiamond;}
     private Color getLogoText() {return logoText;}
 
-    private void drawBoard(GraphicsContext gc, double width, double height) {
+    public void drawBoard(GraphicsContext gc, double width, double height) {
         background(gc, width, height);
         squares(gc, width, height);
         bearOff(gc, width, height);

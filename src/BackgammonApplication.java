@@ -140,8 +140,10 @@ public class BackgammonApplication extends Application {
     //TODO DRAW GAME BOARD
     private void draw(Canvas canvas) {
         gc = canvas.getGraphicsContext2D();
-        board = new Board(gc, canvas.getWidth(), canvas.getHeight()); //Draws the board
-        board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());
+        board = new Board(gc, canvas.getWidth(), canvas.getHeight());           //  Initialises Board and Counters
+
+        board.drawBoard(gc, canvas.getWidth(), canvas.getHeight());             //  Draws the Board
+        board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());    //  Draws the counters
     }
 
     //CALLED WHENEVER WE START MAIN JAVA PROGRAM
