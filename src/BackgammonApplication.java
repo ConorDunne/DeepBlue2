@@ -129,19 +129,23 @@ public class BackgammonApplication extends Application {
             int from = Integer.parseInt(arg[1]);
             int dest = Integer.parseInt(arg[2]);
 
-            f = board.getSpike()[from-1];
-            t = board.getSpike()[dest-1];
+            if(from < 1 || from > 24 || dest < 1 || dest > 24) {
+                infoPanel.appendText("\n" + "Move Value out of bounds. No Corresponding Spike");
+            } else {
+                f = board.getSpike()[from - 1];
+                t = board.getSpike()[dest - 1];
 
-            if (f.getSizeOfSpike() > 0) {
-                t.addToSpike(f.removeFromSpike());
+                if (f.getSizeOfSpike() > 0) {
+                    t.addToSpike(f.removeFromSpike());
 
-                board.drawBoard(gc, canvas.getWidth(), canvas.getHeight());
-                board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());
+                    board.drawBoard(gc, canvas.getWidth(), canvas.getHeight());
+                    board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());
+                }
             }
         }
 
         commandPanel.clear();
-        infoPanel.appendText("\n" + commandPanel.getText());
+        infoPanel.appendText("\n" + s);
         System.out.println("The Size of Spike " + from + " is " + f.getSizeOfSpike());
     }
 
