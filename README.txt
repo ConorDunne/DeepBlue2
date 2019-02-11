@@ -2,7 +2,7 @@ Deep Blue Backgammon
 
 Team Members
     17379526    Conor Dunne
-    ########    Martynas Jagutis
+    17424866    Martynas Jagutis
     17379773    Ronan Mascarenhas
 
 To Do

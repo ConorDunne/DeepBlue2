@@ -1,3 +1,8 @@
+/*
+    17379526    Conor Dunne
+    17424866    Martynas Jagutis
+    17379773    Ronan Mascarenhas
+*/
 package src;
 
 import javafx.geometry.Pos;
