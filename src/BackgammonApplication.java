@@ -4,6 +4,7 @@
     17379773    Ronan Mascarenhas
 */
 
+
 package src;
 
 import javafx.application.Application;
@@ -79,11 +80,11 @@ public class BackgammonApplication extends Application {
             int from = Integer.parseInt(arg[1]);
             int dest = Integer.parseInt(arg[2]);
 
-            if(from < 1 || from > 24 || dest < 1 || dest > 24) {
+          if(from < 0 || from > 26 || dest < 0 || dest > 26) {
                 infoPanel.getInfoPanel().appendText("\n" + "Move Value out of bounds. No Corresponding Spike");
             } else {
-                f = board.getSpike()[from - 1];
-                t = board.getSpike()[dest - 1];
+                f = board.getSpike()[from];
+                t = board.getSpike()[dest];
 
                 if (f.getSizeOfSpike() > 0) {
                     t.addToSpike(f.removeFromSpike());

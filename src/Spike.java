@@ -15,6 +15,7 @@ import java.util.Stack;
 //java file containing the spike class
 public class Spike {
     private int number;                     //  The spike number to be printed below the spike
+    private int numberRev;                  //  The spike number to be printed below the spike (Player 2)
     private int lm;                         //  Location Multiplier (to find position)
     private double xCenter;                 //  Center of the spike
     private double xChange = 0.325/12;      //  To find the edges of the Triangle
@@ -23,8 +24,9 @@ public class Spike {
 
     Stack<Counter> stack = new Stack<>();
 
-    public Spike(int number, int LM) {
+    public Spike(int number, int numberRev, int LM) {
         this.number = number;
+        this.numberRev = numberRev;
         this.lm = LM;
 
         if(number > 12) {
@@ -42,40 +44,31 @@ public class Spike {
             xCenter = 0.475 + ((0.325/6) * LM) + xChange;
     }
 
+    public Spike(int number, double xCenter) {
+        this.xCenter = xCenter;
+        this.number = number;
+        this.numberRev = number;
+    }
+
     public static void initSpike(Spike[] spike) {
-//  Initialize Object Array (Player 2)
-        spike[0] = new Spike(1, 5);
-        spike[2] = new Spike(3, 3);
-        spike[4] = new Spike(5, 1);
+//  Initialize spikes
+        for(int i=1; i<7; i++) {
+            spike[i] = new Spike(i, 25-i, 6-i);
+        }
+        for(int i=7; i<13; i++) {
+            spike[i] = new Spike(i, 25-i, 12-i);
+        }
+        for(int i=13; i<19; i++) {
+            spike[i] = new Spike(i, 25-i, i-13);
+        }
+        for(int i=19; i<25; i++) {
+            spike[i] = new Spike(i, i-25, i-19);
+        }
 
-        spike[6] = new Spike(7, 5);
-        spike[8] = new Spike(9, 3);
-        spike[10] = new Spike(11, 1);
-
-        spike[12] = new Spike(13, 0);
-        spike[14] = new Spike(15, 2);
-        spike[16] = new Spike(17, 4);
-
-        spike[18] = new Spike(19, 0);
-        spike[20] = new Spike(21, 2);
-        spike[22] = new Spike(23, 4);
-
-//  Initialize Object Array (Player 1)
-        spike[1] = new Spike(2, 4);
-        spike[3] = new Spike(4, 2);
-        spike[5] = new Spike(6, 0);
-
-        spike[7] = new Spike(8, 4);
-        spike[9] = new Spike(10, 2);
-        spike[11] = new Spike(12, 0);
-
-        spike[13] = new Spike(14, 1);
-        spike[15] = new Spike(16, 3);
-        spike[17] = new Spike(18, 5);
-
-        spike[19] = new Spike(20, 1);
-        spike[21] = new Spike(22, 3);
-        spike[23] = new Spike(24, 5);
+//  Initialize Special Positions
+        spike[0] = new Spike(1, 0.42);          //  Knocked out checkers
+        spike[25] = new Spike(25, 0.875);       //  Bear-Off 1
+        spike[26] = new Spike(26, 0.875);       //  Bear-Off 2
     }
 
     public void drawSpike(GraphicsContext gc, double width, double height) {
@@ -87,11 +80,17 @@ public class Spike {
             gc.setTextAlign(TextAlignment.CENTER);
             gc.setTextBaseline(VPos.CENTER);
             gc.setFont(Font.font (10));
-
-            if(number < 13)
-                gc.fillText(Integer.toString(number), width*xCenter, height*(yBase+0.025));
-            else
-                gc.fillText(Integer.toString(number), width*xCenter, height*(yBase-0.025));
+            if(true) {
+                if (number < 13)
+                    gc.fillText(Integer.toString(number), width * xCenter, height * (yBase + 0.025));
+                else
+                    gc.fillText(Integer.toString(number), width * xCenter, height * (yBase - 0.025));
+            } else {
+                if (numberRev > 13)
+                    gc.fillText(Integer.toString(number), width * xCenter, height * (yBase + 0.025));
+                else
+                    gc.fillText(Integer.toString(number), width * xCenter, height * (yBase - 0.025));
+            }
     }
 
     public void addToSpike(Counter c) {
@@ -105,21 +104,16 @@ public class Spike {
     public Counter topOfSpike(){
         return stack.peek();
     }
-
     public Counter removeFromSpike() {
         return stack.pop();
     }
-
     public int getSizeOfSpike(){
         return stack.size();
     }
-
     public int getNumber(){ return this.number; }
     public int getLm() {return this.lm; }
     public double getxCenter() { return xCenter; }
     public double getxChange() { return xChange; }
     public double getyBase() { return yBase; }
     public double getyPoint() { return yPoint; }
-
-    public int getNoCounters() {return stack.size(); }
 }

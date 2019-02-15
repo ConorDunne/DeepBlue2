@@ -30,7 +30,7 @@ public class Board {
     public Board(GraphicsContext gc, double width, double height) {
         setColors();
 
-        spike = new Spike[24];
+        spike = new Spike[27];
         Spike.initSpike(spike);
 
         playerOne = new Counter[15];
@@ -98,7 +98,7 @@ public class Board {
 
 //  Method for drawing the spikes (Triangles)
     public void spikes(GraphicsContext gc, double width, double height) {
-        for(int i=0; i<24; i++){
+        for(int i=1; i<25; i++){
             if(i%2 == 0)
                 gc.setFill(getTrianglesPlayerTwo());
             else
@@ -145,20 +145,20 @@ public class Board {
     public void initSpikeCounters() {
         for (int i = 0; i < 15; i++) {
             if (i < 2) {
-                spike[0].addToSpike(playerOne[i]);
-                spike[23].addToSpike(playerTwo[i]);
+                spike[1].addToSpike(playerOne[i]);
+                spike[24].addToSpike(playerTwo[i]);
             }
             else if (i < 7) {
-                spike[11].addToSpike(playerOne[i]);
-                spike[12].addToSpike(playerTwo[i]);
+                spike[12].addToSpike(playerOne[i]);
+                spike[13].addToSpike(playerTwo[i]);
             }
             else if (i < 10) {
-                spike[16].addToSpike(playerOne[i]);
-                spike[7].addToSpike(playerTwo[i]);
+                spike[17].addToSpike(playerOne[i]);
+                spike[8].addToSpike(playerTwo[i]);
             }
             else {
-                spike[18].addToSpike(playerOne[i]);
-                spike[5].addToSpike(playerTwo[i]);
+                spike[19].addToSpike(playerOne[i]);
+                spike[6].addToSpike(playerTwo[i]);
             }
         }
     }
