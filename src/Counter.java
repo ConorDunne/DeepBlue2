@@ -29,25 +29,25 @@ public class Counter {
         if(t) {
             for (int i = 0; i < 15; i++) {
                 if (i < 2)
-                    c[i] = new Counter(0, loc[0], i, c1);
+                    c[i] = new Counter(1, loc[0], i, c1);
                 else if (i < 7)
-                    c[i] = new Counter(11, loc[1], i-2, c1);
+                    c[i] = new Counter(12, loc[1], i-2, c1);
                 else if (i < 10)
-                    c[i] = new Counter(16, loc[2], i-7, c1);
+                    c[i] = new Counter(17, loc[2], i-7, c1);
                 else
-                    c[i] = new Counter(18, loc[3], i-10, c1);
+                    c[i] = new Counter(19, loc[3], i-10, c1);
             }
         }
         else {
             for (int i = 0; i < 15; i++) {
                 if (i < 2)
-                    c[i] = new Counter(23, loc[0], i, c1);
+                    c[i] = new Counter(24, loc[0], i, c1);
                 else if (i < 7)
-                    c[i] = new Counter(12, loc[1], i-2, c1);
+                    c[i] = new Counter(13, loc[1], i-2, c1);
                 else if (i < 10)
-                    c[i] = new Counter(7, loc[2], i-7, c1);
+                    c[i] = new Counter(8, loc[2], i-7, c1);
                 else
-                    c[i] = new Counter(5, loc[3], i-10, c1);
+                    c[i] = new Counter(6, loc[3], i-10, c1);
             }
         }
     }
@@ -68,7 +68,16 @@ public class Counter {
         double radius = height*0.065;
         gc.setFill(this.colour);
 
-        if(spikeLocation < 13)
+        if(spikeLocation == 0) {
+            gc.fillOval((width*xCenter) - radius/2, height*0.885 - (radius*getCounterNum()), radius, radius);
+        }
+        else if(spikeLocation == 25) {
+            gc.fillRect((width*xCenter) - radius/2, height*0.4 - ((getCounterNum()+1)*height*(0.35/15)) , width*0.1, height*(0.35/15));
+        }
+        else if(spikeLocation == 26) {
+            gc.fillRect((width*xCenter) - radius/2, height*0.95 - ((getCounterNum()+1)*height*(0.35/15)) , width*0.1, height*(0.35/15));
+        }
+        else if(spikeLocation < 13)
             gc.fillOval((width*xCenter) - radius/2, height*0.885 - (radius*getCounterNum()), radius, radius);
         else
             gc.fillOval((width*xCenter) - radius/2, height*0.05 + (radius*getCounterNum()), radius, radius);
