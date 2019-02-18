@@ -10,29 +10,19 @@ import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Pair;
-
-import java.awt.*;
-import java.util.Optional;
 
 public class BackgammonApplication extends Application {
 
@@ -43,6 +33,8 @@ public class BackgammonApplication extends Application {
     private GraphicsContext gc;
     private Canvas canvas;
     private Spike f, t;
+    private Dice d1 = new Dice();
+    private Dice d2 = new Dice();
 
     private String playerOneName;
     private String playerTwoName;
@@ -93,6 +85,7 @@ public class BackgammonApplication extends Application {
     }
 
     private void command(String s) {
+        int rollOne = -1, rollTwo = -1;
 
         if (s.equals("quit")) {
             System.exit(0);
@@ -116,10 +109,18 @@ public class BackgammonApplication extends Application {
                     board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());
                 }
             }
+        } else if(s.equals("roll")){
+            rollOne = d1.rollDice(gc, canvas.getWidth(), canvas.getHeight(), 1);
+            rollTwo = d2.rollDice(gc, canvas.getWidth(), canvas.getHeight(), 2);
         }
 
         commandPanel.getCommandPanel().clear();
         infoPanel.getInfoPanel().appendText("\n" + s);
+        if (rollOne != -1 && rollTwo != 1) {
+            infoPanel.getInfoPanel().appendText(" " + rollOne + " " + rollTwo);
+            rollOne = -1;
+            rollTwo = -1;
+        }
     }
 
     public void enterUserNames(Stage mainStage) {
@@ -141,7 +142,7 @@ public class BackgammonApplication extends Application {
         Scene dialogScene = new Scene(pane, 500,200);
         dialog.setScene(dialogScene);
 
-        BackgroundImage image = new BackgroundImage(new Image("src/backgammon.jpg", dialogScene.getWidth(),dialogScene.getHeight(),false,true),
+        BackgroundImage image = new BackgroundImage(new Image("src/Resources/backgammon.jpg", dialogScene.getWidth(),dialogScene.getHeight(),false,true),
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
 
