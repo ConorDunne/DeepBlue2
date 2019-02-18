@@ -65,20 +65,20 @@ public class Counter {
     }
 
     public void drawChecker(GraphicsContext gc, double width, double height) {
-        double radius = height*0.065;
+        double radius = width*0.045;
         gc.setFill(this.colour);
 
         if(spikeLocation == 0) {
-            gc.fillOval((width*xCenter) - radius/2, height*0.885 - (radius*getCounterNum()), radius, radius);
+            gc.fillOval((width*xCenter) - radius/2, height*0.9 - (radius*getCounterNum()), radius, radius);
         }
         else if(spikeLocation == 25) {
-            gc.fillRect((width*xCenter) - radius/2, height*0.4 - ((getCounterNum()+1)*height*(0.35/15)) , width*0.1, height*(0.35/15));
+            gc.fillRect((width*xCenter) - radius/2, height*0.4 - ((getCounterNum()+1)*height*(0.35/15)) , radius, height*(0.35/15));
         }
         else if(spikeLocation == 26) {
-            gc.fillRect((width*xCenter) - radius/2, height*0.95 - ((getCounterNum()+1)*height*(0.35/15)) , width*0.1, height*(0.35/15));
+            gc.fillRect((width*xCenter) - radius/2, height*0.95 - ((getCounterNum()+1)*height*(0.35/15)) , radius, height*(0.35/15));
         }
         else if(spikeLocation < 13)
-            gc.fillOval((width*xCenter) - radius/2, height*0.885 - (radius*getCounterNum()), radius, radius);
+            gc.fillOval((width*xCenter) - radius/2, height*0.89 - (radius*getCounterNum()), radius, radius);
         else
             gc.fillOval((width*xCenter) - radius/2, height*0.05 + (radius*getCounterNum()), radius, radius);
 

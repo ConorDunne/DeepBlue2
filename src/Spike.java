@@ -18,7 +18,7 @@ public class Spike {
     private int numberRev;                  //  The spike number to be printed below the spike (Player 2)
     private int lm;                         //  Location Multiplier (to find position)
     private double xCenter;                 //  Center of the spike
-    private double xChange = 0.325/12;      //  To find the edges of the Triangle
+    private double xChange = 0.3645/12;      //  To find the edges of the Triangle
     private double yBase;                   //  Y-Coordinant for base of triangle
     private double yPoint;                  //  The increase or decrease of the Y Coordinant for the point
 
@@ -39,9 +39,9 @@ public class Spike {
         }
 
         if(number > 6 && number < 19)
-            xCenter = 0.05 + ((0.325/6) * LM) + xChange;
+            xCenter = 0.05 + ((0.3645/6) * LM) + xChange;
         else
-            xCenter = 0.475 + ((0.325/6) * LM) + xChange;
+            xCenter = 0.4895 + ((0.3645/6) * LM) + xChange;
     }
 
     public Spike(int number, double xCenter) {
@@ -67,8 +67,8 @@ public class Spike {
 
 //  Initialize Special Positions
         spike[0] = new Spike(1, 0.42);          //  Knocked out checkers
-        spike[25] = new Spike(25, 0.875);       //  Bear-Off 1
-        spike[26] = new Spike(26, 0.875);       //  Bear-Off 2
+        spike[25] = new Spike(25, 0.9275);       //  Bear-Off 1
+        spike[26] = new Spike(26, 0.9275);       //  Bear-Off 2
     }
 
     public void drawSpike(GraphicsContext gc, double width, double height) {

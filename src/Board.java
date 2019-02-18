@@ -85,15 +85,15 @@ public class Board {
 //  Method for drawing gaming square areas
     public void squares(GraphicsContext gc, double width, double height) {
         gc.setFill(getGamingSquares());
-            gc.fillRect(width*0.05, height*0.05, width*0.325, height*0.9);
-            gc.fillRect(width*0.475, height*0.05, width*0.325, height*0.9);
+            gc.fillRect(width*0.05, height*0.05, width*0.3645, height*0.9);
+            gc.fillRect(width*0.4895, height*0.05, width*0.3645, height*0.9);
     }
 
 //  Method for drawing bear off areas
     public void bearOff(GraphicsContext gc, double width, double height) {
         gc.setFill(getBearOffArea());
-            gc.fillRect(width*0.85, height*0.05, width*0.1, height*0.35);
-            gc.fillRect(width*0.85, height*0.6, width*0.1, height*0.35);
+            gc.fillRect(width*0.905, height*0.05, width*0.045, height*0.35);
+            gc.fillRect(width*0.905, height*0.6, width*0.045, height*0.35);
     }
 
 //  Method for drawing the spikes (Triangles)
@@ -119,18 +119,18 @@ public class Board {
 //  Method for drawing the board logo
     public void logo(GraphicsContext gc, double width, double height) {
         gc.setFill(getLogoDiamond());
-        gc.fillPolygon( new double[]{width*0.2125, width*0.05, width*0.2125, width*0.375},
+        gc.fillPolygon( new double[]{width*((6*0.3645/12)+0.05), width*((0.3645/12)+0.05), width*((6*0.3645/12)+0.05), width*((11*0.3645/12)+0.05)},
                 new double[]{height*0.4, height*0.5, height*0.6, height*0.5},
                 4);
-        gc.fillPolygon( new double[]{width*0.6375, width*0.475, width*0.6375, width*0.8},
+        gc.fillPolygon( new double[]{width*((6*0.3645/12)+0.4895), width*((0.3645/12)+0.4895), width*((6*0.3645/12)+0.4895), width*((11*0.3645/12)+0.4895)},
                 new double[]{height*0.4, height*0.5, height*0.6, height*0.5},
                 4);
 
         gc.setFill(getGamingSquares());
-        gc.fillPolygon( new double[]{width*0.2125, width*0.1, width*0.2125, width*0.325},
+        gc.fillPolygon( new double[]{width*((6*0.3645/12)+0.05), width*((3*0.3645/12)+0.05), width*((6*0.3645/12)+0.05), width*((9*0.3645/12)+0.05)},
                 new double[]{height*0.4, height*0.5, height*0.6, height*0.5},
                 4);
-        gc.fillPolygon( new double[]{width*0.6375, width*0.525, width*0.6375, width*0.75},
+        gc.fillPolygon(new double[]{width*((6*0.3645/12)+0.4895), width*((3*0.3645/12)+0.4895), width*((6*0.3645/12)+0.4895), width*((9*0.3645/12)+0.4895)},
                 new double[]{height*0.4, height*0.5, height*0.6, height*0.5},
                 4);
 
@@ -138,8 +138,8 @@ public class Board {
         gc.setTextAlign(TextAlignment.CENTER);
         gc.setTextBaseline(VPos.CENTER);
         gc.setFont(Font.font (60));
-        gc.fillText("DB2", width*0.2125, height*0.5, width*0.325);
-        gc.fillText("DB2", width*0.6375, height*0.5, width*0.325);
+        gc.fillText("DB2", width*((6*0.3645/12)+0.05), height*0.5, width*0.325);
+        gc.fillText("DB2", width*((6*0.3645/12)+0.4895), height*0.5, width*0.325);
     }
 
     public void initSpikeCounters() {

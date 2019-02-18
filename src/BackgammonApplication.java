@@ -103,7 +103,7 @@ public class BackgammonApplication extends Application {
             int from = Integer.parseInt(arg[1]);
             int dest = Integer.parseInt(arg[2]);
 
-            if(from < 0 || from > 24 || dest < 0 || dest > 24) {
+            if(from < 0 || from > 26 || dest < 0 || dest > 26) {
                 infoPanel.getInfoPanel().appendText("\n" + "Move Value out of bounds. No Corresponding Spike");
             } else {
                 f = board.getSpike()[from ];
@@ -141,7 +141,7 @@ public class BackgammonApplication extends Application {
         Scene dialogScene = new Scene(pane, 500,200);
         dialog.setScene(dialogScene);
 
-        BackgroundImage image = new BackgroundImage(new Image("\\src\\backgammon.jpg", dialogScene.getWidth(),dialogScene.getHeight(),false,true),
+        BackgroundImage image = new BackgroundImage(new Image("src/backgammon.jpg", dialogScene.getWidth(),dialogScene.getHeight(),false,true),
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
 
@@ -192,6 +192,7 @@ public class BackgammonApplication extends Application {
 
                 System.out.println("Player One Name: " + playerOneName);
                 System.out.println("Player Two Name: " + playerTwoName);
+
 
                 infoPanel.getInfoPanel().appendText("Player 1: " + playerOneName + "\n");
                 infoPanel.getInfoPanel().appendText("Player 2: " + playerTwoName + "\n");
