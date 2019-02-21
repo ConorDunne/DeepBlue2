@@ -6,6 +6,7 @@ import javafx.scene.layout.VBox;
 
 public class InformationPanel {
 
+
     private TextArea infoPanel;
     private TextArea scorePanel;
 
@@ -31,6 +32,10 @@ public class InformationPanel {
         vbox.getChildren().addAll(scorePanel, infoPanel);
 
         return vbox;
+    }
+    public void addPlayerInfo(Player pOne, Player pTwo){
+        infoPanel.appendText("Player 1: " + pOne.toString() + "Blue\n");
+        infoPanel.appendText("Player 2: " + pTwo.toString() + "Red\n");
     }
 
     public TextArea getInfoPanel() { return infoPanel; }
