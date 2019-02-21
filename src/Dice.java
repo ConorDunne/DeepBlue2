@@ -1,5 +1,4 @@
 package src;
-import com.sun.corba.se.impl.orbutil.graph.Graph;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
@@ -57,7 +56,7 @@ public class Dice {
 
     private static void wait(int time) {
         try {
-            Thread.sleep((int) (time * 10));
+            Thread.sleep((time * 10));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

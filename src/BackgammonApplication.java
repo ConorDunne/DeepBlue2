@@ -21,6 +21,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -28,6 +29,9 @@ public class BackgammonApplication extends Application {
 
     CommandPanel commandPanel = new CommandPanel();
     InformationPanel infoPanel = new InformationPanel();
+    StartMenu startMenu = new StartMenu();
+
+
 
     private Board board;
     private GraphicsContext gc;
@@ -38,6 +42,9 @@ public class BackgammonApplication extends Application {
 
     private String playerOneName;
     private String playerTwoName;
+
+    private Player playerOne;
+    private Player playerTwo;
 
     @Override
     public void start(Stage stage) {
@@ -80,7 +87,28 @@ public class BackgammonApplication extends Application {
         });
 
         stage.show();
-        enterUserNames(stage);
+        startMenu.enterUserNames(stage);
+
+        //When user presses enter the names in the textfields are put into variables and are displayed in information panel
+        startMenu.getEnterButton().setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+                playerOneName = startMenu.getPlayerOneTextField().getText();
+                playerTwoName = startMenu.getPlayerTwoTextField().getText();
+
+                System.out.println("Player One Name: " + playerOneName);
+                System.out.println("Player Two Name: " + playerTwoName);
+
+
+                playerOne = new Player(playerOneName, Color.BLUE);
+                playerTwo = new Player(playerTwoName, Color.RED);
+                infoPanel.addPlayerInfo(playerOne,playerTwo);
+                startMenu.getDialog().close();
+            }
+        });
+
+
 
     }
 
@@ -123,85 +151,8 @@ public class BackgammonApplication extends Application {
         }
     }
 
-    public void enterUserNames(Stage mainStage) {
-
-        final double INPUT_FIELD_WIDTH = 150;
-
-        VBox vBox = new VBox();
-        HBox playerOneHBox = new HBox();
-        HBox playerTwoHBox = new HBox();
-        HBox buttonHBox = new HBox();
-
-        final Stage dialog = new Stage();
-        dialog.initModality(Modality.APPLICATION_MODAL);
-        dialog.initOwner(mainStage);
-        dialog.setTitle("ENTER PLAYER NAMES");
 
 
-        BorderPane pane = new BorderPane();
-        Scene dialogScene = new Scene(pane, 500,200);
-        dialog.setScene(dialogScene);
-
-        BackgroundImage image = new BackgroundImage(new Image("src/Resources/backgammon.jpg", dialogScene.getWidth(),dialogScene.getHeight(),false,true),
-                BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
-                BackgroundSize.DEFAULT);
-
-
-        pane.setPadding(new Insets(10,10,10,10));
-
-        Button enterButton = new Button("Enter");
-
-        vBox.setSpacing(10);
-
-        //Setting where different elements are positioned
-        playerOneHBox.setAlignment(Pos.CENTER);
-        playerTwoHBox.setAlignment(Pos.CENTER);
-        buttonHBox.setAlignment(Pos.BOTTOM_CENTER);
-
-        //Creation of input fields
-        TextField playerOneTextField = new TextField();
-        playerOneTextField.setPromptText("Enter Player One Name");
-        TextField playerTwoTextField = new TextField();
-        playerTwoTextField.setPromptText("Enter Player Two Name");
-
-        //Setting widths
-        playerOneTextField.setPrefWidth(INPUT_FIELD_WIDTH);
-        playerTwoTextField.setPrefWidth(INPUT_FIELD_WIDTH);
-        enterButton.setPrefWidth(INPUT_FIELD_WIDTH);
-
-        //Adding components to border pane
-        pane.setCenter(vBox);
-        pane.setBottom(buttonHBox);
-
-        //Layout is composes of HBoxes inside a VBox in the center and button is in the bottom section seperately
-        playerOneHBox.getChildren().addAll(new Label("Player 1 Name: "), playerOneTextField);
-        playerTwoHBox.getChildren().addAll(new Label("Player 2 Name: "), playerTwoTextField);
-        buttonHBox.getChildren().add(enterButton);
-        vBox.getChildren().addAll(playerOneHBox, playerTwoHBox);
-
-        pane.setBackground(new Background(image));
-
-        dialog.show();
-
-        //When user presses enter the names in the textfields are put into variables and are displayed in information panel
-        enterButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                
-                playerOneName = playerOneTextField.getText();
-                playerTwoName = playerTwoTextField.getText();
-
-                System.out.println("Player One Name: " + playerOneName);
-                System.out.println("Player Two Name: " + playerTwoName);
-
-
-                infoPanel.getInfoPanel().appendText("Player 1: " + playerOneName + "\n");
-                infoPanel.getInfoPanel().appendText("Player 2: " + playerTwoName + "\n");
-                dialog.close();
-            }
-        });
-
-    }
 
     //Redraws the updated game board
     private void draw(Canvas canvas) {
