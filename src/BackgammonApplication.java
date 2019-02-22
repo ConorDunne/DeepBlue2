@@ -7,31 +7,19 @@
 package src;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class BackgammonApplication extends Application {
 
-    CommandPanel commandPanel = new CommandPanel();
-    InformationPanel infoPanel = new InformationPanel();
-    StartMenu startMenu = new StartMenu();
-
-
+    private CommandPanel commandPanel = new CommandPanel();
+    private InformationPanel infoPanel = new InformationPanel();
+    private StartMenu startMenu = new StartMenu();
 
     private Board board;
     private GraphicsContext gc;
@@ -74,47 +62,36 @@ public class BackgammonApplication extends Application {
         canvas.heightProperty().addListener(event -> draw(canvas));
 
         //Text entered in command panel is appended to the information panel
-        commandPanel.getCommandPanel().setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent e) {
-
+        commandPanel.getCommandPanel().setOnKeyPressed((e) -> {
                 //Inserts text to the information panel after the user presses enter
                 if (e.getCode() == KeyCode.ENTER) {
                     command(commandPanel.getCommandPanel().getText());
                     commandPanel.getCommandPanel().clear();
                 }
-            }
         });
 
         stage.show();
         startMenu.enterUserNames(stage);
 
         //When user presses enter the names in the textfields are put into variables and are displayed in information panel
-        startMenu.getEnterButton().setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
+        startMenu.getEnterButton().setOnMouseClicked((event) -> {
 
-                playerOneName = startMenu.getPlayerOneTextField().getText();
-                playerTwoName = startMenu.getPlayerTwoTextField().getText();
+            playerOneName = startMenu.getPlayerOneTextField().getText();
+            playerTwoName = startMenu.getPlayerTwoTextField().getText();
 
-                System.out.println("Player One Name: " + playerOneName);
-                System.out.println("Player Two Name: " + playerTwoName);
+            playerOne = new Player(playerOneName, Color.BLUE);
+            playerTwo = new Player(playerTwoName, Color.RED);
+            infoPanel.addPlayerInfo(playerOne,playerTwo);
+            startMenu.getDialog().close();
 
-
-                playerOne = new Player(playerOneName, Color.BLUE);
-                playerTwo = new Player(playerTwoName, Color.RED);
-                infoPanel.addPlayerInfo(playerOne,playerTwo);
-                startMenu.getDialog().close();
-            }
         });
-
-
 
     }
 
     private void command(String s) {
         int rollOne = -1, rollTwo = -1;
 
+        //If user enters quit, exit the program
         if (s.equals("quit")) {
             System.exit(0);
         } else if (s.matches("move")) {
@@ -146,13 +123,8 @@ public class BackgammonApplication extends Application {
         infoPanel.getInfoPanel().appendText("\n" + s);
         if (rollOne != -1 && rollTwo != 1) {
             infoPanel.getInfoPanel().appendText(" " + rollOne + " " + rollTwo);
-            rollOne = -1;
-            rollTwo = -1;
         }
     }
-
-
-
 
     //Redraws the updated game board
     private void draw(Canvas canvas) {

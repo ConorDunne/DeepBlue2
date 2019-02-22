@@ -1,6 +1,5 @@
 package src;
 
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -8,17 +7,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class StartMenu {
-
-
-
-    InformationPanel infoPanel = new InformationPanel();
-
 
     private Button enterButton;
     private TextField playerOneTextField;
@@ -31,9 +26,6 @@ public class StartMenu {
     }
 
     public void enterUserNames(Stage mainStage) {
-
-
-
 
         final double INPUT_FIELD_WIDTH = 150;
 
@@ -56,7 +48,6 @@ public class StartMenu {
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
 
-
         pane.setPadding(new Insets(10, 10, 10, 10));
 
         enterButton = new Button("Enter");
@@ -74,39 +65,41 @@ public class StartMenu {
         playerTwoTextField = new TextField();
         playerTwoTextField.setPromptText("Enter Player Two Name");
 
+        Label enterPOneText = new Label("Player 1 Name: ");
+        Label enterPTwoText = new Label("Player 2 Name: ");
+        enterPOneText.setFont(Font.font("Arial", 15));
+        enterPTwoText.setFont(Font.font("Arial", 15));
+        enterPOneText.setTextFill(Color.WHITE);
+        enterPTwoText.setTextFill(Color.WHITE);
+
         //Setting widths
         playerOneTextField.setPrefWidth(INPUT_FIELD_WIDTH);
         playerTwoTextField.setPrefWidth(INPUT_FIELD_WIDTH);
         enterButton.setPrefWidth(INPUT_FIELD_WIDTH);
+        buttonHBox.setPadding(new Insets(0,0,0,100));
 
         //Adding components to border pane
         pane.setCenter(vBox);
         pane.setBottom(buttonHBox);
 
         //Layout is composes of HBoxes inside a VBox in the center and button is in the bottom section seperately
-        playerOneHBox.getChildren().addAll(new Label("Player 1 Name: "), playerOneTextField);
-        playerTwoHBox.getChildren().addAll(new Label("Player 2 Name: "), playerTwoTextField);
+        playerOneHBox.getChildren().addAll(enterPOneText, playerOneTextField);
+        playerTwoHBox.getChildren().addAll(enterPTwoText, playerTwoTextField);
         buttonHBox.getChildren().add(enterButton);
         vBox.getChildren().addAll(playerOneHBox, playerTwoHBox);
 
         pane.setBackground(new Background(image));
 
         dialog.show();
-
-
-
     }
 
     public Button getEnterButton() { return enterButton; }
-
     public TextField getPlayerOneTextField() {
         return playerOneTextField;
     }
-
     public TextField getPlayerTwoTextField() {
         return playerTwoTextField;
     }
-
     public Stage getDialog() {
         return dialog;
     }

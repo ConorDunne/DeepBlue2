@@ -3,6 +3,7 @@ package src;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 
 public class InformationPanel {
 
@@ -17,8 +18,11 @@ public class InformationPanel {
     public VBox addVBox() {
 
         VBox vbox = new VBox();
-        infoPanel = new TextArea("Welcome to Backgammon\n");
+        infoPanel = new TextArea("Welcome to Backgammon!\n");
         scorePanel = new TextArea("SCORE: ");
+
+        infoPanel.setFont(Font.font("Arial", 15));
+        scorePanel.setFont(Font.font("Arial", 15));
 
         VBox.setVgrow(infoPanel, Priority.ALWAYS);
 
