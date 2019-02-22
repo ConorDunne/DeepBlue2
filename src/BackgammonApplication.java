@@ -11,7 +11,8 @@ import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -25,15 +26,16 @@ public class BackgammonApplication extends Application {
     private GraphicsContext gc;
     private Canvas canvas;
     private Spike f, t;
-    private Dice d1 = new Dice();
-    private Dice d2 = new Dice();
+    private Dice d1 = new Dice(1);
+    private Dice d2 = new Dice(2);
 
     private String playerOneName;
     private String playerTwoName;
 
     private Player playerOne;
     private Player playerTwo;
-    private int whosGo = 0;
+    private int whosGo;
+    private int dice1, dice2;
 
     @Override
     public void start(Stage stage) {
@@ -49,7 +51,8 @@ public class BackgammonApplication extends Application {
         Pane wrapperPane = new Pane();
 
         canvas = new Canvas();
-
+        gc = canvas.getGraphicsContext2D();
+        board = new Board(gc, canvas.getWidth(), canvas.getHeight());           //  Initialises Board and Counters
 
         border.setCenter(wrapperPane); //Border at center of screen
         wrapperPane.getChildren().add(canvas); //Adds canvas to wrapper pane
@@ -59,8 +62,8 @@ public class BackgammonApplication extends Application {
         canvas.heightProperty().bind(wrapperPane.heightProperty());
 
         //Uses lambda expressions to call draw() every time the window is resized
-        canvas.widthProperty().addListener(event -> draw(canvas));
-        canvas.heightProperty().addListener(event -> draw(canvas));
+        canvas.widthProperty().addListener(event -> draw());
+        canvas.heightProperty().addListener(event -> draw());
 
         //Text entered in command panel is appended to the information panel
         commandPanel.getCommandPanel().setOnKeyPressed((e) -> {
@@ -87,6 +90,27 @@ public class BackgammonApplication extends Application {
 
         });
 
+        boolean repeat = true;
+        do {
+            dice1 = d1.rollDice(gc, canvas.getWidth(), canvas.getHeight());
+            dice2 = d2.rollDice(gc, canvas.getWidth(), canvas.getHeight());
+
+            if (dice1 > dice2) {
+                infoPanel.getInfoPanel().appendText("Player One goes first.\n");
+                repeat = false;
+                whosGo = 0;
+                draw();
+            }
+            else if (dice2 > dice1) {
+                infoPanel.getInfoPanel().appendText("Player Two goes first.\n");
+                repeat = false;
+                whosGo = 1;
+                draw();
+            }
+
+        } while(repeat);
+
+        infoPanel.getInfoPanel().appendText("Dice >" + dice1 + "|" + dice2 + "\n");
     }
 
     private void command(String s) {
@@ -96,7 +120,7 @@ public class BackgammonApplication extends Application {
         if (s.equals("quit")) {
             System.exit(0);
         } else if (s.matches("move")) {
-            infoPanel.getInfoPanel().appendText("\n > move [from] [destination]");
+            infoPanel.getInfoPanel().appendText("> move [from] [destination]\n");
         } else if (s.startsWith("move")) {
             String[] arg = s.split(" ");
             int from = Integer.parseInt(arg[1]);
@@ -110,7 +134,7 @@ public class BackgammonApplication extends Application {
             }
 
             if(from < 0 || from > 26 || dest < 0 || dest > 26) {
-                infoPanel.getInfoPanel().appendText("\n" + "Move Value out of bounds. No Corresponding Spike");
+                infoPanel.getInfoPanel().appendText("Move Value out of bounds. No Corresponding Spike\n");
             } else {
                 f = board.getSpike()[from ];
                 t = board.getSpike()[dest ];
@@ -118,28 +142,24 @@ public class BackgammonApplication extends Application {
                 if (f.getSizeOfSpike() > 0) {
                     t.addToSpike(f.removeFromSpike());
 
-                    board.drawBoard(gc, canvas.getWidth(), canvas.getHeight(), (byte) (whosGo%2));
-                    board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());
+                   draw();
                 }
             }
         } else if(s.equals("next")){
-           whosGo++;
-           board.drawBoard(gc, canvas.getWidth(), canvas.getHeight(), (byte) (whosGo%2));
-           board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());
+            whosGo++;
+            draw();
+
+            dice1 = d1.rollDice(gc, canvas.getWidth(), canvas.getHeight());
+            dice2 = d2.rollDice(gc, canvas.getWidth(), canvas.getHeight());
+            infoPanel.getInfoPanel().appendText("Dice >" + dice1 + "|" + dice2 + "\n");
         }
 
         commandPanel.getCommandPanel().clear();
-        infoPanel.getInfoPanel().appendText("\n" + s);
-        if (rollOne != -1 && rollTwo != 1) {
-            infoPanel.getInfoPanel().appendText(" " + rollOne + " " + rollTwo);
-        }
+        infoPanel.getInfoPanel().appendText(s + "\n");
     }
 
     //Redraws the updated game board
-    private void draw(Canvas canvas) {
-        gc = canvas.getGraphicsContext2D();
-        board = new Board(gc, canvas.getWidth(), canvas.getHeight());           //  Initialises Board and Counters
-
+    private void draw() {
         board.drawBoard(gc, canvas.getWidth(), canvas.getHeight(), (byte) (whosGo%2));  //  Draws the board
         board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());    //  Draws the counters
     }

@@ -7,6 +7,8 @@ import java.util.Random;
 public class Dice {
     Random rand = new Random();
     private int numberOfSides;
+    private int diceNumber;
+
     private Image image1 = new Image("src/Resources/Dice/1.png");
     private Image image2 = new Image("src/Resources/Dice/2.png");
     private Image image3 = new Image("src/Resources/Dice/3.png");
@@ -14,11 +16,12 @@ public class Dice {
     private Image image5 = new Image("src/Resources/Dice/5.png");
     private Image image6 = new Image("src/Resources/Dice/6.png");
 
-    public Dice() {
+    public Dice(int diceNumber) {
         this.numberOfSides = 6;
+        this.diceNumber = diceNumber;
     }
 
-    public int rollDice(GraphicsContext gc, double width, double height, int diceNumber) {
+    public int rollDice(GraphicsContext gc, double width, double height) {
         int number = rand.nextInt(numberOfSides) + 1;
 
         if(diceNumber == 1)

@@ -10,6 +10,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
+
 import java.util.Stack;
 
 //java file containing the spike class
@@ -66,7 +67,7 @@ public class Spike {
         }
 
 //  Initialize Special Positions
-        spike[0] = new Spike(1, 0.42);          //  Knocked out checkers
+        spike[0] = new Spike(1, 0.454);          //  Knocked out checkers
         spike[25] = new Spike(25, 0.9275);       //  Bear-Off 1
         spike[26] = new Spike(26, 0.9275);       //  Bear-Off 2
     }
