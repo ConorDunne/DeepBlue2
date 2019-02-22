@@ -61,10 +61,6 @@ public class BackgammonApplication extends Application {
         canvas.widthProperty().bind(wrapperPane.widthProperty());
         canvas.heightProperty().bind(wrapperPane.heightProperty());
 
-        //Uses lambda expressions to call draw() every time the window is resized
-        canvas.widthProperty().addListener(event -> draw());
-        canvas.heightProperty().addListener(event -> draw());
-
         //Text entered in command panel is appended to the information panel
         commandPanel.getCommandPanel().setOnKeyPressed((e) -> {
                 //Inserts text to the information panel after the user presses enter
@@ -90,24 +86,28 @@ public class BackgammonApplication extends Application {
 
         });
 
+        //Uses lambda expressions to call draw() every time the window is resized
+        canvas.widthProperty().addListener(event -> draw());
+        canvas.heightProperty().addListener(event -> draw());
+
         boolean repeat = true;
         do {
             dice1 = d1.rollDice(gc, canvas.getWidth(), canvas.getHeight());
             dice2 = d2.rollDice(gc, canvas.getWidth(), canvas.getHeight());
 
-            if (dice1 > dice2) {
-                infoPanel.getInfoPanel().appendText("Player One goes first.\n");
+            if(dice1 != dice2) {
                 repeat = false;
-                whosGo = 0;
                 draw();
-            }
-            else if (dice2 > dice1) {
-                infoPanel.getInfoPanel().appendText("Player Two goes first.\n");
-                repeat = false;
-                whosGo = 1;
-                draw();
-            }
 
+                if (dice1 > dice2) {
+                    infoPanel.getInfoPanel().appendText("Player One goes first.\n");
+                    whosGo = 0;
+                }
+                else if (dice2 > dice1) {
+                    infoPanel.getInfoPanel().appendText("Player Two goes first.\n");
+                    whosGo = 1;
+                }
+            }
         } while(repeat);
 
         infoPanel.getInfoPanel().appendText("Dice >" + dice1 + "|" + dice2 + "\n");
@@ -161,7 +161,10 @@ public class BackgammonApplication extends Application {
     //Redraws the updated game board
     private void draw() {
         board.drawBoard(gc, canvas.getWidth(), canvas.getHeight(), (byte) (whosGo%2));  //  Draws the board
-        board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());    //  Draws the counters
+        board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());            //  Draws the counters
+
+        d1.drawDice(gc, canvas.getWidth(), canvas.getHeight(), dice1);                  //  Draws Die 1
+        d2.drawDice(gc, canvas.getWidth(), canvas.getHeight(), dice2);                  //  Draws Die 2
     }
 
     //CALLED WHENEVER WE START MAIN JAVA PROGRAM

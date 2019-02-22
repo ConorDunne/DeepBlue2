@@ -23,13 +23,16 @@ public class Dice {
 
     public int rollDice(GraphicsContext gc, double width, double height) {
         int number = rand.nextInt(numberOfSides) + 1;
-
-        if(diceNumber == 1)
-            gc.drawImage(getImage(number), width*0.6, height*0.4, width*0.05, width*0.05);
-        else if(diceNumber == 2)
-            gc.drawImage(getImage(number), width*0.7, height*0.5, width*0.05, width*0.05);
+        drawDice(gc, width, height, number);
 
         return number;
+    }
+
+    public void drawDice(GraphicsContext gc, double width, double height, int number) {
+        if(diceNumber == 1)
+            gc.drawImage(getImage(number), width*0.6, height*0.4, width*0.05, width*0.05);
+        else
+            gc.drawImage(getImage(number), width*0.7, height*0.5, width*0.05, width*0.05);
     }
 
     private Image getImage(int i) {
