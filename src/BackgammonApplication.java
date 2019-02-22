@@ -45,6 +45,7 @@ public class BackgammonApplication extends Application {
 
     private Player playerOne;
     private Player playerTwo;
+    private int whosGo = 0;
 
     @Override
     public void start(Stage stage) {
@@ -107,9 +108,6 @@ public class BackgammonApplication extends Application {
                 startMenu.getDialog().close();
             }
         });
-
-
-
     }
 
     private void command(String s) {
@@ -124,6 +122,13 @@ public class BackgammonApplication extends Application {
             int from = Integer.parseInt(arg[1]);
             int dest = Integer.parseInt(arg[2]);
 
+            if(whosGo%2 == 1) {
+                if(from > 0 && from < 25)
+                    from = 25 - from;
+                if(dest > 0 && dest < 25)
+                    dest = 25 - dest;
+            }
+
             if(from < 0 || from > 26 || dest < 0 || dest > 26) {
                 infoPanel.getInfoPanel().appendText("\n" + "Move Value out of bounds. No Corresponding Spike");
             } else {
@@ -133,13 +138,14 @@ public class BackgammonApplication extends Application {
                 if (f.getSizeOfSpike() > 0) {
                     t.addToSpike(f.removeFromSpike());
 
-                    board.drawBoard(gc, canvas.getWidth(), canvas.getHeight());
+                    board.drawBoard(gc, canvas.getWidth(), canvas.getHeight(), (byte) (whosGo%2));
                     board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());
                 }
             }
-        } else if(s.equals("roll")){
-            rollOne = d1.rollDice(gc, canvas.getWidth(), canvas.getHeight(), 1);
-            rollTwo = d2.rollDice(gc, canvas.getWidth(), canvas.getHeight(), 2);
+        } else if(s.equals("next")){
+           whosGo++;
+           board.drawBoard(gc, canvas.getWidth(), canvas.getHeight(), (byte) (whosGo%2));
+           board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());
         }
 
         commandPanel.getCommandPanel().clear();
@@ -151,15 +157,12 @@ public class BackgammonApplication extends Application {
         }
     }
 
-
-
-
     //Redraws the updated game board
     private void draw(Canvas canvas) {
         gc = canvas.getGraphicsContext2D();
         board = new Board(gc, canvas.getWidth(), canvas.getHeight());           //  Initialises Board and Counters
 
-        board.drawBoard(gc, canvas.getWidth(), canvas.getHeight());             //  Draws the Board
+        board.drawBoard(gc, canvas.getWidth(), canvas.getHeight(), (byte) (whosGo%2));  //  Draws the board
         board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());    //  Draws the counters
     }
 

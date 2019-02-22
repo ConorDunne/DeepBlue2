@@ -42,7 +42,7 @@ public class Board {
 
         initSpikeCounters();
 
-        drawBoard(gc, width, height);
+        drawBoard(gc, width, height, (byte) 0);
     }
 
 //  Methods for retrieving colours
@@ -56,14 +56,13 @@ public class Board {
     private Color getLogoDiamond() {return logoDiamond;}
     private Color getLogoText() {return logoText;}
 
-    public void drawBoard(GraphicsContext gc, double width, double height) {
+    public void drawBoard(GraphicsContext gc, double width, double height, byte rev) {
         background(gc, width, height);
         squares(gc, width, height);
         bearOff(gc, width, height);
-        spikes(gc, width, height);
+        spikes(gc, width, height, rev);
         logo(gc, width, height);
-     }
-
+    }
     private void setColors() {
         background = Color.rgb(208,157,93);
         gamingSquares = Color.DARKOLIVEGREEN;
@@ -97,14 +96,14 @@ public class Board {
     }
 
 //  Method for drawing the spikes (Triangles)
-    public void spikes(GraphicsContext gc, double width, double height) {
+    public void spikes(GraphicsContext gc, double width, double height, byte rev) {
         for(int i=1; i<25; i++){
             if(i%2 == 0)
                 gc.setFill(getTrianglesPlayerTwo());
             else
                 gc.setFill(getTrianglesPlayerOne());
 
-            spike[i].drawSpike(gc, width, height);
+            spike[i].drawSpike(gc, width, height, rev);
         }
     }
 

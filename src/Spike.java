@@ -62,7 +62,7 @@ public class Spike {
             spike[i] = new Spike(i, 25-i, i-13);
         }
         for(int i=19; i<25; i++) {
-            spike[i] = new Spike(i, i-25, i-19);
+            spike[i] = new Spike(i, 25-i, i-19);
         }
 
 //  Initialize Special Positions
@@ -71,7 +71,7 @@ public class Spike {
         spike[26] = new Spike(26, 0.9275);       //  Bear-Off 2
     }
 
-    public void drawSpike(GraphicsContext gc, double width, double height) {
+    public void drawSpike(GraphicsContext gc, double width, double height, byte rev) {
             gc.fillPolygon( new double[]{width*(xCenter-xChange), width*(xCenter+xChange), width*(xCenter)},
                             new double[]{height*yBase, height*yBase, height*yPoint},
                          3);
@@ -80,16 +80,16 @@ public class Spike {
             gc.setTextAlign(TextAlignment.CENTER);
             gc.setTextBaseline(VPos.CENTER);
             gc.setFont(Font.font (10));
-            if(true) {
+            if(rev == 0) {
                 if (number < 13)
                     gc.fillText(Integer.toString(number), width * xCenter, height * (yBase + 0.025));
                 else
                     gc.fillText(Integer.toString(number), width * xCenter, height * (yBase - 0.025));
             } else {
-                if (numberRev > 13)
-                    gc.fillText(Integer.toString(number), width * xCenter, height * (yBase + 0.025));
+                if (numberRev < 13)
+                    gc.fillText(Integer.toString(numberRev), width * xCenter, height * (yBase - 0.025));
                 else
-                    gc.fillText(Integer.toString(number), width * xCenter, height * (yBase - 0.025));
+                    gc.fillText(Integer.toString(numberRev), width * xCenter, height * (yBase + 0.025));
             }
     }
 
