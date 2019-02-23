@@ -21,8 +21,8 @@ public class InformationPanel {
         infoPanel = new TextArea("Welcome to Backgammon!\n");
         scorePanel = new TextArea("SCORE: ");
 
-        infoPanel.setFont(Font.font("Arial", 15));
-        scorePanel.setFont(Font.font("Arial", 15));
+        infoPanel.setFont(Font.font("Arial", 13));
+        scorePanel.setFont(Font.font("Arial", 13));
 
         VBox.setVgrow(infoPanel, Priority.ALWAYS);
 
@@ -38,8 +38,8 @@ public class InformationPanel {
         return vbox;
     }
     public void addPlayerInfo(Player pOne, Player pTwo){
-        infoPanel.appendText("Player 1: " + pOne.toString() + "Blue\n");
-        infoPanel.appendText("Player 2: " + pTwo.toString() + "Red\n");
+        infoPanel.appendText("Player 1: " + pOne.toString() + "Red\n");
+        infoPanel.appendText("Player 2: " + pTwo.toString() + "Blue\n");
     }
 
     public TextArea getInfoPanel() { return infoPanel; }

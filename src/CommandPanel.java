@@ -3,8 +3,12 @@ package src;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class CommandPanel {
 
@@ -16,12 +20,17 @@ public class CommandPanel {
 
     }
 
-    //Called to add hbox to border pane on bottom consisting of command panel and export button
+    //Called to add HBox to border pane on bottom consisting of command panel and export button
     public HBox addHBox() {
         HBox hbox = new HBox();
+
         commandPanel = new TextField();
         exportBtn = new Button("Export to .txt file");
         helpBtn = new Button("?");
+
+        exportBtn.setFont(Font.font("Arial", 13));
+        helpBtn.setFont(Font.font("Arial", FontWeight.BOLD, 14));
+        helpBtn.setStyle("-fx-background-color: #429ef4;");
 
         HBox.setHgrow(commandPanel, Priority.ALWAYS);
         exportBtn.setPrefWidth(200);

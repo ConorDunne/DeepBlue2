@@ -79,10 +79,12 @@ public class BackgammonApplication extends Application {
             playerOneName = startMenu.getPlayerOneTextField().getText();
             playerTwoName = startMenu.getPlayerTwoTextField().getText();
 
-            playerOne = new Player(playerOneName, Color.BLUE);
-            playerTwo = new Player(playerTwoName, Color.RED);
+            playerOne = new Player(playerOneName, Color.RED);
+            playerTwo = new Player(playerTwoName, Color.BLUE);
             infoPanel.addPlayerInfo(playerOne,playerTwo);
             startMenu.getDialog().close();
+
+            initialRoll();
 
         });
 
@@ -90,6 +92,11 @@ public class BackgammonApplication extends Application {
         canvas.widthProperty().addListener(event -> draw());
         canvas.heightProperty().addListener(event -> draw());
 
+
+    }
+
+    //Initial Roll of the dice to determine which player moves first. Called after the player names are entered
+    private void initialRoll(){
         boolean repeat = true;
         do {
             dice1 = d1.rollDice(gc, canvas.getWidth(), canvas.getHeight());

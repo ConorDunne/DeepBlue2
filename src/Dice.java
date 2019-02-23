@@ -60,6 +60,10 @@ public class Dice {
         return img;
     }
 
+    public void initialRoll(){
+
+    }
+
     private static void wait(int time) {
         try {
             Thread.sleep((time * 10));

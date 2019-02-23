@@ -25,6 +25,7 @@ public class StartMenu {
 
     }
 
+    //Created a new stage which asks users to enter their names
     public void enterUserNames(Stage mainStage) {
 
         final double INPUT_FIELD_WIDTH = 150;
@@ -51,6 +52,7 @@ public class StartMenu {
         pane.setPadding(new Insets(10, 10, 10, 10));
 
         enterButton = new Button("Enter");
+        enterButton.setFont(Font.font("Arial", 13));
 
         vBox.setSpacing(10);
 
