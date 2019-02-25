@@ -8,8 +8,8 @@ package src;
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
-import javafx.scene.text.TextAlignment;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 
 public class Board {
     private Color background;
@@ -41,8 +41,6 @@ public class Board {
         Counter.initCounter(playerTwo, loc, getCounterPlayerTwo(), false);
 
         initSpikeCounters();
-
-        drawBoard(gc, width, height, (byte) 0);
     }
 
 //  Methods for retrieving colours
