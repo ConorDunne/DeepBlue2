@@ -3,8 +3,6 @@ package src;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.text.Font;
@@ -53,7 +51,6 @@ public class CommandPanel {
 
         alert.setContentText("\nEnter the instructions into the command panel to execute the moves\n" +
                 "Move Counters: move [source] [destination]\n" +
-                "Roll Dice: roll\n" +
                 "Exit Program: quit\n" +
                 "Change Player Turns: next");
 

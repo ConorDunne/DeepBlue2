@@ -10,6 +10,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
@@ -71,6 +72,8 @@ public class BackgammonApplication extends Application {
         });
 
         stage.show();
+
+        drawStart();
         startMenu.enterUserNames(stage);
 
         //When user presses enter the names in the textfields are put into variables and are displayed in information panel
@@ -172,6 +175,10 @@ public class BackgammonApplication extends Application {
 
         d1.drawDice(gc, canvas.getWidth(), canvas.getHeight(), dice1);                  //  Draws Die 1
         d2.drawDice(gc, canvas.getWidth(), canvas.getHeight(), dice2);                  //  Draws Die 2
+    }
+
+    private void drawStart() {
+        gc.drawImage(new Image("src/Resources/Logo.png"), 0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
     //CALLED WHENEVER WE START MAIN JAVA PROGRAM
