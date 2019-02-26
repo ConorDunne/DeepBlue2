@@ -68,6 +68,7 @@ public class Spike {
 
 //  Initialize Special Positions
         spike[0] = new Spike(1, 0.454);          //  Knocked out checkers
+        spike[27] = new Spike(28, 0.454);
         spike[25] = new Spike(25, 0.9275);       //  Bear-Off 1
         spike[26] = new Spike(26, 0.9275);       //  Bear-Off 2
     }

@@ -30,7 +30,7 @@ public class Board {
     public Board(GraphicsContext gc, double width, double height) {
         setColors();
 
-        spike = new Spike[27];
+        spike = new Spike[28];
         Spike.initSpike(spike);
 
         playerOne = new Counter[15];

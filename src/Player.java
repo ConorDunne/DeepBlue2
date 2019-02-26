@@ -6,16 +6,14 @@ public class Player {
 
     private String name;
     private Color color;
-    private boolean isTurn;
+    private int home;
+    private int knockedOut;
 
-    public Player(String name, Color color){
+    public Player(String name, Color color, int home, int knockedOut) {
         this.name = name;
         this.color = color;
-    }
-
-    public Boolean setIsTurn(boolean isTurn){
-        this.isTurn = isTurn;
-        return this.isTurn;
+        this.home = home;
+        this.knockedOut = knockedOut;
     }
 
     @Override
@@ -29,8 +27,11 @@ public class Player {
     public Color getColor() {
         return color;
     }
-    public boolean isTurn() {
-        return isTurn;
+    public int getHomeLocation() {
+        return home;
+    }
+    public int getKnockedOutLocation() {
+        return knockedOut;
     }
 
 }

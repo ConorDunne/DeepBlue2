@@ -82,8 +82,8 @@ public class BackgammonApplication extends Application {
             playerOneName = startMenu.getPlayerOneTextField().getText();
             playerTwoName = startMenu.getPlayerTwoTextField().getText();
 
-            playerOne = new Player(playerOneName, Color.RED);
-            playerTwo = new Player(playerTwoName, Color.BLUE);
+            playerOne = new Player(playerOneName, Color.RED, 0, 25);
+            playerTwo = new Player(playerTwoName, Color.BLUE, 27, 26);
             infoPanel.addPlayerInfo(playerOne,playerTwo);
             startMenu.getDialog().close();
 
@@ -143,11 +143,11 @@ public class BackgammonApplication extends Application {
                     dest = 25 - dest;
             }
 
-            if(from < 0 || from > 26 || dest < 0 || dest > 26) {
+            if(from < 0 || from > 27 || dest < 0 || dest > 27) {
                 infoPanel.getInfoPanel().appendText("Move Value out of bounds. No Corresponding Spike\n");
             } else {
-                f = board.getSpike()[from ];
-                t = board.getSpike()[dest ];
+                f = board.getSpike()[from];
+                t = board.getSpike()[dest];
 
                 if (f.getSizeOfSpike() > 0) {
                     t.addToSpike(f.removeFromSpike());

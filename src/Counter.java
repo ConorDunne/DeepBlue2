@@ -68,7 +68,9 @@ public class Counter {
         gc.setFill(this.colour);
 
         if(spikeLocation == 0) {
-            gc.fillOval((width*xCenter) - radius/2, height*0.5 - (radius*getCounterNum()), radius, radius);
+            gc.fillOval((width*xCenter) - radius/2, height*0.5 - (radius*(getCounterNum()+1)), radius, radius);
+        } else if(spikeLocation == 27) {
+            gc.fillOval((width*xCenter) - radius/2, height*0.5 + (radius*(getCounterNum()+1)), radius, radius);
         }
         else if(spikeLocation == 25) {
             gc.fillRect((width*xCenter) - radius/2, height*0.4 - ((getCounterNum()+1)*height*(0.35/15)) , radius, height*(0.35/15));
