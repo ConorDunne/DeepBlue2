@@ -21,10 +21,6 @@ public class StartMenu {
 
     private Stage dialog;
 
-    public StartMenu(){
-
-    }
-
     //Created a new stage which asks users to enter their names
     public void enterUserNames(Stage mainStage) {
 

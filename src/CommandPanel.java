@@ -14,10 +14,6 @@ public class CommandPanel {
     private Button exportBtn;
     private Button helpBtn;
 
-    public CommandPanel(){
-
-    }
-
     //Called to add HBox to border pane on bottom consisting of command panel and export button
     public HBox addHBox() {
         HBox hbox = new HBox();

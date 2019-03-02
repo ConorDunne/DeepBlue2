@@ -11,8 +11,6 @@ public class InformationPanel {
     private TextArea infoPanel;
     private TextArea scorePanel;
 
-    public InformationPanel(){
-    }
 
     //Called when adding Vbox to border pane on right consisting of information panel and score panel
     public VBox addVBox() {
