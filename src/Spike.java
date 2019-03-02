@@ -106,13 +106,14 @@ public class Spike {
     public Counter topOfSpike(){
         return stack.peek();
     }
-    public Counter removeFromSpike() {
-        return stack.pop();
-    }
+    public Counter removeFromSpike() { return stack.pop(); }
     public int getSizeOfSpike(){
         return stack.size();
     }
+    public boolean isEmpty() {return stack.size() == 0;}
     public int getNumber(){ return this.number; }
+    public Color getColour() { return stack.peek().getCounterColour(); }
+    public int getCounterPlayer() { return stack.peek().getPlayer(); }
     public int getLm() {return this.lm; }
     public double getxCenter() { return xCenter; }
     public double getxChange() { return xChange; }

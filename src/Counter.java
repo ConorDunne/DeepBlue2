@@ -15,38 +15,40 @@ public class Counter {
     private double xCenter;
     private int CounterNum;
     private Color colour;
+    private int player;
 
 
-    public Counter(int loc, double spikeX, int y, Color c) {
+    public Counter(int loc, double spikeX, int y, Color c, int player) {
         this.spikeLocation = loc;
         this.xCenter = spikeX;
         this.colour = c;
         this.CounterNum = y;
+        this.player = player;
     }
 
     public static void initCounter(Counter[] c, double[] loc, Color c1, boolean t) {
         if(t) {
             for (int i = 0; i < 15; i++) {
                 if (i < 2)
-                    c[i] = new Counter(1, loc[0], i, c1);
+                    c[i] = new Counter(1, loc[0], i, c1, 1);
                 else if (i < 7)
-                    c[i] = new Counter(12, loc[1], i-2, c1);
+                    c[i] = new Counter(12, loc[1], i-2, c1, 1);
                 else if (i < 10)
-                    c[i] = new Counter(17, loc[2], i-7, c1);
+                    c[i] = new Counter(17, loc[2], i-7, c1, 1);
                 else
-                    c[i] = new Counter(19, loc[3], i-10, c1);
+                    c[i] = new Counter(19, loc[3], i-10, c1, 1);
             }
         }
         else {
             for (int i = 0; i < 15; i++) {
                 if (i < 2)
-                    c[i] = new Counter(24, loc[0], i, c1);
+                    c[i] = new Counter(24, loc[0], i, c1, 2);
                 else if (i < 7)
-                    c[i] = new Counter(13, loc[1], i-2, c1);
+                    c[i] = new Counter(13, loc[1], i-2, c1, 2);
                 else if (i < 10)
-                    c[i] = new Counter(8, loc[2], i-7, c1);
+                    c[i] = new Counter(8, loc[2], i-7, c1, 2);
                 else
-                    c[i] = new Counter(6, loc[3], i-10, c1);
+                    c[i] = new Counter(6, loc[3], i-10, c1, 2);
             }
         }
     }
@@ -54,11 +56,9 @@ public class Counter {
     public void setX(double x) {
         this.xCenter = x;
     }
-
     public void setSpike(int x) {
         this.spikeLocation = x;
     }
-
     public void setCounterNum(int x) {
         CounterNum = x;
     }
@@ -88,4 +88,6 @@ public class Counter {
     public int getSpikeLocation() { return spikeLocation; }
     public double getxCenter() { return xCenter; }
     public int getCounterNum() { return CounterNum; }
+    public Color getCounterColour() { return this.colour; }
+    public int getPlayer() { return this.player; }
 }

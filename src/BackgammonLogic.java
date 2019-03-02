@@ -34,7 +34,7 @@ public class BackgammonLogic extends UI {
             playerTwoName = getStartMenu().getPlayerTwoTextField().getText();
 
             playerOne = new Player(playerOneName, Color.RED, 0, 25);
-            playerTwo = new Player(playerTwoName, Color.BLUE, 27, 26);
+            playerTwo = new Player(playerTwoName, Color.BLUE, 26, 27);
             getInfoPanel().addPlayerInfo(playerOne,playerTwo);
             getStartMenu().getDialog().close();
 
@@ -117,11 +117,54 @@ public class BackgammonLogic extends UI {
             setDice1(getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight()));
             setDice2(getD2().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight()));
             getInfoPanel().getInfoPanel().appendText("Dice >" + getDice1() + "|" + getDice2() + "\n");
+        } else if(s.equals("cheat")) {
+            cheat();
         }
 
         getCommandPanel().getCommandPanel().clear();
         getInfoPanel().getInfoPanel().appendText(s + "\n");
     }
 
+    public void cheat() {
+        f = new Spike(-1, 0);
+        t = new Spike(-2, 0);
 
+    //  Collect Counters
+        for(int i=0; i<28; i++) {
+            Spike pointerSpike = getBoard().getSpike()[i];
+
+            while(!pointerSpike.isEmpty()) {
+                if (pointerSpike.getCounterPlayer() == 1)
+                    f.addToSpike(pointerSpike.removeFromSpike());
+                else
+                    t.addToSpike(pointerSpike.removeFromSpike());
+            }
+        }
+
+        System.out.println("F number: " + f.getSizeOfSpike());
+        System.out.println("t number: " + t.getSizeOfSpike());
+
+    //  Move Player 1
+        cheatMove(getBoard().getSpike()[playerOne.getHomeLocation()], f, 3);
+        cheatMove(getBoard().getSpike()[playerOne.getKnockedOutLocation()], f, 3);
+        cheatMove(getBoard().getSpike()[24], f, 3);
+        cheatMove(getBoard().getSpike()[22], f, 3);
+        cheatMove(getBoard().getSpike()[21], f, 3);
+
+    //  Move Player 2
+        cheatMove(getBoard().getSpike()[playerTwo.getHomeLocation()], t, 2);
+        cheatMove(getBoard().getSpike()[playerTwo.getKnockedOutLocation()], t, 3);
+        cheatMove(getBoard().getSpike()[1], t, 2);
+        cheatMove(getBoard().getSpike()[2], t, 2);
+        cheatMove(getBoard().getSpike()[3], t, 2);
+        cheatMove(getBoard().getSpike()[4], t, 2);
+        cheatMove(getBoard().getSpike()[5], t, 2);
+
+        draw();
+    }
+
+    private void cheatMove(Spike dest, Spike src, int number) {
+        for(int i=0; i<number; i++)
+            dest.addToSpike(src.removeFromSpike());
+    }
 }
