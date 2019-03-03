@@ -6,13 +6,14 @@
 
 package src;
 
-
+//import packages for handling stage, colors
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 public class BackgammonLogic extends UI {
 
+	//initialise objects to store player names and info
     private Spike f, t;
     private String playerOneName;
     private String playerTwoName;
@@ -20,6 +21,7 @@ public class BackgammonLogic extends UI {
     private Player playerOne;
     private Player playerTwo;
 
+    //constructor to create stage/click options
     public BackgammonLogic(Stage stage){
         super(stage);
         enterBtnClick();
@@ -30,14 +32,18 @@ public class BackgammonLogic extends UI {
         //When user presses enter the names in the textfields are put into variables and are displayed in information panel
         getStartMenu().getEnterButton().setOnMouseClicked((event) -> {
 
+        	//names entered into fields are stored in player name objects
             playerOneName = getStartMenu().getPlayerOneTextField().getText();
             playerTwoName = getStartMenu().getPlayerTwoTextField().getText();
 
+            //players are assigned counter colors
             playerOne = new Player(playerOneName, Color.RED, 0, 25);
             playerTwo = new Player(playerTwoName, Color.BLUE, 26, 27);
+            //player info is displayed on the info panel
             getInfoPanel().addPlayerInfo(playerOne,playerTwo);
             getStartMenu().getDialog().close();
 
+            //first roll of dice
             initialRoll();
 
         });
@@ -56,18 +62,24 @@ public class BackgammonLogic extends UI {
     //Initial Roll of the dice to determine which player moves first. Called after the player names are entered
     private void initialRoll(){
         boolean repeat = true;
+        
+        //dice will be rolled at least once before values are compared
         do {
             setDice1(getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight()));
             setDice2(getD2().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight()));
 
+            //if a player rolls more than opponent, no need to roll again
             if(getDice1() != getDice2()) {
                 repeat = false;
                 draw();
 
+              //case where player one goes first
                 if (getDice1() > getDice2()) {
                     getInfoPanel().getInfoPanel().appendText("Player One goes first.\n");
                     setWhosGo(0);
                 }
+                
+              //case where player two goes first
                 else if (getDice2() > getDice1()) {
                     getInfoPanel().getInfoPanel().appendText("Player Two goes first.\n");
                     setWhosGo(1);
@@ -75,9 +87,11 @@ public class BackgammonLogic extends UI {
             }
         } while(repeat);
 
+      //dice rolls are displayed on info panel
         getInfoPanel().getInfoPanel().appendText("Dice >" + getDice1() + "|" + getDice2() + "\n");
     }
 
+  //logic for the command line
     private void command(String s) {
         int rollOne = -1, rollTwo = -1;
 
@@ -85,12 +99,15 @@ public class BackgammonLogic extends UI {
         if (s.equals("quit")) {
             System.exit(0);
         } else if (s.matches("move")) {
+        	//deal with player movement
             getInfoPanel().getInfoPanel().appendText("> move [from] [destination]\n");
         } else if (s.startsWith("move")) {
             String[] arg = s.split(" ");
+          //parse move starting position and finishing postion
             int from = Integer.parseInt(arg[1]);
             int dest = Integer.parseInt(arg[2]);
 
+          //calculating movement for the second player
             if(getWhosGo()%2 == 1) {
                 if(from > 0 && from < 25)
                     from = 25 - from;
@@ -98,9 +115,12 @@ public class BackgammonLogic extends UI {
                     dest = 25 - dest;
             }
 
+          //case where move out of bounds
             if(from < 0 || from > 27 || dest < 0 || dest > 27) {
                 getInfoPanel().getInfoPanel().appendText("Move Value out of bounds. No Corresponding Spike\n");
-            } else {
+            } 
+          //move the counter, depending on whether the move is valid, spike has a counter...
+            else {
                 f = getBoard().getSpike()[from];
                 t = getBoard().getSpike()[dest];
 
@@ -111,6 +131,7 @@ public class BackgammonLogic extends UI {
                 }
             }
         } else if(s.equals("next")){
+        	//next players turn
             setWhosGo(getWhosGo()+1);
             draw();
 
@@ -118,6 +139,7 @@ public class BackgammonLogic extends UI {
             setDice2(getD2().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight()));
             getInfoPanel().getInfoPanel().appendText("Dice >" + getDice1() + "|" + getDice2() + "\n");
         } else if(s.equals("cheat")) {
+        	//cheat mode activated
             cheat();
         }
 
@@ -125,6 +147,7 @@ public class BackgammonLogic extends UI {
         getInfoPanel().getInfoPanel().appendText(s + "\n");
     }
 
+  //logic for the cheat mode
     public void cheat() {
         f = new Spike(-1, 0);
         t = new Spike(-2, 0);
@@ -163,6 +186,7 @@ public class BackgammonLogic extends UI {
         draw();
     }
 
+  //movement in cheat mode
     private void cheatMove(Spike dest, Spike src, int number) {
         for(int i=0; i<number; i++)
             dest.addToSpike(src.removeFromSpike());
