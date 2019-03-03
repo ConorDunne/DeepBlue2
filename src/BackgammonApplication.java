@@ -6,6 +6,7 @@
 
 package src;
 
+//import packages for handling the application, stage and scene
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -20,6 +21,7 @@ import javafx.stage.Stage;
 public class BackgammonApplication extends Application {
 
     @Override
+    //program is started
     public void start(Stage stage) {
         BackgammonLogic logic = new BackgammonLogic(stage);
     }
