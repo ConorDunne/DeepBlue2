@@ -1,12 +1,5 @@
-/*
-    17379526    Conor Dunne
-    17424866    Martynas Jagutis
-    17379773    Ronan Mascarenhas
-*/
+package src.UI;
 
-package src;
-
-//import packages for scene/positioning
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -22,7 +15,6 @@ import javafx.stage.Stage;
 
 public class StartMenu {
 
-	//stores player names and enter button
     private Button enterButton;
     private TextField playerOneTextField;
     private TextField playerTwoTextField;
@@ -39,7 +31,6 @@ public class StartMenu {
         HBox playerTwoHBox = new HBox();
         HBox buttonHBox = new HBox();
 
-        //set up stage and prompt players for their names
         dialog = new Stage();
         dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.initOwner(mainStage);
@@ -50,14 +41,12 @@ public class StartMenu {
         Scene dialogScene = new Scene(pane, 500, 200);
         dialog.setScene(dialogScene);
 
-        //set up start menu background
         BackgroundImage image = new BackgroundImage(new Image("src/Resources/backgammon.jpg", dialogScene.getWidth(), dialogScene.getHeight(), false, true),
                 BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT,
                 BackgroundSize.DEFAULT);
 
         pane.setPadding(new Insets(10, 10, 10, 10));
 
-        //enter button text
         enterButton = new Button("Enter");
         enterButton.setFont(Font.font("Arial", 13));
 
@@ -102,7 +91,6 @@ public class StartMenu {
         dialog.show();
     }
 
-    //accessor methods for player text fields, enter button and dialog
     public Button getEnterButton() { return enterButton; }
     public TextField getPlayerOneTextField() {
         return playerOneTextField;

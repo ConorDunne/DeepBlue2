@@ -1,4 +1,4 @@
-package src;
+package src.Objects;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;

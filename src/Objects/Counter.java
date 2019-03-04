@@ -3,7 +3,7 @@
     17424866    Martynas Jagutis
     17379773    Ronan Mascarenhas
 */
-package src;
+package src.Objects;
 
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;

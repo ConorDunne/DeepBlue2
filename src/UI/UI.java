@@ -1,21 +1,14 @@
-/*
-    17379526    Conor Dunne
-    17424866    Martynas Jagutis
-    17379773    Ronan Mascarenhas
-*/
+package src.UI;
 
-package src;
-
-//imported packages for scene
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import src.Objects.CommandPanel;
+import src.Objects.Dice;
 
 public class UI{
 
@@ -23,7 +16,6 @@ public class UI{
     private GraphicsContext gc;
     private Canvas canvas;
 
-    //create panels/start menu
     private CommandPanel commandPanel = new CommandPanel();
     private InformationPanel infoPanel = new InformationPanel();
     private StartMenu startMenu = new StartMenu();
@@ -39,7 +31,6 @@ public class UI{
 
     public void start(Stage stage){
 
-    	//set up stage with title
         stage.setTitle("Backgammon - DeepBlue2");
         BorderPane border = new BorderPane();
         Scene scene = new Scene(border, 700, 400);
@@ -81,12 +72,9 @@ public class UI{
         getD2().drawDice(gc, canvas.getWidth(), canvas.getHeight(), getDice2());                  //  Draws Die 2
     }
 
-    //draw the logo into the window
     private void drawStart() {
         gc.drawImage(new Image("src/Resources/Logo.png"), 0, 0, canvas.getWidth(), canvas.getHeight());
     }
-    
-    //accessor and mutator methods for the ui properties
     public Dice getD1() { return d1; }
     public Dice getD2() { return d2; }
     public int getWhosGo() { return whosGo; }

@@ -3,7 +3,7 @@
     17424866    Martynas Jagutis
     17379773    Ronan Mascarenhas
 */
-package src;
+package src.Objects;
 
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
