@@ -3,15 +3,13 @@
     17424866    Martynas Jagutis
     17379773    Ronan Mascarenhas
 */
-package src.UI;
+package src.Objects;
 
 import javafx.geometry.VPos;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
-import src.Objects.Counter;
-import src.Objects.Spike;
 
 public class Board {
     private Color background;

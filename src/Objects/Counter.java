@@ -30,25 +30,25 @@ public class Counter {
         if(t) {
             for (int i = 0; i < 15; i++) {
                 if (i < 2)
-                    c[i] = new Counter(1, loc[0], i, c1, 1);
+                    c[i] = new Counter(1, loc[0], i, c1, 0);
                 else if (i < 7)
-                    c[i] = new Counter(12, loc[1], i-2, c1, 1);
+                    c[i] = new Counter(12, loc[1], i-2, c1, 0);
                 else if (i < 10)
-                    c[i] = new Counter(17, loc[2], i-7, c1, 1);
+                    c[i] = new Counter(17, loc[2], i-7, c1, 0);
                 else
-                    c[i] = new Counter(19, loc[3], i-10, c1, 1);
+                    c[i] = new Counter(19, loc[3], i-10, c1, 0);
             }
         }
         else {
             for (int i = 0; i < 15; i++) {
                 if (i < 2)
-                    c[i] = new Counter(24, loc[0], i, c1, 2);
+                    c[i] = new Counter(24, loc[0], i, c1, 1);
                 else if (i < 7)
-                    c[i] = new Counter(13, loc[1], i-2, c1, 2);
+                    c[i] = new Counter(13, loc[1], i-2, c1, 1);
                 else if (i < 10)
-                    c[i] = new Counter(8, loc[2], i-7, c1, 2);
+                    c[i] = new Counter(8, loc[2], i-7, c1, 1);
                 else
-                    c[i] = new Counter(6, loc[3], i-10, c1, 2);
+                    c[i] = new Counter(6, loc[3], i-10, c1, 1);
             }
         }
     }

@@ -7,7 +7,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import src.Objects.CommandPanel;
+import src.Objects.Board;
 import src.Objects.Dice;
 
 public class UI{
@@ -20,7 +20,7 @@ public class UI{
     private InformationPanel infoPanel = new InformationPanel();
     private StartMenu startMenu = new StartMenu();
 
-    private int whosGo;
+    private int whoseGo;
     private int dice1, dice2;
     private Dice d1 = new Dice(1);
     private Dice d2 = new Dice(2);
@@ -65,7 +65,7 @@ public class UI{
 }
     //Redraws the updated game board
     public void draw() {
-        board.drawBoard(gc, canvas.getWidth(), canvas.getHeight(), (byte) (getWhosGo()%2));  //  Draws the board
+        board.drawBoard(gc, canvas.getWidth(), canvas.getHeight(), (byte) (getWhoseGo()));  //  Draws the board
         board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());            //  Draws the counters
 
         getD1().drawDice(gc, canvas.getWidth(), canvas.getHeight(), getDice1());                  //  Draws Die 1
@@ -77,7 +77,7 @@ public class UI{
     }
     public Dice getD1() { return d1; }
     public Dice getD2() { return d2; }
-    public int getWhosGo() { return whosGo; }
+    public int getWhoseGo() { return whoseGo % 2; }
     public int getDice1() { return dice1; }
     public int getDice2() { return dice2; }
     public CommandPanel getCommandPanel() { return commandPanel; }
@@ -86,7 +86,7 @@ public class UI{
     public Board getBoard() { return board; }
     public GraphicsContext getGc() { return gc; }
     public Canvas getCanvas() { return canvas; }
-    public void setWhosGo(int whosGo) { this.whosGo = whosGo; }
+    public void setWhoseGo(int whoseGo) { this.whoseGo = whoseGo; }
     public void setDice1(int dice1) { this.dice1 = dice1; }
     public void setDice2(int dice2) { this.dice2 = dice2; }
 }
