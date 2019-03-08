@@ -12,6 +12,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import src.Objects.Player;
+import src.Objects.PossibleMove;
 import src.Objects.Spike;
 import src.Objects.moveType;
 import src.UI.UI;
@@ -215,47 +216,50 @@ public class BackgammonLogic extends UI {
             dest.addToSpike(src.removeFromSpike());
     }
 
-    private void findPossibleMoves(int spike, Queue moves) {
 
-    }
 
     //  Tests is a move is possible
-    private moveType testMove(int start, int roll) {
+    private PossibleMove testMove(int start, int roll) {
+        PossibleMove move = new PossibleMove();
+        Spike f = getBoard().getSpike()[start];         //  Test Spike counter from
+        Spike t = getBoard().getSpike()[start + roll];  //  Test Spike counter to
 
-        moveType move;
-        Spike f = getBoard().getSpike()[start];
-        Spike t = getBoard().getSpike()[start + roll];
-
+    //  tests if a move is invalid (moving from spike f to spike t)
         if(testInvalidMove(f, t))
-            move = moveType.NotValid;
-        else if (testKnockOutMove(t))
-            move = moveType.KnockOut;
+            move.addMove(start, roll, moveType.NotValid);
+    //  tests if a move is a hit (moving from spike f to spike t)
+        else if (testHit(t))
+            move.addMove(start, roll, moveType.Hit);
+    //  tests if a move is Home (moving from spike f to spike t)
         else if (testBearOff(start, roll))
-            move = moveType.BearOff;
+            move.addMove(start, roll, moveType.BearOff);
+    //  tests if a move is Normal - No special move (moving from spike f to spike t)
         else
-            move = moveType.Normal;
+            move.addMove(start, roll, moveType.Normal);
 
-        switch(move) {
+    //  Print to console move type (testing purpose)
+        switch(move.getMoveType(0)) {
             case Normal:
-                System.out.println("Normal");
+                System.out.println(start + " to " + (start+roll) + "> Normal");
                 break;
             case NotValid:
-                System.out.println("Invalid");
+                System.out.println(start + " to " + (start+roll) + "> Invalid");
                 break;
             case BearOff:
-                System.out.println("BearOff");
+                System.out.println(start + " to " + (start+roll) + "> BearOff");
                 break;
-            case KnockOut:
-                System.out.println("KnockOut");
+            case Hit:
+                System.out.println(start + " to " + (start+roll) + "> Hit");
                 break;
             default:
-                System.out.println("Error");
+                System.out.println(start + " to " + (start+roll) + "> Error");
                 break;
         }
 
         return move;
     }
 
+//  Tests if a move is invalid
     private boolean testInvalidMove(Spike s1, Spike s2) {
         boolean test = false;
 
@@ -269,7 +273,8 @@ public class BackgammonLogic extends UI {
         return test;
     }
 
-    private boolean testKnockOutMove(Spike s) {
+//  Tests if a move is a hit
+    private boolean testHit(Spike s) {
         boolean test = false;
 
         if(s.getSizeOfSpike() == 1 && s.getCounterPlayer() != getWhoseGo())
@@ -278,6 +283,7 @@ public class BackgammonLogic extends UI {
         return test;
     }
 
+//  Tests if a move is a bear-off
     private boolean testBearOff(int s, int r) {
         boolean test = false;
 
