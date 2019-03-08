@@ -17,9 +17,8 @@ import src.Objects.Spike;
 import src.Objects.moveType;
 import src.UI.UI;
 
+import java.util.LinkedList;
 import java.util.Queue;
-
-import static java.lang.Math.abs;
 
 public class BackgammonLogic extends UI {
 
@@ -105,7 +104,7 @@ public class BackgammonLogic extends UI {
 
     //  Process Commands entered into Command Panel
     private void command(String s) {
-        int rollOne = -1, rollTwo = -1;
+        Queue<PossibleMove> move = new LinkedList<PossibleMove>();
 
         //If user enters quit, exit the program
         if (s.equals("quit")) {
@@ -168,6 +167,13 @@ public class BackgammonLogic extends UI {
                 testMove(test, r1);
                 testMove(test, r2);
             }
+        } else if(s.matches("find")) {
+            if(getDice1() > getDice2())
+                findPossibleMoves(1, getDice1(), getDice2(), move);
+            else
+                findPossibleMoves(1, getDice2(), getDice1(), move);
+
+            move.toString();
         }
 
         getCommandPanel().getCommandPanel().clear();
@@ -216,29 +222,28 @@ public class BackgammonLogic extends UI {
             dest.addToSpike(src.removeFromSpike());
     }
 
+    private Queue findPossibleMoves(int spikeNum, int d1, int d2, Queue moves) {
+        moveType test = testType(spikeNum, d1);
 
+        if(test != moveType.NotValid) {
+            moves.add(new PossibleMove(spikeNum, d1, test));
+            testMove(spikeNum, d1);
+        }
+
+        if(spikeNum > 24)
+            return moves;
+        if(d1 > d2)
+            return findPossibleMoves(spikeNum, d2, d1, moves);
+        else
+            return findPossibleMoves(spikeNum+1, d2, d1, moves);
+    }
 
     //  Tests is a move is possible
-    private PossibleMove testMove(int start, int roll) {
-        PossibleMove move = new PossibleMove();
-        Spike f = getBoard().getSpike()[start];         //  Test Spike counter from
-        Spike t = getBoard().getSpike()[start + roll];  //  Test Spike counter to
-
-    //  tests if a move is invalid (moving from spike f to spike t)
-        if(testInvalidMove(f, t))
-            move.addMove(start, roll, moveType.NotValid);
-    //  tests if a move is a hit (moving from spike f to spike t)
-        else if (testHit(t))
-            move.addMove(start, roll, moveType.Hit);
-    //  tests if a move is Home (moving from spike f to spike t)
-        else if (testBearOff(start, roll))
-            move.addMove(start, roll, moveType.BearOff);
-    //  tests if a move is Normal - No special move (moving from spike f to spike t)
-        else
-            move.addMove(start, roll, moveType.Normal);
+    private void testMove(int start, int roll) {
+        moveType m = testType(start, roll);
 
     //  Print to console move type (testing purpose)
-        switch(move.getMoveType(0)) {
+        switch(m) {
             case Normal:
                 System.out.println(start + " to " + (start+roll) + "> Normal");
                 break;
@@ -255,40 +260,34 @@ public class BackgammonLogic extends UI {
                 System.out.println(start + " to " + (start+roll) + "> Error");
                 break;
         }
-
-        return move;
     }
 
-//  Tests if a move is invalid
-    private boolean testInvalidMove(Spike s1, Spike s2) {
-        boolean test = false;
+//  Tests for type of move
+    private moveType testType(int s, int roll) {
+        Spike s1 = getBoard().getSpike()[s];
 
-        if(s1.isEmpty())
-            test = true;
-        else if(s1.getCounterPlayer() != getWhoseGo())
-            test = true;
-        else if(s2.getSizeOfSpike() > 1 && s2.getCounterPlayer() != getWhoseGo())
-            test = true;
+        if(s1.isEmpty() || s1.getCounterPlayer() != getWhoseGo())
+            return moveType.NotValid;
+        if(s+roll > 24)
+            return moveType.BearOff;
 
-        return test;
+        Spike s2 = getBoard().getSpike()[s+roll];
+
+        if(s2.isEmpty() || s2.getCounterPlayer() == getWhoseGo())
+            return moveType.Normal;
+        if(s2.getSizeOfSpike() == 1)
+            return moveType.Hit;
+
+        return moveType.NotValid;
     }
 
-//  Tests if a move is a hit
-    private boolean testHit(Spike s) {
-        boolean test = false;
-
-        if(s.getSizeOfSpike() == 1 && s.getCounterPlayer() != getWhoseGo())
-            test = true;
-
-        return test;
-    }
 
 //  Tests if a move is a bear-off
     private boolean testBearOff(int s, int r) {
         boolean test = false;
 
-        if(s + abs(r) > 24)
-            test = true;
+       if(s+r > 24 || (24-s)-r <1)
+           test = true;
 
         return test;
     }
