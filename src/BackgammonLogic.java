@@ -113,6 +113,7 @@ public class BackgammonLogic extends UI {
         } else if (s.matches("move")) {
             //deal with player movement
             getInfoPanel().getInfoPanel().appendText("> move [from] [destination]\n");
+
         } else if (s.startsWith("move")) {
             String[] arg = s.split(" ");
             //parse move starting position and finishing postion
@@ -141,8 +142,18 @@ public class BackgammonLogic extends UI {
 
                     draw();
                 }
+
             }
-        } else if (s.equals("next")) {
+            //Updates player scores according to number of counters in spike 25 and 26
+            getInfoPanel().getScorePanel().setText("SCORE\nPlayer 1: " + getBoard().getSpike()[26].getSizeOfSpike() +
+                    "\nPlayer 2: " + getBoard().getSpike()[25].getSizeOfSpike());
+
+        }
+        //Placehold for when the game finishes
+        else if (s.equals("finish")){
+
+        }
+        else if (s.equals("next")) {
             //next players turn
             setWhoseGo(getWhoseGo() + 1);
             draw();
