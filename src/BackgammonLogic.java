@@ -193,6 +193,8 @@ public class BackgammonLogic extends UI {
                 findPossibleMoves(1, getDice2(), getDice1(), move);
 
             System.out.println("-----------------");
+
+            printQueue(move);
         }
 
         getCommandPanel().getCommandPanel().clear();
@@ -243,9 +245,12 @@ public class BackgammonLogic extends UI {
 
     private Queue findPossibleMoves(int spikeNum, int d1, int d2, Queue moves) {
         moveType test = testType(spikeNum, d1);
+        PossibleMove pm = new PossibleMove();
 
         if (test != moveType.NotValid) {
-            moves.add(new PossibleMove(spikeNum, d1, test));
+            pm.add(spikeNum, d1, test);
+            findSecondMove(spikeNum, d2, pm, moves);
+
             printMoveType(spikeNum, d1);
         }
 
@@ -255,6 +260,35 @@ public class BackgammonLogic extends UI {
             return findPossibleMoves(spikeNum, d2, d1, moves);
         else
             return findPossibleMoves(spikeNum + 1, d2, d1, moves);
+    }
+
+    private Queue findSecondMove(int spike, int roll, PossibleMove m, Queue moves) {
+        moveType test = testType(spike, roll);
+
+        if(test != moveType.NotValid) {
+            PossibleMove m2 = new PossibleMove();
+            m2.clone(m);
+            m2.add(spike, roll, test);
+
+            moves.add(m2);
+        }
+
+
+        if(test == moveType.NotValid && spike > 24) {
+            moves.add(m);
+        } else {
+            findSecondMove(spike+1, roll, m, moves);
+        }
+
+        return moves;
+    }
+
+    private void printQueue(Queue moves) {
+        while(!moves.isEmpty()) {
+            PossibleMove temp = (PossibleMove) moves.remove();
+            System.out.println(temp.getMoves());
+            moves.remove();
+        }
     }
 
     //  Tests is a move is possible

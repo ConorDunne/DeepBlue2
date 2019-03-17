@@ -3,21 +3,31 @@ package src.Objects;
 public class PossibleMove {
     private int numberOfMoves;
     private String moves;
-    private int startSpike;
-    private int roll;
-    private moveType type;
+    private int[] startSpike = new int[4];
+    private int[] roll = new int[4];
+    private moveType[] type = new moveType[4];
 
-    public PossibleMove(int start, int roll, moveType t) {
-        this.numberOfMoves = 1;
-        this.roll = roll;
-        this.type = t;
-        this.startSpike = start;
-        moves = "> " + start + "-" + (start+roll);
+    public PossibleMove() {
+        this.numberOfMoves = 0;
+        this.moves = ">";
+    }
+
+    public void add(int start, int roll, moveType t) {
+        this.numberOfMoves++;
+        this.roll[numberOfMoves] = roll;
+        this.type[numberOfMoves] = t;
+        this.startSpike[numberOfMoves] = start;
+        this.moves += " " + (start) + "-" + (start+roll);
+    }
+
+    public void clone(PossibleMove original) {
+        this.numberOfMoves = original.numberOfMoves;
+        this.moves = original.moves;
+        this.startSpike = original.startSpike;
+        this.roll = original.roll;
+        this.type = original.type;
     }
 
     public String getMoves() { return this.moves; }
     public int getNumberOfMoves() { return this.numberOfMoves; }
-    public int getStartSpike () { return this.startSpike; }
-    public int getRoll () { return this.roll; }
-    public moveType getMoveType () { return this.type; }
 }
