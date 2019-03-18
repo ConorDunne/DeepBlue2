@@ -187,10 +187,7 @@ public class BackgammonLogic extends UI {
                 setDice2(0-getDice2());
             }
 
-            if (abs(getDice1()) < abs(getDice2()))
-                findPossibleMoves(1, getDice1(), getDice2(), move);
-            else
-                findPossibleMoves(1, getDice2(), getDice1(), move);
+            findPossibleMoves(move);
 
             System.out.println("-----------------");
 
@@ -243,13 +240,84 @@ public class BackgammonLogic extends UI {
             dest.addToSpike(src.removeFromSpike());
     }
 
-    private Queue findPossibleMoves(int spikeNum, int d1, int d2, Queue moves) {
+    private Queue findPossibleMoves(Queue moves) {
+        Spike one = getBoard().getSpike()[playerOne.getKnockedOutLocation()];
+        Spike two = getBoard().getSpike()[playerTwo.getKnockedOutLocation()];
+        int d1, d2;
+
+        if(getDice1() < getDice2()) {
+            d1 = getDice1();
+            d2 = getDice2();
+        } else {
+            d1 = getDice1();
+            d2 = getDice2();
+        }
+
+        if((one.isEmpty() && getWhoseGo() == 0) || (two.isEmpty() && getWhoseGo() == 1)) {
+            findFirstMove(1, d1, d2, moves);
+        } else {
+            if(getWhoseGo() == 0)
+                testBar(one, d1, d2, playerOne.getKnockedOutLocation(), moves);
+            else
+                testBar(two, d1, d2, playerTwo.getKnockedOutLocation(), moves);
+        }
+
+        return moves;
+    }
+
+    private Queue testBar(Spike bar, int d1, int d2, int k, Queue moves) {
+        if(bar.getNumber() == 1) {
+            moveType test = testBar(bar, d1);
+            if(test != moveType.NotValid) {
+                PossibleMove pm = new PossibleMove();
+                pm.add(k, d1, test);
+
+                Spike dest = getBoard().getSpike()[d1];
+                dest.addToSpike(bar.removeFromSpike());
+                findSecondMove(1, d2, pm, moves);
+                bar.addToSpike(dest.removeFromSpike());
+            }
+
+            test = testBar(bar, d2);
+            if(test != moveType.NotValid) {
+                PossibleMove pm = new PossibleMove();
+                pm.add(k, d2, test);
+
+                Spike dest = getBoard().getSpike()[d1];
+                dest.addToSpike(bar.removeFromSpike());
+                findSecondMove(1, d1, pm, moves);
+                bar.addToSpike(dest.removeFromSpike());
+            }
+        } else {
+            moveType test = testBar(bar, d1);
+            PossibleMove pm = new PossibleMove();
+
+            if(test != moveType.NotValid) {
+                pm.add(k, d1, test);
+            }
+
+            test = testBar(bar, d2);
+            if(test != moveType.NotValid) {
+                pm.add(k, d2, test);
+            }
+        }
+
+        return moves;
+    }
+
+    private Queue findFirstMove(int spikeNum, int d1, int d2, Queue moves) {
         moveType test = testType(spikeNum, d1);
         PossibleMove pm = new PossibleMove();
 
         if (test != moveType.NotValid) {
+            Spike one = getBoard().getSpike()[spikeNum];
+            Spike two = getBoard().getSpike()[spikeNum+d1];
+
             pm.add(spikeNum, d1, test);
+
+            two.addToSpike(one.removeFromSpike());
             findSecondMove(spikeNum, d2, pm, moves);
+            one.addToSpike(two.removeFromSpike());
 
             printMoveType(spikeNum, d1);
         }
@@ -257,9 +325,9 @@ public class BackgammonLogic extends UI {
         if (spikeNum > 24)
             return moves;
         if (abs(d1) < abs(d2))
-            return findPossibleMoves(spikeNum, d2, d1, moves);
+            return findFirstMove(spikeNum, d2, d1, moves);
         else
-            return findPossibleMoves(spikeNum + 1, d2, d1, moves);
+            return findFirstMove(spikeNum + 1, d2, d1, moves);
     }
 
     private Queue findSecondMove(int spike, int roll, PossibleMove m, Queue moves) {
@@ -334,6 +402,17 @@ public class BackgammonLogic extends UI {
         if (s2.isEmpty() || s2.getCounterPlayer() == getWhoseGo())
             return moveType.Normal;
         if (s2.getSizeOfSpike() == 1)
+            return moveType.Hit;
+
+        return moveType.NotValid;
+    }
+
+    private moveType testBar(Spike bar, int roll) {
+        Spike pip = getBoard().getSpike()[roll];
+
+        if(pip.isEmpty() || pip.getCounterPlayer() == bar.getCounterPlayer())
+            return moveType.Normal;
+        else if(pip.getNumber() == 1)
             return moveType.Hit;
 
         return moveType.NotValid;
