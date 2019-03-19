@@ -17,7 +17,13 @@ public class PossibleMove {
         this.roll[numberOfMoves] = roll;
         this.type[numberOfMoves] = t;
         this.startSpike[numberOfMoves] = start;
-        this.moves += " " + (start) + "-" + (start+roll);
+
+        if(t == moveType.Normal)
+            this.moves += " " + (start) + "-" + (start+roll);
+        else if(t == moveType.Hit)
+            this.moves += " " + (start) + "-" + (start+roll) + "*";
+        else if(t == moveType.BearOff)
+            this.moves += " " + (start) + "-" + "B";
     }
 
     public void clone(PossibleMove original) {
