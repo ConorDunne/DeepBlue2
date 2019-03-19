@@ -22,6 +22,8 @@ import java.util.Queue;
 
 import static java.lang.Math.abs;
 
+
+
 public class BackgammonLogic extends UI {
 
     //initialise objects
@@ -29,6 +31,9 @@ public class BackgammonLogic extends UI {
 
     private Player playerOne;       //  Player One Object
     private Player playerTwo;       //  Player Two Object
+
+    private int playerOneScore;
+    private int playerTwoScore;
 
     //constructor to create stage/click options
     public BackgammonLogic(Stage stage) {
@@ -144,13 +149,27 @@ public class BackgammonLogic extends UI {
                 }
 
             }
+            playerOneScore = getBoard().getSpike()[26].getSizeOfSpike();
+            playerTwoScore = getBoard().getSpike()[25].getSizeOfSpike();
+
             //Updates player scores according to number of counters in spike 25 and 26
-            getInfoPanel().getScorePanel().setText("SCORE\nPlayer 1: " + getBoard().getSpike()[26].getSizeOfSpike() +
-                    "\nPlayer 2: " + getBoard().getSpike()[25].getSizeOfSpike());
+            getInfoPanel().getScorePanel().setText("SCORE\nPlayer 1: " + playerOneScore +
+                    "\nPlayer 2: " + playerTwoScore);
 
         }
         //Placehold for when the game finishes
         else if (s.equals("finish")){
+            getFinishGameMenu().endOfGame();
+            if(playerOneScore>playerTwoScore) {
+                getFinishGameMenu().getResultsLabel().setText("Congratulations Player 1! You won the game!");
+            }
+            else if (playerTwoScore > playerOneScore){
+                getFinishGameMenu().getResultsLabel().setText("Congratulations Player 2! You won the game!");
+            }else
+            {
+                getFinishGameMenu().getResultsLabel().setText("The game is a draw!");
+
+            }
 
         }
         else if (s.equals("next")) {

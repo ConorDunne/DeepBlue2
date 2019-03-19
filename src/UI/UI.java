@@ -19,11 +19,14 @@ public class UI{
     private CommandPanel commandPanel = new CommandPanel();
     private InformationPanel infoPanel = new InformationPanel();
     private StartMenu startMenu = new StartMenu();
+    private FinishGameMenu finishGameMenu = new FinishGameMenu();
 
     private int whoseGo;
     private int dice1, dice2;
     private Dice d1 = new Dice(1);
     private Dice d2 = new Dice(2);
+
+
 
     public UI(Stage stage){
         start(stage);
@@ -55,7 +58,7 @@ public class UI{
         stage.show();
 
         drawStart();
-            getStartMenu().enterUserNames(stage);
+        getStartMenu().enterUserNames(stage);
 
         //Uses lambda expressions to call draw() every time the window is resized
             canvas.widthProperty().addListener(event -> draw());
@@ -89,4 +92,6 @@ public class UI{
     public void setWhoseGo(int whoseGo) { this.whoseGo = whoseGo; }
     public void setDice1(int dice1) { this.dice1 = dice1; }
     public void setDice2(int dice2) { this.dice2 = dice2; }
+
+    public FinishGameMenu getFinishGameMenu() { return finishGameMenu; }
 }
