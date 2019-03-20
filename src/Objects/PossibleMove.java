@@ -12,17 +12,28 @@ public class PossibleMove {
         this.moves = ">";
     }
 
-    public void add(int start, int roll, moveType t) {
+    public void add(int start, int roll, moveType t, byte player) {
         this.numberOfMoves++;
         this.roll[numberOfMoves] = roll;
         this.type[numberOfMoves] = t;
         this.startSpike[numberOfMoves] = start;
 
-        if(t == moveType.Normal)
-            this.moves += " " + (start) + "-" + (start+roll);
-        else if(t == moveType.Hit)
-            this.moves += " " + (start) + "-" + (start+roll) + "*";
-        else if(t == moveType.BearOff)
+        int displaySrt;
+        int displayEnd;
+
+        if(player == 0) {
+            displaySrt = start;
+            displayEnd = start + roll;
+        } else {
+            displaySrt = 25 - start;
+            displayEnd = 25 - start + roll;
+        }
+
+        if (t == moveType.Normal)
+            this.moves += " " + displaySrt + "-" + displayEnd;
+        else if (t == moveType.Hit)
+            this.moves += " " + displaySrt + "-" + displayEnd + "*";
+        else if (t == moveType.BearOff)
             this.moves += " " + (start) + "-" + "B";
     }
 

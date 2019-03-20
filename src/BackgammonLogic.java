@@ -17,6 +17,7 @@ import src.Objects.Spike;
 import src.Objects.moveType;
 import src.UI.UI;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -268,8 +269,8 @@ public class BackgammonLogic extends UI {
             d1 = getDice1();
             d2 = getDice2();
         } else {
-            d1 = getDice1();
-            d2 = getDice2();
+            d1 = getDice2();
+            d2 = getDice1();
         }
 
         if((one.isEmpty() && getWhoseGo() == 0) || (two.isEmpty() && getWhoseGo() == 1)) {
@@ -289,22 +290,22 @@ public class BackgammonLogic extends UI {
             moveType test = testBar(bar, d1);
             if(test != moveType.NotValid) {
                 PossibleMove pm = new PossibleMove();
-                pm.add(k, d1, test);
+                pm.add(k, d1, test, (byte) getWhoseGo());
 
                 Spike dest = getBoard().getSpike()[d1];
                 dest.addToSpike(bar.removeFromSpike());
-                findSecondMove(1, d2, pm, moves);
+                findSecondMove(1, d2, pm, moves, true);
                 bar.addToSpike(dest.removeFromSpike());
             }
 
             test = testBar(bar, d2);
             if(test != moveType.NotValid) {
                 PossibleMove pm = new PossibleMove();
-                pm.add(k, d2, test);
+                pm.add(k, d2, test, (byte) getWhoseGo());
 
                 Spike dest = getBoard().getSpike()[d1];
                 dest.addToSpike(bar.removeFromSpike());
-                findSecondMove(1, d1, pm, moves);
+                findSecondMove(1, d1, pm, moves, true);
                 bar.addToSpike(dest.removeFromSpike());
             }
         } else {
@@ -312,12 +313,12 @@ public class BackgammonLogic extends UI {
             PossibleMove pm = new PossibleMove();
 
             if(test != moveType.NotValid) {
-                pm.add(k, d1, test);
+                pm.add(k, d1, test, (byte) getWhoseGo());
             }
 
             test = testBar(bar, d2);
             if(test != moveType.NotValid) {
-                pm.add(k, d2, test);
+                pm.add(k, d2, test, (byte) getWhoseGo());
             }
         }
 
@@ -332,10 +333,10 @@ public class BackgammonLogic extends UI {
             Spike one = getBoard().getSpike()[spikeNum];
             Spike two = getBoard().getSpike()[spikeNum+d1];
 
-            pm.add(spikeNum, d1, test);
+            pm.add(spikeNum, d1, test, (byte) getWhoseGo());
 
             two.addToSpike(one.removeFromSpike());
-            findSecondMove(spikeNum, d2, pm, moves);
+            findSecondMove(spikeNum, d2, pm, moves, true);
             one.addToSpike(two.removeFromSpike());
 
             printMoveType(spikeNum, d1);
@@ -349,22 +350,23 @@ public class BackgammonLogic extends UI {
             return findFirstMove(spikeNum + 1, d2, d1, moves);
     }
 
-    private Queue findSecondMove(int spike, int roll, PossibleMove m, Queue moves) {
+    private Queue findSecondMove(int spike, int roll, PossibleMove m, Queue moves, boolean addSingleMove) {
         moveType test = testType(spike, roll);
 
         if(test != moveType.NotValid) {
             PossibleMove m2 = new PossibleMove();
             m2.clone(m);
-            m2.add(spike, roll, test);
+            m2.add(spike, roll, test, (byte) getWhoseGo());
 
             moves.add(m2);
+            addSingleMove = false;
         }
 
 
-        if(test == moveType.NotValid && spike > 24) {
+        if(test == moveType.NotValid && spike > 24 && addSingleMove) {
             moves.add(m);
-        } else {
-            findSecondMove(spike+1, roll, m, moves);
+        } else if (spike < 24){
+            findSecondMove(spike+1, roll, m, moves, addSingleMove);
         }
 
         return moves;
@@ -374,7 +376,6 @@ public class BackgammonLogic extends UI {
         while(!moves.isEmpty()) {
             PossibleMove temp = (PossibleMove) moves.remove();
             System.out.println(temp.getMoves());
-            moves.remove();
         }
     }
 

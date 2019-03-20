@@ -144,16 +144,13 @@ public class Board {
             if (i < 2) {
                 spike[1].addToSpike(playerOne[i]);
                 spike[24].addToSpike(playerTwo[i]);
-            }
-            else if (i < 7) {
+            } else if (i < 7) {
                 spike[12].addToSpike(playerOne[i]);
                 spike[13].addToSpike(playerTwo[i]);
-            }
-            else if (i < 10) {
+            } else if (i < 10) {
                 spike[17].addToSpike(playerOne[i]);
                 spike[8].addToSpike(playerTwo[i]);
-            }
-            else {
+            } else {
                 spike[19].addToSpike(playerOne[i]);
                 spike[6].addToSpike(playerTwo[i]);
             }
