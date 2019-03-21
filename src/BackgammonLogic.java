@@ -156,7 +156,7 @@ public class BackgammonLogic extends UI {
                     "\nPlayer 2: " + playerTwoScore);
 
         }
-        //Placehold for when the game finishes
+        //Place hold for when the game finishes
         else if (s.equals("finish")){
             getFinishGameMenu().endOfGame();
             if(playerOneScore>playerTwoScore) {
@@ -179,9 +179,10 @@ public class BackgammonLogic extends UI {
             setDice1(getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight()));
             setDice2(getD2().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight()));
             getInfoPanel().getInfoPanel().appendText("Dice >" + getDice1() + "|" + getDice2() + "\n");
-        } else if (s.equals("cheat")) {
+        } else if (s.startsWith("cheat")) {
+            String[] args = s.split(" ");
             //cheat mode activated
-            cheat();
+            cheat(Integer.parseInt(args[1]));
         } else if (s.equals("roll")) {
             getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight());
         } else if (s.startsWith("test")) {
@@ -217,23 +218,21 @@ public class BackgammonLogic extends UI {
     }
 
     //logic for the cheat mode
-    public void cheat() {
+    public void cheat(int position) {
         f = new Spike(-1, 0);
         t = new Spike(-2, 0);
 
-        //  Collect Counters
-        for (int i = 0; i < 28; i++) {
-            Spike pointerSpike = getBoard().getSpike()[i];
+        collectCounters();
 
-            while (!pointerSpike.isEmpty()) {
-                if (pointerSpike.getCounterPlayer() == 1)
-                    f.addToSpike(pointerSpike.removeFromSpike());
-                else
-                    t.addToSpike(pointerSpike.removeFromSpike());
-            }
-        }
+        if (position == 1)
+            cheatPositionOne();
+        else if (position == 2)
+            cheatPositionTwo();
 
-        //  Move Player 1
+        draw();
+    }
+
+    private void cheatPositionOne() {
         cheatMove(getBoard().getSpike()[playerOne.getHomeLocation()], f, 3);
         cheatMove(getBoard().getSpike()[playerOne.getKnockedOutLocation()], f, 3);
         cheatMove(getBoard().getSpike()[24], f, 3);
@@ -248,8 +247,31 @@ public class BackgammonLogic extends UI {
         cheatMove(getBoard().getSpike()[3], t, 2);
         cheatMove(getBoard().getSpike()[4], t, 2);
         cheatMove(getBoard().getSpike()[5], t, 2);
+    }
 
-        draw();
+    private void cheatPositionTwo() {
+        cheatMove(getBoard().getSpike()[playerOne.getHomeLocation()], f, 2);
+        cheatMove(getBoard().getSpike()[playerOne.getKnockedOutLocation()], f, 1);
+        cheatMove(getBoard().getSpike()[playerTwo.getHomeLocation()], t, 2);
+        cheatMove(getBoard().getSpike()[playerTwo.getKnockedOutLocation()], t, 1);
+
+        for (int i = 1; !f.isEmpty(); i++) {
+            cheatMove(getBoard().getSpike()[i], f, 1);
+            cheatMove(getBoard().getSpike()[25 - i], t, 1);
+        }
+    }
+
+    private void collectCounters() {
+        for (int i = 0; i < 28; i++) {
+            Spike pointerSpike = getBoard().getSpike()[i];
+
+            while (!pointerSpike.isEmpty()) {
+                if (pointerSpike.getCounterPlayer() == 1)
+                    f.addToSpike(pointerSpike.removeFromSpike());
+                else
+                    t.addToSpike(pointerSpike.removeFromSpike());
+            }
+        }
     }
 
     //  Moves the Checkers. Moves x counters from a to b - Only for Cheat Command
