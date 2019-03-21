@@ -52,7 +52,7 @@ public class BackgammonLogic extends UI {
             playerTwoName = getStartMenu().getPlayerTwoTextField().getText();
 
             //players are assigned counter colors
-            playerOne = new Player(playerOneName, Color.RED, 0, 25);
+            playerOne = new Player(playerOneName, Color.RED, 25, 0);
             playerTwo = new Player(playerTwoName, Color.BLUE, 26, 27);
             //player info is displayed on the info panel
             getInfoPanel().addPlayerInfo(playerOne, playerTwo);
@@ -157,21 +157,18 @@ public class BackgammonLogic extends UI {
 
         }
         //Place hold for when the game finishes
-        else if (s.equals("finish")){
+        else if (s.equals("finish")) {
             getFinishGameMenu().endOfGame();
-            if(playerOneScore>playerTwoScore) {
+            if (playerOneScore > playerTwoScore) {
                 getFinishGameMenu().getResultsLabel().setText("Congratulations Player 1! You won the game!");
-            }
-            else if (playerTwoScore > playerOneScore){
+            } else if (playerTwoScore > playerOneScore) {
                 getFinishGameMenu().getResultsLabel().setText("Congratulations Player 2! You won the game!");
-            }else
-            {
+            } else {
                 getFinishGameMenu().getResultsLabel().setText("The game is a draw!");
 
             }
 
-        }
-        else if (s.equals("next")) {
+        } else if (s.equals("next")) {
             //next players turn
             setWhoseGo(getWhoseGo() + 1);
             draw();
@@ -183,6 +180,8 @@ public class BackgammonLogic extends UI {
             String[] args = s.split(" ");
             //cheat mode activated
             cheat(Integer.parseInt(args[1]));
+        } else if (s.matches("cheat")) {
+            cheat(1);
         } else if (s.equals("roll")) {
             getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight());
         } else if (s.startsWith("test")) {
@@ -281,64 +280,76 @@ public class BackgammonLogic extends UI {
     }
 
     private Queue findPossibleMoves(Queue moves) {
-        Spike ko;
+        Spike bar;
         int d1, d2;
 
         d1 = min(abs(getDice1()), abs(getDice2()));
         d2 = max(abs(getDice1()), abs(getDice2()));
 
         if (getWhoseGo() == 0)
-            ko = getBoard().getSpike()[playerOne.getKnockedOutLocation()];
+            bar = getBoard().getSpike()[playerOne.getKnockedOutLocation()];
         else
-            ko = getBoard().getSpike()[playerTwo.getKnockedOutLocation()];
+            bar = getBoard().getSpike()[playerTwo.getKnockedOutLocation()];
 
-        if (ko.isEmpty()) {
+        if (bar.isEmpty()) {
             findFirstMove(1, d1, d2, moves);
         } else {
             if(getWhoseGo() == 0)
-                testBar(ko, d1, d2, playerOne.getKnockedOutLocation(), moves);
+                testBar(bar, d1, d2, playerOne.getKnockedOutLocation(), moves);
             else
-                testBar(ko, d1, d2, playerTwo.getKnockedOutLocation(), moves);
+                testBar(bar, d1, d2, playerTwo.getKnockedOutLocation(), moves);
         }
 
         return moves;
     }
 
-    private Queue testBar(Spike bar, int d1, int d2, int k, Queue moves) {
-        if(bar.getNumber() == 1) {
-            moveType test = testBar(bar, d1);
+    private Queue testBar(Spike bar, int d1, int d2, int spikeNum, Queue moves) {
+        if (bar.getSizeOfSpike() == 1) {
+            moveType test = testBar(d1);
             if(test != moveType.NotValid) {
                 PossibleMove pm = new PossibleMove();
-                pm.add(k, d1, test, (byte) getWhoseGo());
+                pm.add(spikeNum, d1, test, (byte) getWhoseGo());
 
-                Spike dest = getBoard().getSpike()[d1];
+                Spike dest;
+                if (getWhoseGo() == 0)
+                    dest = getBoard().getSpike()[d1];
+                else
+                    dest = getBoard().getSpike()[25 - d1];
+
                 dest.addToSpike(bar.removeFromSpike());
                 findSecondMove(1, d2, pm, moves, true);
                 bar.addToSpike(dest.removeFromSpike());
             }
 
-            test = testBar(bar, d2);
+            test = testBar(d2);
             if(test != moveType.NotValid) {
                 PossibleMove pm = new PossibleMove();
-                pm.add(k, d2, test, (byte) getWhoseGo());
+                pm.add(spikeNum, d2, test, (byte) getWhoseGo());
 
-                Spike dest = getBoard().getSpike()[d1];
+                Spike dest;
+                if (getWhoseGo() == 0)
+                    dest = getBoard().getSpike()[d2];
+                else
+                    dest = getBoard().getSpike()[25 - d2];
+
                 dest.addToSpike(bar.removeFromSpike());
                 findSecondMove(1, d1, pm, moves, true);
                 bar.addToSpike(dest.removeFromSpike());
             }
         } else {
-            moveType test = testBar(bar, d1);
+            moveType test = testBar(d1);
             PossibleMove pm = new PossibleMove();
 
             if(test != moveType.NotValid) {
-                pm.add(k, d1, test, (byte) getWhoseGo());
+                pm.add(spikeNum, d1, test, (byte) getWhoseGo());
             }
 
-            test = testBar(bar, d2);
+            test = testBar(d2);
             if(test != moveType.NotValid) {
-                pm.add(k, d2, test, (byte) getWhoseGo());
+                pm.add(spikeNum, d2, test, (byte) getWhoseGo());
             }
+
+            moves.add(pm);
         }
 
         return moves;
@@ -468,10 +479,15 @@ public class BackgammonLogic extends UI {
         return moveType.NotValid;
     }
 
-    private moveType testBar(Spike bar, int roll) {
-        Spike pip = getBoard().getSpike()[roll];
+    private moveType testBar(int roll) {
+        Spike pip;
 
-        if(pip.isEmpty() || pip.getCounterPlayer() == bar.getCounterPlayer())
+        if (getWhoseGo() == 0)
+            pip = getBoard().getSpike()[roll];
+        else
+            pip = getBoard().getSpike()[25 - roll];
+
+        if (pip.isEmpty() || pip.getCounterPlayer() == getWhoseGo())
             return moveType.Normal;
         else if(pip.getNumber() == 1)
             return moveType.Hit;
