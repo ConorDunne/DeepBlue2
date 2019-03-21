@@ -18,21 +18,15 @@ public class PossibleMove {
         this.type[numberOfMoves] = t;
         this.startSpike[numberOfMoves] = start;
 
-        int displaySrt;
-        int displayEnd;
-
-        if(player == 0) {
-            displaySrt = start;
-            displayEnd = start + roll;
-        } else {
-            displaySrt = 25 - start;
-            displayEnd = 25 - start + roll;
+        if (player == 1) {
+            start = 25 - start;
+            roll = -roll;
         }
 
         if (t == moveType.Normal)
-            this.moves += " " + displaySrt + "-" + displayEnd;
+            this.moves += " " + (start) + "-" + (start + roll);
         else if (t == moveType.Hit)
-            this.moves += " " + displaySrt + "-" + displayEnd + "*";
+            this.moves += " " + (start) + "-" + (start + roll) + "*";
         else if (t == moveType.BearOff)
             this.moves += " " + (start) + "-" + "B";
     }
