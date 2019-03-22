@@ -6,17 +6,22 @@ public class PossibleMove {
     private int[] startSpike = new int[4];
     private int[] roll = new int[4];
     private moveType[] type = new moveType[4];
+    private int[] endStateOne = new int[26];
+    private int[] endStateTwo = new int[26];
 
     public PossibleMove() {
         this.numberOfMoves = 0;
         this.moves = ">";
     }
 
-    public void add(int start, int roll, moveType t, byte player) {
+    public void add(int start, int roll, moveType t, int[] counter1state, int[] counter2state, byte player) {
         this.numberOfMoves++;
         this.roll[numberOfMoves] = roll;
         this.type[numberOfMoves] = t;
         this.startSpike[numberOfMoves] = start;
+        this.endStateOne = counter1state;
+        this.endStateTwo = counter2state;
+
 
         if (player == 1) {
             start = 25 - start;
@@ -37,6 +42,8 @@ public class PossibleMove {
         this.startSpike = original.startSpike;
         this.roll = original.roll;
         this.type = original.type;
+        this.endStateOne = original.endStateOne;
+        this.endStateTwo = original.endStateTwo;
     }
 
     public String getMoves() { return this.moves; }

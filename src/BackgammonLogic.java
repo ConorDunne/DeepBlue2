@@ -26,19 +26,27 @@ import static java.lang.Math.*;
 public class BackgammonLogic extends UI {
 
     //initialise objects
-    private Spike f, t;             //  Temporary Spike Objects
+    private Spike f, t;                 //  Temporary Spike Objects
 
-    private Player playerOne;       //  Player One Object
-    private Player playerTwo;       //  Player Two Object
+    private Player playerOne;           //  Player One Object
+    private Player playerTwo;           //  Player Two Object
 
-    private int playerOneScore;
-    private int playerTwoScore;
+    private int playerOneScore;         //  Player One Score
+    private int playerTwoScore;         //  Player Two Score
+
+    //  State of the counters. Number of their counters on the spikes (Removing identical moves)
+    //  int[0] is for bar, int[25] is for bear off, spikes correspond to their number
+    private int[] counterOneStates = new int[26];     //  State of Player 1 counters
+    private int[] counterTwoStates = new int[26];     //  State of Player 2 counters
 
     //constructor to create stage/click options
     public BackgammonLogic(Stage stage) {
+        //  Initialize Stage
         super(stage);
         enterBtnClick();
         commandBtnClick();
+
+        initializeCounterStates(0);
     }
 
     private void enterBtnClick() {
@@ -87,7 +95,7 @@ public class BackgammonLogic extends UI {
             //if a player rolls more than opponent, no need to roll again
             if (getDice1() != getDice2()) {
                 repeat = false;
-                draw();
+                gameStateDraw();
 
                 //case where player one goes first
                 if (getDice1() > getDice2()) {
@@ -141,10 +149,40 @@ public class BackgammonLogic extends UI {
                 f = getBoard().getSpike()[from];
                 t = getBoard().getSpike()[dest];
 
+                if (getWhoseGo() == 0) {
+                    if (from < 25 && from > 0)
+                        counterOneStates[from]--;
+                    else if (from < 1)
+                        counterOneStates[0]--;
+                    else if (from > 24)
+                        counterOneStates[25]--;
+
+                    if (dest < 25 && dest > 0)
+                        counterOneStates[dest]++;
+                    else if (dest < 1)
+                        counterOneStates[0]++;
+                    else if (dest > 24)
+                        counterOneStates[25]++;
+                } else {
+                    if (from < 25 && from > 0)
+                        counterTwoStates[from]--;
+                    else if (from < 1)
+                        counterTwoStates[0]--;
+                    else if (from > 24)
+                        counterTwoStates[25]--;
+
+                    if (dest < 25 && dest > 0)
+                        counterTwoStates[dest]++;
+                    else if (dest < 1)
+                        counterTwoStates[0]++;
+                    else if (dest > 24)
+                        counterTwoStates[25]++;
+                }
+
                 if (f.getSizeOfSpike() > 0) {
                     t.addToSpike(f.removeFromSpike());
 
-                    draw();
+                    gameStateDraw();
                 }
 
             }
@@ -171,7 +209,7 @@ public class BackgammonLogic extends UI {
         } else if (s.equals("next")) {
             //next players turn
             setWhoseGo(getWhoseGo() + 1);
-            draw();
+            gameStateDraw();
 
             setDice1(getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight()));
             setDice2(getD2().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight()));
@@ -228,7 +266,9 @@ public class BackgammonLogic extends UI {
         else if (position == 2)
             cheatPositionTwo();
 
-        draw();
+        initializeCounterStates(position);
+
+        gameStateDraw();
     }
 
     private void cheatPositionOne() {
@@ -308,7 +348,7 @@ public class BackgammonLogic extends UI {
             moveType test = testBar(d1);
             if(test != moveType.NotValid) {
                 PossibleMove pm = new PossibleMove();
-                pm.add(spikeNum, d1, test, (byte) getWhoseGo());
+                pm.add(spikeNum, d1, test, counterOneStates, counterTwoStates, (byte) getWhoseGo());
 
                 Spike dest;
                 if (getWhoseGo() == 0)
@@ -324,7 +364,7 @@ public class BackgammonLogic extends UI {
             test = testBar(d2);
             if(test != moveType.NotValid) {
                 PossibleMove pm = new PossibleMove();
-                pm.add(spikeNum, d2, test, (byte) getWhoseGo());
+                pm.add(spikeNum, d2, test, counterOneStates, counterTwoStates, (byte) getWhoseGo());
 
                 Spike dest;
                 if (getWhoseGo() == 0)
@@ -341,12 +381,12 @@ public class BackgammonLogic extends UI {
             PossibleMove pm = new PossibleMove();
 
             if(test != moveType.NotValid) {
-                pm.add(spikeNum, d1, test, (byte) getWhoseGo());
+                pm.add(spikeNum, d1, test, counterOneStates, counterTwoStates, (byte) getWhoseGo());
             }
 
             test = testBar(d2);
             if(test != moveType.NotValid) {
-                pm.add(spikeNum, d2, test, (byte) getWhoseGo());
+                pm.add(spikeNum, d2, test, counterOneStates, counterTwoStates, (byte) getWhoseGo());
             }
 
             moves.add(pm);
@@ -374,7 +414,7 @@ public class BackgammonLogic extends UI {
             Spike one = getBoard().getSpike()[realNum];
             Spike two = getBoard().getSpike()[realNum + d1];
 
-            pm.add(realNum, realRoll, test, (byte) getWhoseGo());
+            pm.add(realNum, realRoll, test, counterOneStates, counterTwoStates, (byte) getWhoseGo());
 
             two.addToSpike(one.removeFromSpike());
             findSecondMove(spikeNum, d2, pm, moves, true);
@@ -405,7 +445,7 @@ public class BackgammonLogic extends UI {
         if(test != moveType.NotValid) {
             PossibleMove m2 = new PossibleMove();
             m2.clone(m);
-            m2.add(realNum, realRoll, test, (byte) getWhoseGo());
+            m2.add(realNum, realRoll, test, counterOneStates, counterTwoStates, (byte) getWhoseGo());
 
             moves.add(m2);
             addSingleMove = false;
@@ -493,5 +533,71 @@ public class BackgammonLogic extends UI {
             return moveType.Hit;
 
         return moveType.NotValid;
+    }
+
+    private void initializeCounterStates(int state) {
+        //  Initialize counter states
+        for (int i = 0; i < 26; i++) {
+            counterOneStates[i] = 0;
+            counterTwoStates[i] = 0;
+        }
+
+        if (state == 0) {
+            counterOneStates[1] = 2;
+            counterTwoStates[1] = 2;
+            counterOneStates[12] = 5;
+            counterTwoStates[12] = 5;
+            counterOneStates[17] = 3;
+            counterTwoStates[17] = 3;
+            counterOneStates[19] = 5;
+            counterTwoStates[19] = 5;
+        } else if (state == 1) {
+            counterOneStates[0] = 3;
+            counterOneStates[1] = 3;
+            counterOneStates[3] = 3;
+            counterOneStates[4] = 3;
+            counterOneStates[25] = 3;
+
+            counterTwoStates[0] = 3;
+            counterTwoStates[1] = 2;
+            counterTwoStates[2] = 2;
+            counterTwoStates[3] = 2;
+            counterTwoStates[4] = 2;
+            counterTwoStates[5] = 2;
+            counterTwoStates[25] = 2;
+        } else if (state == 2) {
+            for (int i = 0; i < 13; i++) {
+                counterOneStates[i] = 1;
+                counterTwoStates[i] = 1;
+            }
+
+            counterOneStates[25] = 2;
+            counterTwoStates[25] = 2;
+        }
+    }
+
+    private void gameStateDraw() {
+        String nu = " K | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | B";
+        String p1 = " ";
+        String p2 = " ";
+
+        for (int i = 0; i < 26; i++) {
+            if (i < 10) {
+                p1 += counterOneStates[i] + " | ";
+                p2 += counterTwoStates[i] + " | ";
+            } else if (i < 25) {
+                p1 += counterOneStates[i] + "  | ";
+                p2 += counterTwoStates[i] + "  | ";
+            } else {
+                p1 += counterOneStates[i];
+                p2 += counterTwoStates[i];
+            }
+        }
+
+        System.out.println("    Player One >" + p1);
+        System.out.println("    Player Two >" + p2);
+        System.out.println(" Bar Numbering >" + nu + "\n\n");
+
+        draw();
     }
 }
