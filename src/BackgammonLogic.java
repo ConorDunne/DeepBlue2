@@ -26,16 +26,17 @@ import static java.lang.Math.*;
 public class BackgammonLogic extends UI {
 
     //initialise objects
-    private Spike f, t;             //  Temporary Spike Objects
+    private Spike f, t;                 //  Temporary Spike Objects
 
-    private Player playerOne;       //  Player One Object
-    private Player playerTwo;       //  Player Two Object
+    private Player playerOne;           //  Player One Object
+    private Player playerTwo;           //  Player Two Object
 
-    private int playerOneScore;
-    private int playerTwoScore;
+    private int playerOneScore;         //  Player One Score
+    private int playerTwoScore;         //  Player Two Score
 
     //constructor to create stage/click options
     public BackgammonLogic(Stage stage) {
+        //  Initialize Stage
         super(stage);
         enterBtnClick();
         commandBtnClick();
@@ -87,7 +88,7 @@ public class BackgammonLogic extends UI {
             //if a player rolls more than opponent, no need to roll again
             if (getDice1() != getDice2()) {
                 repeat = false;
-                draw();
+            draw();
 
                 //case where player one goes first
                 if (getDice1() > getDice2()) {
@@ -372,7 +373,14 @@ public class BackgammonLogic extends UI {
 
         if (test != moveType.NotValid) {
             Spike one = getBoard().getSpike()[realNum];
-            Spike two = getBoard().getSpike()[realNum + d1];
+            Spike two;
+
+            if(realNum + d1 > 24 && getWhoseGo() == 0)
+                two = getBoard().getSpike()[playerOne.getHomeLocation()];
+            else if(realNum + d1 > 24 && getWhoseGo() == 1)
+                two = getBoard().getSpike()[playerTwo.getHomeLocation()];
+            else
+                two = getBoard().getSpike()[realNum + d1];
 
             pm.add(realNum, realRoll, test, (byte) getWhoseGo());
 

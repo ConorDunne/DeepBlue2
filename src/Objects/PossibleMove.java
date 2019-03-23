@@ -12,11 +12,12 @@ public class PossibleMove {
         this.moves = ">";
     }
 
-    public void add(int start, int roll, moveType t, byte player) {
+    public void add(int start, int roll, moveType t,byte player) {
         this.numberOfMoves++;
         this.roll[numberOfMoves] = roll;
         this.type[numberOfMoves] = t;
         this.startSpike[numberOfMoves] = start;
+
 
         if (player == 1) {
             start = 25 - start;
