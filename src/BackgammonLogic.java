@@ -114,47 +114,9 @@ public class BackgammonLogic extends UI {
         //If user enters quit, exit the program
         if (s.equals("quit")) {
             System.exit(0);
-        } else if (s.matches("move")) {
-            //deal with player movement
-            getInfoPanel().getInfoPanel().appendText("> move [from] [destination]\n");
-
         } else if (s.startsWith("move")) {
             String[] arg = s.split(" ");
-            //parse move starting position and finishing postion
-            int from = Integer.parseInt(arg[1]);
-            int dest = Integer.parseInt(arg[2]);
-
-            //calculating movement for the second player
-            if (getWhoseGo() == 1) {
-                if (from > 0 && from < 25)
-                    from = 25 - from;
-                if (dest > 0 && dest < 25)
-                    dest = 25 - dest;
-            }
-
-            //case where move out of bounds
-            if (from < 0 || from > 27 || dest < 0 || dest > 27) {
-                getInfoPanel().getInfoPanel().appendText("Move Value out of bounds. No Corresponding Spike\n");
-            }
-            //move the counter, depending on whether the move is valid, spike has a counter...
-            else {
-                f = getBoard().getSpike()[from];
-                t = getBoard().getSpike()[dest];
-
-                if (f.getSizeOfSpike() > 0) {
-                    t.addToSpike(f.removeFromSpike());
-
-                    draw();
-                }
-
-            }
-            playerOneScore = getBoard().getSpike()[26].getSizeOfSpike();
-            playerTwoScore = getBoard().getSpike()[25].getSizeOfSpike();
-
-            //Updates player scores according to number of counters in spike 25 and 26
-            getInfoPanel().getScorePanel().setText("SCORE\nPlayer 1: " + playerOneScore +
-                    "\nPlayer 2: " + playerTwoScore);
-
+            move(Integer.parseInt((arg[1])), Integer.parseInt(arg[2]));
         }
         //Place hold for when the game finishes
         else if (s.equals("finish")) {
@@ -165,13 +127,10 @@ public class BackgammonLogic extends UI {
                 getFinishGameMenu().getResultsLabel().setText("Congratulations Player 2! You won the game!");
             } else {
                 getFinishGameMenu().getResultsLabel().setText("The game is a draw!");
-
             }
-
         } else if (s.equals("next")) {
             //next players turn
             setWhoseGo(getWhoseGo() + 1);
-            draw();
 
             setDice1(getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight()));
             setDice2(getD2().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight()));
@@ -186,19 +145,7 @@ public class BackgammonLogic extends UI {
             getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight());
         } else if (s.startsWith("test")) {
             String[] arg = s.split(" ");
-            int test = Integer.parseInt(arg[1]);
-            int r1 = getDice1();
-            int r2 = getDice2();
-
-            if (getWhoseGo() == 1 && (test > 0 && test < 25)) {
-                test = 25 - test;
-
-                printMoveType(test, 0 - r1);
-                printMoveType(test, 0 - r2);
-            } else {
-                printMoveType(test, r1);
-                printMoveType(test, r2);
-            }
+            test(Integer.parseInt(arg[1]));
         } else if (s.matches("find")) {
             if(getWhoseGo() == 1) {
                 setDice1(0-getDice1());
@@ -206,14 +153,81 @@ public class BackgammonLogic extends UI {
             }
 
             findPossibleMoves(move);
-
             System.out.println("-----------------");
 
             printQueue(move);
+        } else {
+            chooseMove(s, move);
         }
 
         getCommandPanel().getCommandPanel().clear();
         getInfoPanel().getInfoPanel().appendText(s + "\n");
+
+        playerOneScore = getBoard().getSpike()[26].getSizeOfSpike();
+        playerTwoScore = getBoard().getSpike()[25].getSizeOfSpike();
+
+        //Updates player scores according to number of counters in spike 25 and 26
+        getInfoPanel().getScorePanel().setText("SCORE\nPlayer 1: " + playerOneScore +
+                "\nPlayer 2: " + playerTwoScore);
+        draw();
+    }
+
+    private void chooseMove(String s, Queue move) {
+        findPossibleMoves(move);
+
+        int moveNumber = 0;
+        boolean invalid = false;
+
+        for (int i = 0; i < s.length() && !invalid; i++) {
+            if (s.charAt(i) >= 'A' && s.charAt(i) <= 'Z') {
+                moveNumber += s.charAt(i) + 1 - 'A';
+            } else
+                invalid = true;
+        }
+
+        if (invalid) {
+            System.out.println("Invalid Command");
+        } else if (moveNumber > move.size()) {
+            System.out.println("ERROR: No Corresponding Move " + moveNumber + " " + move.size());
+            printQueue(move);
+        } else {
+            System.out.println(" Number: " + moveNumber);
+            PossibleMove chosenMove = (PossibleMove) move.remove();
+
+            for (int i = 1; i < moveNumber; i++)
+                chosenMove = (PossibleMove) move.remove();
+
+            System.out.println(" Move: " + chosenMove.getMoves());
+            for (int i = 1; i < chosenMove.getNumberOfMoves() + 1; i++) {
+                move(chosenMove.getStartSpike(i), chosenMove.getEndSpike(i));
+            }
+        }
+    }
+
+    //  Move a counter
+    public void move(int from, int dest) {
+        System.out.println("\tMove " + from + " to " + dest);
+
+        if (getWhoseGo() == 1) {
+            if (from > 0 && from < 25)
+                from = 25 - from;
+            if (dest > 0 && dest < 25)
+                dest = 25 - dest;
+        }
+
+        //case where move out of bounds
+        if (from < 0 || from > 27 || dest < 0 || dest > 27) {
+            getInfoPanel().getInfoPanel().appendText("Move Value out of bounds. No Corresponding Spike\n");
+        }
+        //move the counter, depending on whether the move is valid, spike has a counter...
+        else {
+            f = getBoard().getSpike()[from];
+            t = getBoard().getSpike()[dest];
+
+            if (f.getSizeOfSpike() > 0) {
+                t.addToSpike(f.removeFromSpike());
+            }
+        }
     }
 
     //logic for the cheat mode
@@ -227,8 +241,6 @@ public class BackgammonLogic extends UI {
             cheatPositionOne();
         else if (position == 2)
             cheatPositionTwo();
-
-        draw();
     }
 
     private void cheatPositionOne() {
@@ -428,10 +440,36 @@ public class BackgammonLogic extends UI {
         return moves;
     }
 
-    private void printQueue(Queue moves) {
-        while(!moves.isEmpty()) {
+    private int printQueue(Queue moves) {
+        Queue<PossibleMove> queue2 = new LinkedList<PossibleMove>();
+        int i = 0;
+
+        for (i = 0; !moves.isEmpty(); i++) {
+            char num = (char) ('A' + i);
             PossibleMove temp = (PossibleMove) moves.remove();
-            System.out.println(temp.getMoves());
+            System.out.println(num + "> " + temp.getMoves());
+            queue2.add(temp);
+        }
+
+        while (!queue2.isEmpty()) {
+            moves.add(queue2.remove());
+        }
+
+        return i;
+    }
+
+    private void test(int test) {
+        int r1 = getDice1();
+        int r2 = getDice2();
+
+        if (getWhoseGo() == 1 && (test > 0 && test < 25)) {
+            test = 25 - test;
+
+            printMoveType(test, 0 - r1);
+            printMoveType(test, 0 - r2);
+        } else {
+            printMoveType(test, r1);
+            printMoveType(test, r2);
         }
     }
 
