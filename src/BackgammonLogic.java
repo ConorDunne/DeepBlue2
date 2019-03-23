@@ -429,9 +429,6 @@ public class BackgammonLogic extends UI {
     }
 
     private void printQueue(Queue moves) {
-      /*  if(getWhoseGo() == 1)
-            reverseQueue(moves);
-*/
         while(!moves.isEmpty()) {
             PossibleMove temp = (PossibleMove) moves.remove();
             System.out.println(temp.getMoves());
