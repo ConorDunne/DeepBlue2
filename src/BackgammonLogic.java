@@ -36,7 +36,6 @@ public class BackgammonLogic extends UI {
 
     //constructor to create stage/click options
     public BackgammonLogic(Stage stage) {
-        //  Initialize Stage
         super(stage);
         enterBtnClick();
         commandBtnClick();
@@ -88,7 +87,7 @@ public class BackgammonLogic extends UI {
             //if a player rolls more than opponent, no need to roll again
             if (getDice1() != getDice2()) {
                 repeat = false;
-            draw();
+                draw();
 
                 //case where player one goes first
                 if (getDice1() > getDice2()) {
