@@ -32,10 +32,13 @@ public class BackgammonLogic extends UI {
 
     private int playerOneScore;         //  Player One Score
     private int playerTwoScore;         //  Player Two Score
+    private int playerOneTotalScore, playerTwoTotalScore;
 
     //constructor to create stage/click options
     public BackgammonLogic(Stage stage) {
         super(stage);
+        playerOneTotalScore = 0;
+        playerTwoTotalScore = 0;
         enterBtnClick();
         commandBtnClick();
     }
@@ -119,14 +122,7 @@ public class BackgammonLogic extends UI {
         }
         //Place hold for when the game finishes
         else if (s.equals("finish")) {
-            getFinishGameMenu().endOfGame();
-            if (playerOneScore > playerTwoScore) {
-                getFinishGameMenu().getResultsLabel().setText("Congratulations Player 1! You won the game!");
-            } else if (playerTwoScore > playerOneScore) {
-                getFinishGameMenu().getResultsLabel().setText("Congratulations Player 2! You won the game!");
-            } else {
-                getFinishGameMenu().getResultsLabel().setText("The game is a draw!");
-            }
+            endOfGame();
         } else if (s.equals("next")) {
             //next players turn
             setWhoseGo(getWhoseGo() + 1);
@@ -164,9 +160,27 @@ public class BackgammonLogic extends UI {
         playerTwoScore = getBoard().getSpike()[25].getSizeOfSpike();
 
         //Updates player scores according to number of counters in spike 25 and 26
-        getInfoPanel().getScorePanel().setText("SCORE\nPlayer 1: " + playerOneScore +
-                "\nPlayer 2: " + playerTwoScore);
+        getInfoPanel().getScorePanel().setText("SCORE\nPlayer 1: " + playerOneScore + " [Total: " + playerOneTotalScore + "]" +
+                "\nPlayer 2: " + playerTwoScore + " [Total: " + playerTwoTotalScore + "]" );
+        if(playerOneScore == 15 || playerTwoScore == 15)
+            endOfGame();
         draw();
+    }
+
+    private void endOfGame(){
+        getFinishGameMenu().endOfGame();
+        if (playerOneScore > playerTwoScore) {
+            getFinishGameMenu().getResultsLabel().setText("Congratulations Player 1! You won the game!");
+            playerOneTotalScore++;
+        } else if (playerTwoScore > playerOneScore) {
+            getFinishGameMenu().getResultsLabel().setText("Congratulations Player 2! You won the game!");
+            playerTwoScore++;
+        } else {
+            getFinishGameMenu().getResultsLabel().setText("The game is a draw!");
+        }
+        playerOneScore = 0;
+        playerTwoScore = 0;
+
     }
 
     private void chooseMove(String s, Queue move) {
@@ -205,6 +219,7 @@ public class BackgammonLogic extends UI {
     public void move(int whoseMoving, int from, int dest) {
         System.out.println("\tMove " + from + " to " + dest);
 
+
         if (whoseMoving == 0) {
             if (from == 0)
                 from = playerOne.getKnockedOutLocation();
@@ -242,6 +257,8 @@ public class BackgammonLogic extends UI {
         t = getBoard().getSpike()[dest];
 
         t.addToSpike(f.removeFromSpike());
+
+        getInfoPanel().getInfoPanel().appendText("Move " + from + " to " + dest + "\n");
     }
 
     //logic for the cheat mode

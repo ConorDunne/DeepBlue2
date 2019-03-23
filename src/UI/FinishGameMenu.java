@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import src.Objects.Board;
 
 public class FinishGameMenu {
 
@@ -49,7 +50,7 @@ public class FinishGameMenu {
         restartButton = new Button("New Game");
         restartButton.setPrefWidth(BUTTON_WIDTH);
         restartButton.setOnMouseClicked(event -> {
-            //TODO Call a method which resets the game.
+
         });
 
 

@@ -55,14 +55,15 @@ public class UI{
         canvas.widthProperty().bind(wrapperPane.widthProperty());
         canvas.heightProperty().bind(wrapperPane.heightProperty());
 
+
         stage.show();
 
         drawStart();
         getStartMenu().enterUserNames(stage);
 
         //Uses lambda expressions to call draw() every time the window is resized
-            canvas.widthProperty().addListener(event -> draw());
-            canvas.heightProperty().addListener(event -> draw());
+        canvas.widthProperty().addListener(event -> draw());
+        canvas.heightProperty().addListener(event -> draw());
 
 
 }
