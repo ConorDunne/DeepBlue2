@@ -22,7 +22,6 @@ import java.util.Queue;
 
 import static java.lang.Math.*;
 
-
 public class BackgammonLogic extends UI {
 
     //initialise objects
@@ -116,7 +115,7 @@ public class BackgammonLogic extends UI {
             System.exit(0);
         } else if (s.startsWith("move")) {
             String[] arg = s.split(" ");
-            move(Integer.parseInt((arg[1])), Integer.parseInt(arg[2]));
+            move(getWhoseGo(), Integer.parseInt((arg[1])), Integer.parseInt(arg[2]));
         }
         //Place hold for when the game finishes
         else if (s.equals("finish")) {
@@ -132,9 +131,17 @@ public class BackgammonLogic extends UI {
             //next players turn
             setWhoseGo(getWhoseGo() + 1);
 
-            setDice1(getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight()));
-            setDice2(getD2().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight()));
             getInfoPanel().getInfoPanel().appendText("Dice >" + getDice1() + "|" + getDice2() + "\n");
+
+            if (getWhoseGo() == 1) {
+                setDice1(0 - getDice1());
+                setDice2(0 - getDice2());
+            }
+
+            findPossibleMoves(move);
+            System.out.println("-----------------");
+
+            printQueue(move);
         } else if (s.startsWith("cheat")) {
             String[] args = s.split(" ");
             //cheat mode activated
@@ -146,16 +153,6 @@ public class BackgammonLogic extends UI {
         } else if (s.startsWith("test")) {
             String[] arg = s.split(" ");
             test(Integer.parseInt(arg[1]));
-        } else if (s.matches("find")) {
-            if(getWhoseGo() == 1) {
-                setDice1(0-getDice1());
-                setDice2(0-getDice2());
-            }
-
-            findPossibleMoves(move);
-            System.out.println("-----------------");
-
-            printQueue(move);
         } else {
             chooseMove(s, move);
         }
@@ -199,35 +196,52 @@ public class BackgammonLogic extends UI {
 
             System.out.println(" Move: " + chosenMove.getMoves());
             for (int i = 1; i < chosenMove.getNumberOfMoves() + 1; i++) {
-                move(chosenMove.getStartSpike(i), chosenMove.getEndSpike(i));
+                move(getWhoseGo(), chosenMove.getStartSpike(i), chosenMove.getEndSpike(i));
             }
         }
     }
 
     //  Move a counter
-    public void move(int from, int dest) {
+    public void move(int whoseMoving, int from, int dest) {
         System.out.println("\tMove " + from + " to " + dest);
 
-        if (getWhoseGo() == 1) {
-            if (from > 0 && from < 25)
+        if (whoseMoving == 0) {
+            if (from == 0)
+                from = playerOne.getKnockedOutLocation();
+            else if (from == 25)
+                from = playerOne.getHomeLocation();
+
+            if (dest == 0)
+                dest = playerOne.getKnockedOutLocation();
+            else if (dest == 25)
+                dest = playerOne.getHomeLocation();
+        } else {
+            if (from == 0)
+                from = playerTwo.getKnockedOutLocation();
+            else if (from == 25)
+                from = playerTwo.getHomeLocation();
+            else
                 from = 25 - from;
-            if (dest > 0 && dest < 25)
-                dest = 25 - dest;
+
+            if (dest == 0)
+                dest = playerTwo.getKnockedOutLocation();
+            else if (dest == 25)
+                dest = playerTwo.getHomeLocation();
+            else
+                dest = 25 - from;
         }
 
-        //case where move out of bounds
-        if (from < 0 || from > 27 || dest < 0 || dest > 27) {
-            getInfoPanel().getInfoPanel().appendText("Move Value out of bounds. No Corresponding Spike\n");
+        if (testType(from, dest) == moveType.Hit) {
+            if (whoseMoving == 0)
+                move(1, dest, 0);
+            else
+                move(0, dest, 0);
         }
-        //move the counter, depending on whether the move is valid, spike has a counter...
-        else {
-            f = getBoard().getSpike()[from];
-            t = getBoard().getSpike()[dest];
 
-            if (f.getSizeOfSpike() > 0) {
-                t.addToSpike(f.removeFromSpike());
-            }
-        }
+        f = getBoard().getSpike()[from];
+        t = getBoard().getSpike()[dest];
+
+        t.addToSpike(f.removeFromSpike());
     }
 
     //logic for the cheat mode
