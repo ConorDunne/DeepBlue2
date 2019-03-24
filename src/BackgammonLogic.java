@@ -249,12 +249,18 @@ public class BackgammonLogic extends UI {
                 dest = 25 - dest;
         }
 
-        f = getBoard().getSpike()[from];
+        if (type == moveType.Hit) {
+            f = getBoard().getSpike()[dest];
 
-        if (testType(from, dest) == moveType.Hit) {
-            System.out.println("\t\t\tHit Her");
+            if (whoseMoving == 0)
+                t = getBoard().getSpike()[playerTwo.getKnockedOutLocation()];
+            else
+                t = getBoard().getSpike()[playerOne.getKnockedOutLocation()];
+
+            t.addToSpike(f.removeFromSpike());
         }
 
+        f = getBoard().getSpike()[from];
         t = getBoard().getSpike()[dest];
 
 
@@ -361,7 +367,7 @@ public class BackgammonLogic extends UI {
             if(test != moveType.NotValid) {
                 //  Adds dice 1 move from bar
                 PossibleMove pm = new PossibleMove();
-                pm.add(spikeNum, d1, test, (byte) getWhoseGo());
+                pm.add(0, abs(d1), test, (byte) getWhoseGo());
 
                 //  Sets destination spike
                 Spike dest;
@@ -495,7 +501,7 @@ public class BackgammonLogic extends UI {
         }
 
         //  Tests if reached end and no possible second move
-        if(test == moveType.NotValid && spike > 24 && addSingleMove) {
+        if (spike > 24 && addSingleMove) {
             moves.add(m);
         }
         //  Searches next spike
@@ -510,7 +516,10 @@ public class BackgammonLogic extends UI {
         Queue<PossibleMove> queue2 = new LinkedList<PossibleMove>();
         int i;
 
-        System.out.print("D1: " + getDice1() + " D2: " + getDice2() + "\n");
+        if (getWhoseGo() == 0)
+            System.out.println("Player 1");
+        else
+            System.out.println("Player 2");
 
         for (i = 0; !moves.isEmpty(); i++) {
             String num = "";
