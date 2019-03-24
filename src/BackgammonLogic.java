@@ -551,6 +551,7 @@ public class BackgammonLogic extends UI {
     private int displayMoves(Queue moves) {
     	Queue<PossibleMove> secondQueue = new LinkedList<PossibleMove>();
     	getInfoPanel().getInfoPanel().clear();	//clear panel before outputting moves
+    	int i;
     	
     	//if no moves possible
     	if (moves.isEmpty())	{
@@ -558,16 +559,20 @@ public class BackgammonLogic extends UI {
         		getInfoPanel().getInfoPanel().appendText(playerOne.getName() + " - No Possible Moves" + "\n" + "Continuing to next roll...");
         		try {
         		    Thread.sleep(3000);
+        		    return 0;
         		} catch(InterruptedException e) {
         		    System.out.println("error");
+        		    return 1;
         		}
     		}	
             else	{
             	getInfoPanel().getInfoPanel().appendText(playerTwo.getName() + " - No Possible Moves" + "\n" + "Continuing to next roll...");
             	try {
         		    Thread.sleep(3000);
+        		    return 0;
         		} catch(InterruptedException e) {
         		    System.out.println("error");
+        		    return 1;
         		}
             }
     	}
@@ -580,7 +585,7 @@ public class BackgammonLogic extends UI {
         	getInfoPanel().getInfoPanel().appendText(playerTwo.getName() + " - Possible moves:" + "\n");
     	
     	//as long as moves remain to be printed
-    	for (int i = 0; !moves.isEmpty(); i++)	{
+    	for (i = 0; !moves.isEmpty(); i++)	{
     		String message = "";
 
     		//if letters go beyond Z, a second row of letters is added
@@ -602,6 +607,30 @@ public class BackgammonLogic extends UI {
     	while (!secondQueue.isEmpty()) {
             moves.add(secondQueue.remove());
         }
+    	
+    	//if the play is forced - only one move possible
+    	if (i == 1)	{
+    		if (getWhoseGo() == 0)	{
+        		getInfoPanel().getInfoPanel().appendText(playerOne.getName() + " - Only One Play Possible" + "\n" + "Continuing to next roll...");
+        		try {
+        		    Thread.sleep(3000);
+        		    return 0;
+        		} catch(InterruptedException e) {
+        		    System.out.println("error");
+        		    return 1;
+        		}
+    		}	
+            else	{
+            	getInfoPanel().getInfoPanel().appendText(playerTwo.getName() + " - Only One Play Possible" + "\n" + "Continuing to next roll...");
+            	try {
+        		    Thread.sleep(3000);
+        		    return 0;
+        		} catch(InterruptedException e) {
+        		    System.out.println("error");
+        		    return 1;
+        		}
+            }
+    	}
     	
     	return 0;
     }
