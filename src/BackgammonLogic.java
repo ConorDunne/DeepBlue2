@@ -129,14 +129,17 @@ public class BackgammonLogic extends UI {
 
             getInfoPanel().getInfoPanel().appendText("Dice >" + getDice1() + "|" + getDice2() + "\n");
 
+            //sets the dice values for player 2
             if (getWhoseGo() == 1) {
                 setDice1(0 - getDice1());
                 setDice2(0 - getDice2());
             }
 
+            //call function to find all possible moves the current player can take
             findPossibleMoves(move);
             System.out.println("-----------------");
 
+            //output the list of possible moves to the console
             printQueue(move);
         } else if (s.startsWith("cheat")) {
             String[] args = s.split(" ");
@@ -153,9 +156,11 @@ public class BackgammonLogic extends UI {
             chooseMove(s, move);
         }
 
+        //clears the command panel and moves to next line
         getCommandPanel().getCommandPanel().clear();
         getInfoPanel().getInfoPanel().appendText(s + "\n");
 
+        //gets the scores of the players
         playerOneScore = getBoard().getSpike()[26].getSizeOfSpike();
         playerTwoScore = getBoard().getSpike()[25].getSizeOfSpike();
 
@@ -167,6 +172,7 @@ public class BackgammonLogic extends UI {
         draw();
     }
 
+    //ending the game functionality
     private void endOfGame(){
         getFinishGameMenu().endOfGame();
         if (playerOneScore > playerTwoScore) {
@@ -183,6 +189,7 @@ public class BackgammonLogic extends UI {
 
     }
 
+    //allows the player to choose the move they want to make
     private void chooseMove(String s, Queue move) {
         findPossibleMoves(move);
 
@@ -322,13 +329,16 @@ public class BackgammonLogic extends UI {
             dest.addToSpike(src.removeFromSpike());
     }
 
+   //finds all possible moves that the player can make
     private Queue findPossibleMoves(Queue moves) {
         Spike bar;
         int d1, d2;
 
+        //
         d1 = min(abs(getDice1()), abs(getDice2()));
         d2 = max(abs(getDice1()), abs(getDice2()));
 
+        //checks to see if the bar is empty (player cant move until the bar is clear)
         if (getWhoseGo() == 0)
             bar = getBoard().getSpike()[playerOne.getKnockedOutLocation()];
         else
@@ -337,6 +347,7 @@ public class BackgammonLogic extends UI {
         if (bar.isEmpty()) {
             findFirstMove(1, d1, d2, moves);
         } else {
+        	//tests to see if the move from bar can be made
             if(getWhoseGo() == 0)
                 testBar(bar, d1, d2, playerOne.getKnockedOutLocation(), moves);
             else
@@ -346,6 +357,7 @@ public class BackgammonLogic extends UI {
         return moves;
     }
 
+    //function to see if move can be made off bar
     private Queue testBar(Spike bar, int d1, int d2, int spikeNum, Queue moves) {
         if (bar.getSizeOfSpike() == 1) {
             moveType test = testBar(d1);
@@ -399,8 +411,9 @@ public class BackgammonLogic extends UI {
     }
 
     private Queue findFirstMove(int spikeNum, int d1, int d2, Queue moves) {
-        int realNum, realRoll;
+        int realNum, realRoll;	//realNum = index of the spike, realRoll- positive = p1, negative = p2
 
+        //sets local variables depending on which player is moving
         if (getWhoseGo() == 0) {
             realNum = spikeNum;
             realRoll = d1;
@@ -409,39 +422,47 @@ public class BackgammonLogic extends UI {
             realRoll = 0 - abs(d1);
         }
 
+        //checks to see what type of move can be made with the die roll
         moveType test = testType(realNum, realRoll);
 
+        //creates possiblemove object
         PossibleMove pm = new PossibleMove();
 
+        //test is valid move
         if (test != moveType.NotValid) {
-            Spike one = getBoard().getSpike()[realNum];
-            Spike two;
+            Spike one = getBoard().getSpike()[realNum];	//origin
+            Spike two;									//dest
 
+            //if > 24 its a bear off, sets dest to be home location for p1, p2
             if(realNum + d1 > 24 && getWhoseGo() == 0)
                 two = getBoard().getSpike()[playerOne.getHomeLocation()];
             else if(realNum + d1 > 24 && getWhoseGo() == 1)
                 two = getBoard().getSpike()[playerTwo.getHomeLocation()];
             else
-                two = getBoard().getSpike()[realNum + d1];
+                two = getBoard().getSpike()[realNum + d1];	//if not bear off then two is assigned dest spike value
 
+            //if move can be made, add it to list of possible moves
             pm.add(realNum, realRoll, test, (byte) getWhoseGo());
 
-            two.addToSpike(one.removeFromSpike());
-            findSecondMove(spikeNum, d2, pm, moves, true);
+            two.addToSpike(one.removeFromSpike());		//moves counter to dest spike
+            findSecondMove(spikeNum, d2, pm, moves, true);	//looks for second move with other die roll
             one.addToSpike(two.removeFromSpike());
         }
 
+        //end case (all counters reached end spike)
         if (spikeNum > 24)
             return moves;
-        if (abs(d1) < abs(d2))
+        if (abs(d1) < abs(d2))	//check if all possible moves have been found
             return findFirstMove(spikeNum, d2, abs(d1), moves);
         else
             return findFirstMove(spikeNum + 1, d2, abs(d1), moves);
     }
 
+    //checks for the second move of the pair
     private Queue findSecondMove(int spike, int roll, PossibleMove m, Queue moves, boolean addSingleMove) {
         int realNum, realRoll;
 
+        //sets local variables depending on which player is moving
         if (getWhoseGo() == 0) {
             realNum = spike;
             realRoll = roll;
@@ -450,33 +471,37 @@ public class BackgammonLogic extends UI {
             realRoll = 0 - abs(roll);
         }
 
+        //creates test movetype object
         moveType test = testType(realNum, realRoll);
 
+        //check if move is valid
         if(test != moveType.NotValid) {
-            PossibleMove m2 = new PossibleMove();
-            m2.clone(m);
-            m2.add(realNum, realRoll, test, (byte) getWhoseGo());
+            PossibleMove m2 = new PossibleMove();	//new list of possible moves
+            m2.clone(m);							//clone the possible first moves into 
+            m2.add(realNum, realRoll, test, (byte) getWhoseGo());	//adds possible second moves to list
 
-            moves.add(m2);
-            addSingleMove = false;
+            moves.add(m2);	//add the move to the list of possible moves. All pairs of moves stored here
+            addSingleMove = false;	//2 moves are now possible
         }
 
-
+        //creates the list of pair of moves
         if(test == moveType.NotValid && spike > 24 && addSingleMove) {
-            moves.add(m);
-        } else if (spike < 24){
+            moves.add(m);	//add this move to list of possible
+        } else if (spike < 24){		
             findSecondMove(spike+1, roll, m, moves, addSingleMove);
         }
 
         return moves;
     }
 
+    //output the list of all possible moves
     private int printQueue(Queue moves) {
         Queue<PossibleMove> queue2 = new LinkedList<PossibleMove>();
         int i = 0;
 
+        //continues as long as possible moves remain to be outputted
         for (i = 0; !moves.isEmpty(); i++) {
-            char num = (char) ('A' + i);
+            char num = (char) ('A' + i);		//index lettering
             PossibleMove temp = (PossibleMove) moves.remove();
             System.out.println(num + "> " + temp.getMoves());
             queue2.add(temp);
@@ -489,10 +514,12 @@ public class BackgammonLogic extends UI {
         return i;
     }
 
+    //tests the move type for the die roll
     private void test(int test) {
         int r1 = getDice1();
         int r2 = getDice2();
 
+        //flip numbering for p2
         if (getWhoseGo() == 1 && (test > 0 && test < 25)) {
             test = 25 - test;
 
@@ -537,13 +564,16 @@ public class BackgammonLogic extends UI {
     private moveType testType(int s, int roll) {
         Spike s1 = getBoard().getSpike()[s];
 
+        //checks if the spike is empty or if the counters belong to the player being tested (move can't be made then)
         if (s1.isEmpty() || s1.getCounterPlayer() != getWhoseGo())
             return moveType.NotValid;
-        else if (s + roll > 24 || s + roll < 1)
+        else if (s + roll > 24 || s + roll < 1)	//bear off move
             return moveType.BearOff;
 
+        //gets the finishing position spike
         Spike s2 = getBoard().getSpike()[s + roll];
 
+        //if finishing spike is empty or if the counters belong to the 
         if (s2.isEmpty() || s2.getCounterPlayer() == getWhoseGo())
             return moveType.Normal;
         else if (s2.getSizeOfSpike() == 1)
@@ -552,6 +582,7 @@ public class BackgammonLogic extends UI {
         return moveType.NotValid;
     }
 
+    //tests moves for the bar
     private moveType testBar(int roll) {
         Spike pip;
 
