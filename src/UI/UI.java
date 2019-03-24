@@ -69,16 +69,17 @@ public class UI{
 }
     //Redraws the updated game board
     public void draw() {
-        board.drawBoard(gc, canvas.getWidth(), canvas.getHeight(), (byte) (getWhoseGo()));  //  Draws the board
-        board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());            //  Draws the counters
+        board.drawBoard(gc, canvas.getWidth(), canvas.getHeight(), (byte) (getWhoseGo()));          //  Draws the board
+        board.drawPlayerCounters(gc, canvas.getWidth(), canvas.getHeight());                        //  Draws the counters
 
-        getD1().drawDice(gc, canvas.getWidth(), canvas.getHeight(), getDice1());                  //  Draws Die 1
-        getD2().drawDice(gc, canvas.getWidth(), canvas.getHeight(), getDice2());                  //  Draws Die 2
+        getD1().drawDice(gc, canvas.getWidth(), canvas.getHeight(), getDice1());                    //  Draws Die 1
+        getD2().drawDice(gc, canvas.getWidth(), canvas.getHeight(), getDice2());                    //  Draws Die 2
     }
 
     private void drawStart() {
         gc.drawImage(new Image("src/Resources/Logo.png"), 0, 0, canvas.getWidth(), canvas.getHeight());
     }
+
     public Dice getD1() { return d1; }
     public Dice getD2() { return d2; }
     public int getWhoseGo() { return whoseGo % 2; }
