@@ -34,6 +34,9 @@ public class BackgammonLogic extends UI {
     private int playerTwoScore;         //  Player Two Score
     private int playerOneTotalScore, playerTwoTotalScore;
 
+    Queue<PossibleMove> move = new LinkedList<PossibleMove>();
+
+
     //constructor to create stage/click options
     public BackgammonLogic(Stage stage) {
         super(stage);
@@ -107,11 +110,15 @@ public class BackgammonLogic extends UI {
 
         //dice rolls are displayed on info panel
         getInfoPanel().getInfoPanel().appendText("Dice >" + getDice1() + "|" + getDice2() + "\n");
+        findPossibleMoves(move);
+
+        printQueue(move);
+        //display possible moves
+        displayMoves(move);
     }
 
     //  Process Commands entered into Command Panel
     private void command(String s) {
-        Queue<PossibleMove> move = new LinkedList<PossibleMove>();
 
         //If user enters quit, exit the program
         if (s.equals("quit")) {
