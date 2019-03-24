@@ -118,7 +118,7 @@ public class BackgammonLogic extends UI {
             System.exit(0);
         } else if (s.startsWith("move")) {
             String[] arg = s.split(" ");
-            move(getWhoseGo(), Integer.parseInt((arg[1])), Integer.parseInt(arg[2]));
+            move(getWhoseGo(), Integer.parseInt((arg[1])), Integer.parseInt(arg[2]), moveType.Normal);
         }
         //Place hold for when the game finishes
         else if (s.equals("finish")) {
@@ -127,12 +127,15 @@ public class BackgammonLogic extends UI {
             //next players turn
             setWhoseGo(getWhoseGo() + 1);
 
+            setDice1(getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight()));
+            setDice2(getD2().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight()));
+
             getInfoPanel().getInfoPanel().appendText("Dice >" + getDice1() + "|" + getDice2() + "\n");
 
             //sets the dice values for player 2
             if (getWhoseGo() == 1) {
-                setDice1(0 - getDice1());
-                setDice2(0 - getDice2());
+                setDice1(0 - abs(getDice1()));
+                setDice2(0 - abs(getDice2()));
             }
 
             //call function to find all possible moves the current player can take
@@ -148,6 +151,7 @@ public class BackgammonLogic extends UI {
         } else if (s.matches("cheat")) {
             cheat(1);
         } else if (s.equals("roll")) {
+            getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight());
             getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight());
         } else if (s.startsWith("test")) {
             String[] arg = s.split(" ");
@@ -204,7 +208,7 @@ public class BackgammonLogic extends UI {
         }
 
         if (invalid) {
-            System.out.println("Invalid Command");
+            System.out.println("Invalid Input");
         } else if (moveNumber > move.size()) {
             System.out.println("ERROR: No Corresponding Move " + moveNumber + " " + move.size());
             printQueue(move);
@@ -216,16 +220,15 @@ public class BackgammonLogic extends UI {
                 chosenMove = (PossibleMove) move.remove();
 
             System.out.println(" Move: " + chosenMove.getMoves());
-            for (int i = 1; i < chosenMove.getNumberOfMoves() + 1; i++) {
-                move(getWhoseGo(), chosenMove.getStartSpike(i), chosenMove.getEndSpike(i));
+            for (int i = 0; i < chosenMove.getNumberOfMoves(); i++) {
+                move(getWhoseGo(), chosenMove.getStartSpike(i), chosenMove.getEndSpike(i), chosenMove.getMoveType(i));
             }
         }
     }
 
     //  Move a counter
-    public void move(int whoseMoving, int from, int dest) {
+    public void move(int whoseMoving, int from, int dest, moveType type) {
         System.out.println("\tMove " + from + " to " + dest);
-
 
         if (whoseMoving == 0) {
             if (from == 0)
@@ -250,18 +253,17 @@ public class BackgammonLogic extends UI {
             else if (dest == 25)
                 dest = playerTwo.getHomeLocation();
             else
-                dest = 25 - from;
-        }
-
-        if (testType(from, dest) == moveType.Hit) {
-            if (whoseMoving == 0)
-                move(1, dest, 0);
-            else
-                move(0, dest, 0);
+                dest = 25 - dest;
         }
 
         f = getBoard().getSpike()[from];
+
+        if (testType(from, dest) == moveType.Hit) {
+            System.out.println("\t\t\tHit Her");
+        }
+
         t = getBoard().getSpike()[dest];
+
 
         t.addToSpike(f.removeFromSpike());
 
@@ -329,21 +331,34 @@ public class BackgammonLogic extends UI {
             dest.addToSpike(src.removeFromSpike());
     }
 
+<<<<<<< HEAD
    //finds all possible moves that the player can make
+=======
+    //  Fills Queue moves all possible moves checking if the bar is empty
+>>>>>>> 9a61252b1cc96c0badd889f00339aa00890c627a
     private Queue findPossibleMoves(Queue moves) {
         Spike bar;
         int d1, d2;
 
+<<<<<<< HEAD
         //
         d1 = min(abs(getDice1()), abs(getDice2()));
         d2 = max(abs(getDice1()), abs(getDice2()));
 
         //checks to see if the bar is empty (player cant move until the bar is clear)
+=======
+        //  Int d1 is the smaller of the 2 dice rolls, d2 is the larger
+        d1 = min(abs(getDice1()), abs(getDice2()));
+        d2 = max(abs(getDice1()), abs(getDice2()));
+
+        //  Sets the bar
+>>>>>>> 9a61252b1cc96c0badd889f00339aa00890c627a
         if (getWhoseGo() == 0)
             bar = getBoard().getSpike()[playerOne.getKnockedOutLocation()];
         else
             bar = getBoard().getSpike()[playerTwo.getKnockedOutLocation()];
 
+        //  Searches in bar or rest of spikes
         if (bar.isEmpty()) {
             findFirstMove(1, d1, d2, moves);
         } else {
@@ -357,48 +372,63 @@ public class BackgammonLogic extends UI {
         return moves;
     }
 
+<<<<<<< HEAD
     //function to see if move can be made off bar
+=======
+    //  Finds the possible moves on the bar
+>>>>>>> 9a61252b1cc96c0badd889f00339aa00890c627a
     private Queue testBar(Spike bar, int d1, int d2, int spikeNum, Queue moves) {
+        //  If there is only 1 counter on the bar (1 move from bar, 1 move from spikes)
         if (bar.getSizeOfSpike() == 1) {
+            //  Tests dice 1 on bar
             moveType test = testBar(d1);
             if(test != moveType.NotValid) {
+                //  Adds dice 1 move from bar
                 PossibleMove pm = new PossibleMove();
                 pm.add(spikeNum, d1, test, (byte) getWhoseGo());
 
+                //  Sets destination spike
                 Spike dest;
                 if (getWhoseGo() == 0)
                     dest = getBoard().getSpike()[d1];
                 else
                     dest = getBoard().getSpike()[25 - d1];
 
+                //  Moves counter to destination and finds second move
                 dest.addToSpike(bar.removeFromSpike());
                 findSecondMove(1, d2, pm, moves, true);
                 bar.addToSpike(dest.removeFromSpike());
             }
 
+            //  Tests dice 2 on bar
             test = testBar(d2);
             if(test != moveType.NotValid) {
+                //  Adds dice 2 move from bar
                 PossibleMove pm = new PossibleMove();
                 pm.add(spikeNum, d2, test, (byte) getWhoseGo());
 
+                //  Sets destination spike
                 Spike dest;
                 if (getWhoseGo() == 0)
                     dest = getBoard().getSpike()[d2];
                 else
                     dest = getBoard().getSpike()[25 - d2];
 
+                //  Moves counter to destination and finds second move
                 dest.addToSpike(bar.removeFromSpike());
                 findSecondMove(1, d1, pm, moves, true);
                 bar.addToSpike(dest.removeFromSpike());
             }
+            //  If more than 1 counter on the bar (Both moves from bar)
         } else {
+            //  Finds dice 1 move
             moveType test = testBar(d1);
             PossibleMove pm = new PossibleMove();
-
             if(test != moveType.NotValid) {
                 pm.add(spikeNum, d1, test, (byte) getWhoseGo());
             }
 
+            //  Finds dice 2 move
             test = testBar(d2);
             if(test != moveType.NotValid) {
                 pm.add(spikeNum, d2, test, (byte) getWhoseGo());
@@ -410,8 +440,15 @@ public class BackgammonLogic extends UI {
         return moves;
     }
 
+    //  Finds the first move of the turn if the bar is empty
     private Queue findFirstMove(int spikeNum, int d1, int d2, Queue moves) {
+<<<<<<< HEAD
         int realNum, realRoll;	//realNum = index of the spike, realRoll- positive = p1, negative = p2
+=======
+        //  realNum is player viewed spike number converted to index number
+        //  realRoll is the dice roll with the direction (player 2 moves in a different direction to 1)
+        int realNum, realRoll;
+>>>>>>> 9a61252b1cc96c0badd889f00339aa00890c627a
 
         //sets local variables depending on which player is moving
         if (getWhoseGo() == 0) {
@@ -422,10 +459,15 @@ public class BackgammonLogic extends UI {
             realRoll = 0 - abs(d1);
         }
 
+<<<<<<< HEAD
         //checks to see what type of move can be made with the die roll
         moveType test = testType(realNum, realRoll);
 
         //creates possiblemove object
+=======
+        //  Tests possible move
+        moveType test = testType(realNum, realRoll);
+>>>>>>> 9a61252b1cc96c0badd889f00339aa00890c627a
         PossibleMove pm = new PossibleMove();
 
         //test is valid move
@@ -433,12 +475,18 @@ public class BackgammonLogic extends UI {
             Spike one = getBoard().getSpike()[realNum];	//origin
             Spike two;									//dest
 
+<<<<<<< HEAD
             //if > 24 its a bear off, sets dest to be home location for p1, p2
             if(realNum + d1 > 24 && getWhoseGo() == 0)
+=======
+            //  Gets spike 2 object - destination
+            if (spikeNum + d1 > 24 && getWhoseGo() == 0)
+>>>>>>> 9a61252b1cc96c0badd889f00339aa00890c627a
                 two = getBoard().getSpike()[playerOne.getHomeLocation()];
-            else if(realNum + d1 > 24 && getWhoseGo() == 1)
+            else if (spikeNum + d1 > 24 && getWhoseGo() == 1)
                 two = getBoard().getSpike()[playerTwo.getHomeLocation()];
             else
+<<<<<<< HEAD
                 two = getBoard().getSpike()[realNum + d1];	//if not bear off then two is assigned dest spike value
 
             //if move can be made, add it to list of possible moves
@@ -453,13 +501,38 @@ public class BackgammonLogic extends UI {
         if (spikeNum > 24)
             return moves;
         if (abs(d1) < abs(d2))	//check if all possible moves have been found
+=======
+                two = getBoard().getSpike()[realNum + realRoll];
+
+            //  Adds possible move
+            pm.add(realNum, realRoll, test, (byte) getWhoseGo());
+
+            //  Moves counter and finds second move
+            two.addToSpike(one.removeFromSpike());
+            findSecondMove(spikeNum, d2, pm, moves, true);
+            one.addToSpike(two.removeFromSpike());
+        }
+
+        //  If searched spike number is too large, reached end
+        if (spikeNum > 23)
+            return moves;
+            //  If d1 is less than d2, search with d2 and d1 swapped
+        else if (abs(d1) < abs(d2))
+>>>>>>> 9a61252b1cc96c0badd889f00339aa00890c627a
             return findFirstMove(spikeNum, d2, abs(d1), moves);
+            //  Otherwise start the search starting on the next spike
         else
             return findFirstMove(spikeNum + 1, d2, abs(d1), moves);
     }
 
+<<<<<<< HEAD
     //checks for the second move of the pair
+=======
+    //  Finds the second possible move - After first move or moving from the bar
+>>>>>>> 9a61252b1cc96c0badd889f00339aa00890c627a
     private Queue findSecondMove(int spike, int roll, PossibleMove m, Queue moves, boolean addSingleMove) {
+        //  realNum is player viewed spike number converted to index number
+        //  realRoll is the dice roll with the direction (player 2 moves in a different direction to 1)
         int realNum, realRoll;
 
         //sets local variables depending on which player is moving
@@ -471,23 +544,44 @@ public class BackgammonLogic extends UI {
             realRoll = 0 - abs(roll);
         }
 
+<<<<<<< HEAD
         //creates test movetype object
+=======
+        //  Tests possible move
+>>>>>>> 9a61252b1cc96c0badd889f00339aa00890c627a
         moveType test = testType(realNum, realRoll);
 
         //check if move is valid
         if(test != moveType.NotValid) {
+<<<<<<< HEAD
             PossibleMove m2 = new PossibleMove();	//new list of possible moves
             m2.clone(m);							//clone the possible first moves into 
             m2.add(realNum, realRoll, test, (byte) getWhoseGo());	//adds possible second moves to list
+=======
+            PossibleMove m2 = new PossibleMove();
+            //  Clones possible move from first move
+            //  Other second moves with same first move
+            m2.clone(m);
+            m2.add(realNum, realRoll, test, (byte) getWhoseGo());
+>>>>>>> 9a61252b1cc96c0badd889f00339aa00890c627a
 
             moves.add(m2);	//add the move to the list of possible moves. All pairs of moves stored here
             addSingleMove = false;	//2 moves are now possible
         }
 
+<<<<<<< HEAD
         //creates the list of pair of moves
         if(test == moveType.NotValid && spike > 24 && addSingleMove) {
             moves.add(m);	//add this move to list of possible
         } else if (spike < 24){		
+=======
+        //  Tests if reached end and no possible second move
+        if(test == moveType.NotValid && spike > 24 && addSingleMove) {
+            moves.add(m);
+        }
+        //  Searches next spike
+        else if (spike < 24) {
+>>>>>>> 9a61252b1cc96c0badd889f00339aa00890c627a
             findSecondMove(spike+1, roll, m, moves, addSingleMove);
         }
 
@@ -497,13 +591,27 @@ public class BackgammonLogic extends UI {
     //output the list of all possible moves
     private int printQueue(Queue moves) {
         Queue<PossibleMove> queue2 = new LinkedList<PossibleMove>();
-        int i = 0;
+        int i;
+
+        System.out.print("D1: " + getDice1() + " D2: " + getDice2() + "\n");
 
         //continues as long as possible moves remain to be outputted
         for (i = 0; !moves.isEmpty(); i++) {
+<<<<<<< HEAD
             char num = (char) ('A' + i);		//index lettering
+=======
+            String num = "";
+
+            int tens = i / 26;
+            int units = i % 26;
+
+            if (tens > 0)
+                num += (char) ('A' + tens);
+            num += (char) ('A' + units);
+
+>>>>>>> 9a61252b1cc96c0badd889f00339aa00890c627a
             PossibleMove temp = (PossibleMove) moves.remove();
-            System.out.println(num + "> " + temp.getMoves());
+            System.out.println(num + "\t" + temp.getMoves());
             queue2.add(temp);
         }
 

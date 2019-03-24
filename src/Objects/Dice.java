@@ -4,6 +4,8 @@ import javafx.scene.image.Image;
 
 import java.util.Random;
 
+import static java.lang.Math.abs;
+
 public class Dice {
     Random rand = new Random();
     private int numberOfSides;
@@ -37,7 +39,7 @@ public class Dice {
 
     private Image getImage(int i) {
         Image img = image1;
-        switch (i) {
+        switch (abs(i)) {
             case 1:
                 img = image1;
                 break;

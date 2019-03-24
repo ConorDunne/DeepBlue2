@@ -7,7 +7,7 @@ public class PossibleMove {
 
     public PossibleMove() {
         this.numberOfMoves = 0;
-        this.moves = ">";
+        this.moves = "";
     }
 
     public void add(int start, int roll, moveType t,byte player) {
@@ -19,11 +19,11 @@ public class PossibleMove {
         }
 
         if (t == moveType.Normal)
-            this.moves += " " + (start) + "-" + (start + roll);
+            this.moves += (start) + "-" + (start + roll) + " ";
         else if (t == moveType.Hit)
-            this.moves += " " + (start) + "-" + (start + roll) + "*";
+            this.moves += (start) + "-" + (start + roll) + "* ";
         else if (t == moveType.BearOff)
-            this.moves += " " + (start) + "-" + "B";
+            this.moves += (start) + "-" + "B ";
     }
 
     public void clone(PossibleMove original) {
@@ -55,5 +55,21 @@ public class PossibleMove {
         }
 
         return Integer.parseInt(out);
+    }
+
+    public moveType getMoveType(int i) {
+        String m[] = this.moves.split(" ");
+        String n[] = m[i].split("-");
+        String out = n[1];
+
+        String last = n[1].substring(n[1].length() - 1);
+        System.out.println(" Last Char: " + last);
+        if (last.equals("*")) {
+            return moveType.Hit;
+        } else if (last.equals("B")) {
+            return moveType.BearOff;
+        } else {
+            return moveType.Normal;
+        }
     }
 }
