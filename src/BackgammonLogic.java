@@ -138,6 +138,9 @@ public class BackgammonLogic extends UI {
             System.out.println("-----------------");
 
             printQueue(move);
+            //
+            displayMoves(move);
+            
         } else if (s.startsWith("cheat")) {
             String[] args = s.split(" ");
             //cheat mode activated
@@ -518,11 +521,11 @@ public class BackgammonLogic extends UI {
         for (i = 0; !moves.isEmpty(); i++) {
             String num = "";
 
-            int tens = i / 26;
+            int firstLetter = i / 26;
             int units = i % 26;
 
-            if (tens > 0)
-                num += (char) ('A' + tens);
+            if (firstLetter > 0)
+                num += (char) ('A' + firstLetter);
             num += (char) ('A' + units);
 
             PossibleMove temp = (PossibleMove) moves.remove();
@@ -535,6 +538,43 @@ public class BackgammonLogic extends UI {
         }
 
         return i;
+    }
+    
+    //displays the possible moves to the info panel
+    private void displayMoves(Queue moves) {
+    	Queue<PossibleMove> secondQueue = new LinkedList<PossibleMove>();
+    	getInfoPanel().getInfoPanel().clear();	//clear panel before outputting moves
+    	
+    	//ensures correct player heading
+    	if (getWhoseGo() == 0)
+    		getInfoPanel().getInfoPanel().appendText("Player 1 - Possible moves:" + "\n");
+        else
+        	getInfoPanel().getInfoPanel().appendText("Player 2 - Possible moves:" + "\n");
+    	
+    	//as long as moves remain to be printed
+    	for (int i = 0; !moves.isEmpty(); i++)	{
+    		String message = "";
+
+    		//if letters go beyond Z, a second row of letters is added
+            int firstLetter = i / 26;
+            firstLetter = (int) floor(firstLetter);
+            int secondLetter = i % 26;
+
+            //prints the letter depending on how far down the list
+            if (firstLetter > 0)
+                message += (char) ('A' + firstLetter);
+            message += (char) ('A' + secondLetter);
+    		
+            PossibleMove temp = (PossibleMove) moves.remove();
+            getInfoPanel().getInfoPanel().appendText(message + "\t" + temp.getMoves());
+            secondQueue.add(temp);
+    		
+    		getInfoPanel().getInfoPanel().appendText("\n");
+    	}
+    	
+    	while (!secondQueue.isEmpty()) {
+            moves.add(secondQueue.remove());
+        }
     }
 
     private void test(int test) {
