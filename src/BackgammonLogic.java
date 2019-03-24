@@ -138,7 +138,7 @@ public class BackgammonLogic extends UI {
             System.out.println("-----------------");
 
             printQueue(move);
-            //
+            //display possible moves
             displayMoves(move);
             
         } else if (s.startsWith("cheat")) {
@@ -541,15 +541,36 @@ public class BackgammonLogic extends UI {
     }
     
     //displays the possible moves to the info panel
-    private void displayMoves(Queue moves) {
+    private int displayMoves(Queue moves) {
     	Queue<PossibleMove> secondQueue = new LinkedList<PossibleMove>();
     	getInfoPanel().getInfoPanel().clear();	//clear panel before outputting moves
     	
+    	//if no moves possible
+    	if (moves.isEmpty())	{
+    		if (getWhoseGo() == 0)	{
+        		getInfoPanel().getInfoPanel().appendText(playerOne.getName() + " - No Possible Moves" + "\n" + "Continuing to next roll...");
+        		try {
+        		    Thread.sleep(3000);
+        		} catch(InterruptedException e) {
+        		    System.out.println("error");
+        		}
+    		}	
+            else	{
+            	getInfoPanel().getInfoPanel().appendText(playerTwo.getName() + " - No Possible Moves" + "\n" + "Continuing to next roll...");
+            	try {
+        		    Thread.sleep(3000);
+        		} catch(InterruptedException e) {
+        		    System.out.println("error");
+        		}
+            }
+    	}
+    	
     	//ensures correct player heading
-    	if (getWhoseGo() == 0)
-    		getInfoPanel().getInfoPanel().appendText("Player 1 - Possible moves:" + "\n");
+    	if (getWhoseGo() == 0)	{
+    		getInfoPanel().getInfoPanel().appendText(playerOne.getName() + " - Possible moves:" + "\n");
+    	}
         else
-        	getInfoPanel().getInfoPanel().appendText("Player 2 - Possible moves:" + "\n");
+        	getInfoPanel().getInfoPanel().appendText(playerTwo.getName() + " - Possible moves:" + "\n");
     	
     	//as long as moves remain to be printed
     	for (int i = 0; !moves.isEmpty(); i++)	{
@@ -568,13 +589,14 @@ public class BackgammonLogic extends UI {
             PossibleMove temp = (PossibleMove) moves.remove();
             getInfoPanel().getInfoPanel().appendText(message + "\t" + temp.getMoves());
             secondQueue.add(temp);
-    		
     		getInfoPanel().getInfoPanel().appendText("\n");
     	}
     	
     	while (!secondQueue.isEmpty()) {
             moves.add(secondQueue.remove());
         }
+    	
+    	return 0;
     }
 
     private void test(int test) {
