@@ -202,6 +202,8 @@ public class BackgammonLogic extends UI {
         for (int i = 0; i < s.length() && !invalid; i++) {
             if (s.charAt(i) >= 'A' && s.charAt(i) <= 'Z') {
                 moveNumber += s.charAt(i) + 1 - 'A';
+            } else if (s.charAt(i) >= 'a' && s.charAt(i) <= 'z') {
+                moveNumber += s.charAt(i) + 1 - 'a';
             } else
                 invalid = true;
         }
@@ -217,6 +219,9 @@ public class BackgammonLogic extends UI {
 
             for (int i = 1; i < moveNumber; i++)
                 chosenMove = (PossibleMove) move.remove();
+
+            while (!move.isEmpty())
+                move.remove();
 
             System.out.println(" Move: " + chosenMove.getMoves());
             for (int i = 0; i < chosenMove.getNumberOfMoves(); i++) {
@@ -393,7 +398,7 @@ public class BackgammonLogic extends UI {
             if(test != moveType.NotValid) {
                 //  Adds dice 2 move from bar
                 PossibleMove pm = new PossibleMove();
-                pm.add(spikeNum, d2, test, (byte) getWhoseGo());
+                pm.add(0, d2, test, (byte) getWhoseGo());
 
                 //  Sets destination spike
                 Spike dest;
@@ -451,12 +456,14 @@ public class BackgammonLogic extends UI {
             Spike two;
 
             //  Gets spike 2 object - destination
-            if (spikeNum + d1 > 24 && getWhoseGo() == 0)
-                two = getBoard().getSpike()[playerOne.getHomeLocation()];
-            else if (spikeNum + d1 > 24 && getWhoseGo() == 1)
-                two = getBoard().getSpike()[playerTwo.getHomeLocation()];
-            else
+            if (spikeNum + d1 > 24) {
+                if (getWhoseGo() == 0)
+                    two = getBoard().getSpike()[playerOne.getHomeLocation()];
+                else
+                    two = getBoard().getSpike()[playerTwo.getHomeLocation()];
+            } else {
                 two = getBoard().getSpike()[realNum + realRoll];
+            }
 
             //  Adds possible move
             pm.add(realNum, realRoll, test, (byte) getWhoseGo());
@@ -468,7 +475,7 @@ public class BackgammonLogic extends UI {
         }
 
         //  If searched spike number is too large, reached end
-        if (spikeNum > 23)
+        if (spikeNum > 24)
             return moves;
             //  If d1 is less than d2, search with d2 and d1 swapped
         else if (abs(d1) < abs(d2))

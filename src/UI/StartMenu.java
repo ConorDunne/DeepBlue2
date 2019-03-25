@@ -1,3 +1,8 @@
+/*
+    17379526    Conor Dunne
+    17424866    Martynas Jagutis
+    17379773    Ronan Mascarenhas
+*/
 package src.UI;
 
 import javafx.geometry.Insets;
@@ -92,12 +97,15 @@ public class StartMenu {
     }
 
     public Button getEnterButton() { return enterButton; }
+
     public TextField getPlayerOneTextField() {
         return playerOneTextField;
     }
+
     public TextField getPlayerTwoTextField() {
         return playerTwoTextField;
     }
+
     public Stage getDialog() {
         return dialog;
     }

@@ -1,3 +1,9 @@
+/*
+    17379526    Conor Dunne
+    17424866    Martynas Jagutis
+    17379773    Ronan Mascarenhas
+*/
+
 package src.UI;
 
 import javafx.geometry.Insets;
@@ -5,14 +11,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import src.Objects.Board;
 
 public class FinishGameMenu {
 
@@ -53,7 +57,6 @@ public class FinishGameMenu {
 
         restartButton = new Button("New Game");
         restartButton.setPrefWidth(BUTTON_WIDTH);
-
 
 
 

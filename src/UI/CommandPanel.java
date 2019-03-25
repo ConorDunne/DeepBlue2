@@ -1,3 +1,9 @@
+/*
+    17379526    Conor Dunne
+    17424866    Martynas Jagutis
+    17379773    Ronan Mascarenhas
+*/
+
 package src.UI;
 
 import javafx.scene.control.Alert;
@@ -55,5 +61,6 @@ public class CommandPanel {
     }
 
     public TextField getCommandPanel(){ return this.commandPanel; }
+
     public Button getExportBtn() { return this.exportBtn; }
 }

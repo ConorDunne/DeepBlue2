@@ -1,3 +1,8 @@
+/*
+    17379526    Conor Dunne
+    17424866    Martynas Jagutis
+    17379773    Ronan Mascarenhas
+*/
 package src.UI;
 
 import javafx.scene.control.TextArea;
@@ -36,11 +41,13 @@ public class InformationPanel {
 
         return vbox;
     }
+
     public void addPlayerInfo(Player pOne, Player pTwo){
         infoPanel.appendText("Player 1: " + pOne.toString() + "Red\n");
         infoPanel.appendText("Player 2: " + pTwo.toString() + "Blue\n");
     }
 
     public TextArea getInfoPanel() { return infoPanel; }
+
     public TextArea getScorePanel() { return scorePanel; }
 }

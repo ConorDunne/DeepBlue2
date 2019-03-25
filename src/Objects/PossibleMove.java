@@ -1,5 +1,13 @@
+/*
+    17379526    Conor Dunne
+    17424866    Martynas Jagutis
+    17379773    Ronan Mascarenhas
+*/
+
 package src.Objects;
 
+
+import static java.lang.Math.abs;
 
 public class PossibleMove {
     private int numberOfMoves;
@@ -10,13 +18,16 @@ public class PossibleMove {
         this.moves = "";
     }
 
-    public void add(int start, int roll, moveType t,byte player) {
+    public void add(int start, int roll, moveType t, byte player) {
         this.numberOfMoves++;
 
-        if (player == 1) {
+        roll = abs(roll);
+
+        if (player == 1)
             start = 25 - start;
-            roll = -roll;
-        }
+
+        if (start == 25 || start == 0)
+            start = 0;
 
         if (t == moveType.Normal)
             this.moves += (start) + "-" + (start + roll) + " ";
@@ -32,6 +43,7 @@ public class PossibleMove {
     }
 
     public String getMoves() { return this.moves; }
+
     public int getNumberOfMoves() { return this.numberOfMoves; }
 
     public int getStartSpike(int i) {

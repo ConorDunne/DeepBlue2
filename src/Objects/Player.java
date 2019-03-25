@@ -1,3 +1,9 @@
+/*
+    17379526    Conor Dunne
+    17424866    Martynas Jagutis
+    17379773    Ronan Mascarenhas
+*/
+
 package src.Objects;
 
 import javafx.scene.paint.Color;
@@ -24,12 +30,15 @@ public class Player {
     public String getName() {
         return name;
     }
+
     public Color getColor() {
         return color;
     }
+
     public int getHomeLocation() {
         return home;
     }
+
     public int getKnockedOutLocation() {
         return knockedOut;
     }

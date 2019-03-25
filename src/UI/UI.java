@@ -1,3 +1,8 @@
+/*
+    17379526    Conor Dunne
+    17424866    Martynas Jagutis
+    17379773    Ronan Mascarenhas
+*/
 package src.UI;
 
 import javafx.scene.Scene;
@@ -25,7 +30,6 @@ public class UI{
     private int dice1, dice2;
     private Dice d1 = new Dice(1);
     private Dice d2 = new Dice(2);
-
 
 
     public UI(Stage stage){
@@ -66,7 +70,8 @@ public class UI{
         canvas.heightProperty().addListener(event -> draw());
 
 
-}
+    }
+
     //Redraws the updated game board
     public void draw() {
         board.drawBoard(gc, canvas.getWidth(), canvas.getHeight(), (byte) (getWhoseGo()));          //  Draws the board
@@ -81,18 +86,31 @@ public class UI{
     }
 
     public Dice getD1() { return d1; }
+
     public Dice getD2() { return d2; }
+
     public int getWhoseGo() { return whoseGo % 2; }
+
     public int getDice1() { return dice1; }
+
     public int getDice2() { return dice2; }
+
     public CommandPanel getCommandPanel() { return commandPanel; }
+
     public InformationPanel getInfoPanel() { return infoPanel; }
+
     public StartMenu getStartMenu() { return startMenu; }
+
     public Board getBoard() { return board; }
+
     public GraphicsContext getGc() { return gc; }
+
     public Canvas getCanvas() { return canvas; }
+
     public void setWhoseGo(int whoseGo) { this.whoseGo = whoseGo; }
+
     public void setDice1(int dice1) { this.dice1 = dice1; }
+
     public void setDice2(int dice2) { this.dice2 = dice2; }
 
     public FinishGameMenu getFinishGameMenu() { return finishGameMenu; }
