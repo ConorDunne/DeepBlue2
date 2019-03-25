@@ -168,8 +168,8 @@ public class BackgammonLogic extends UI {
         playerTwoScore = getBoard().getSpike()[25].getSizeOfSpike();
 
         //Updates player scores according to number of counters in spike 25 and 26
-        getInfoPanel().getScorePanel().setText("SCORE\nPlayer 1: " + playerOneScore + " [Total: " + playerOneTotalScore + "]" +
-                "\nPlayer 2: " + playerTwoScore + " [Total: " + playerTwoTotalScore + "]" );
+        getInfoPanel().getScorePanel().setText("SCORE\n(Blue)  Player 1: " + playerOneScore + " [Total: " + playerOneTotalScore + "]" +
+                "\n(Red)  Player 2: " + playerTwoScore + " [Total: " + playerTwoTotalScore + "]" );
         if(playerOneScore == 15 || playerTwoScore == 15)
             endOfGame();
         draw();
@@ -188,6 +188,8 @@ public class BackgammonLogic extends UI {
         }
         playerOneScore = 0;
         playerTwoScore = 0;
+        getFinishGameMenu().getRestartButton().setOnMouseClicked(event -> {
+        });
 
     }
 

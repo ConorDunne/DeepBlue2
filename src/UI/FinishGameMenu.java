@@ -22,6 +22,10 @@ public class FinishGameMenu {
     private Button restartButton;
     private Label resultsLabel;
 
+    public FinishGameMenu(){
+
+    }
+
     //Created a new stage which asks users to enter their names
     public void endOfGame() {
 
@@ -49,9 +53,7 @@ public class FinishGameMenu {
 
         restartButton = new Button("New Game");
         restartButton.setPrefWidth(BUTTON_WIDTH);
-        restartButton.setOnMouseClicked(event -> {
 
-        });
 
 
 

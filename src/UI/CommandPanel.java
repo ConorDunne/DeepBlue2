@@ -46,9 +46,10 @@ public class CommandPanel {
         alert.getDialogPane().setPrefSize(450,200);
 
         alert.setContentText("\nEnter the instructions into the command panel to execute the moves\n" +
-                "Move Counters: move [source] [destination]\n" +
+                "Move Counters: Enter letter from possible moves\n" +
                 "Exit Program: quit\n" +
-                "Change Player Turns: next");
+                "Change Player Turns: next" +
+                "End Game: finish");
 
         alert.showAndWait();
     }
