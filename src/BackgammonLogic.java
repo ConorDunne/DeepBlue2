@@ -147,13 +147,13 @@ public class BackgammonLogic extends UI {
             printQueue(move);
             //display possible moves
             displayMoves(move);
-            
+
+        } else if (s.matches("cheat")) {
+            cheat(3);
         } else if (s.startsWith("cheat")) {
             String[] args = s.split(" ");
             //cheat mode activated
             cheat(Integer.parseInt(args[1]));
-        } else if (s.matches("cheat")) {
-            cheat(1);
         } else if (s.equals("roll")) {
             getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight());
             getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight());
@@ -291,6 +291,8 @@ public class BackgammonLogic extends UI {
             cheatPositionOne();
         else if (position == 2)
             cheatPositionTwo();
+        else if (position == 3) ;
+        cheatPositionThree();
     }
 
     private void cheatPositionOne() {
@@ -320,6 +322,16 @@ public class BackgammonLogic extends UI {
             cheatMove(getBoard().getSpike()[i], f, 1);
             cheatMove(getBoard().getSpike()[25 - i], t, 1);
         }
+    }
+
+    private void cheatPositionThree() {
+        cheatMove(getBoard().getSpike()[playerOne.getHomeLocation()], f, 13);
+        cheatMove(getBoard().getSpike()[playerTwo.getHomeLocation()], t, 13);
+
+        cheatMove(getBoard().getSpike()[1], f, 2);
+        cheatMove(getBoard().getSpike()[24], t, 2);
+
+
     }
 
     private void collectCounters() {
