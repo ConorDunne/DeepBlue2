@@ -23,6 +23,11 @@ public class StartMenu {
     private Button enterButton;
     private TextField playerOneTextField;
     private TextField playerTwoTextField;
+    private TextField maxScoreTextField;
+
+    private Button arrowLeft, arrowRight;
+
+    private int maxScore = 1;
 
     private Stage dialog;
 
@@ -34,6 +39,7 @@ public class StartMenu {
         VBox vBox = new VBox();
         HBox playerOneHBox = new HBox();
         HBox playerTwoHBox = new HBox();
+        HBox maxScoreHBox = new HBox();
         HBox buttonHBox = new HBox();
 
         dialog = new Stage();
@@ -53,6 +59,8 @@ public class StartMenu {
         pane.setPadding(new Insets(10, 10, 10, 10));
 
         enterButton = new Button("Enter");
+        arrowLeft = new Button("<-");
+        arrowRight = new Button("->");
         enterButton.setFont(Font.font("Arial", 13));
 
         vBox.setSpacing(10);
@@ -60,6 +68,7 @@ public class StartMenu {
         //Setting where different elements are positioned
         playerOneHBox.setAlignment(Pos.CENTER);
         playerTwoHBox.setAlignment(Pos.CENTER);
+        maxScoreHBox.setAlignment(Pos.CENTER);
         buttonHBox.setAlignment(Pos.BOTTOM_CENTER);
 
         //Creation of input fields
@@ -67,17 +76,27 @@ public class StartMenu {
         playerOneTextField.setPromptText("Enter Player One Name");
         playerTwoTextField = new TextField();
         playerTwoTextField.setPromptText("Enter Player Two Name");
+        maxScoreTextField = new TextField();
 
         Label enterPOneText = new Label("Player 1 Name: ");
         Label enterPTwoText = new Label("Player 2 Name: ");
+        Label maxScoreText = new Label("Choose Max Score: ");
+
         enterPOneText.setFont(Font.font("Arial", 15));
         enterPTwoText.setFont(Font.font("Arial", 15));
+        maxScoreText.setFont(Font.font("Arial", 15));
+
         enterPOneText.setTextFill(Color.WHITE);
         enterPTwoText.setTextFill(Color.WHITE);
+        maxScoreText.setTextFill(Color.WHITE);
+
+        maxScoreTextField.setText("" + maxScore);
 
         //Setting widths
         playerOneTextField.setPrefWidth(INPUT_FIELD_WIDTH);
         playerTwoTextField.setPrefWidth(INPUT_FIELD_WIDTH);
+        maxScoreTextField.setPrefWidth(INPUT_FIELD_WIDTH-100);
+
         enterButton.setPrefWidth(INPUT_FIELD_WIDTH);
         buttonHBox.setPadding(new Insets(0,0,0,100));
 
@@ -85,16 +104,34 @@ public class StartMenu {
         pane.setCenter(vBox);
         pane.setBottom(buttonHBox);
 
+        arrowLeft.setOnMouseClicked(event -> {
+            if(maxScore > 1){
+                maxScore--;
+            }
+            maxScoreTextField.setText("" + maxScore);
+        });
+        arrowRight.setOnMouseClicked(event -> {
+            maxScore++;
+            maxScoreTextField.setText("" + maxScore);
+        });
+        maxScoreTextField.onActionProperty().addListener(event ->{
+            maxScore = Integer.parseInt(maxScoreTextField.getText());
+            maxScoreTextField.setText("" + maxScore);
+        });
+
         //Layout is composes of HBoxes inside a VBox in the center and button is in the bottom section seperately
         playerOneHBox.getChildren().addAll(enterPOneText, playerOneTextField);
         playerTwoHBox.getChildren().addAll(enterPTwoText, playerTwoTextField);
+        maxScoreHBox.getChildren().addAll(maxScoreText, arrowLeft, maxScoreTextField, arrowRight);
         buttonHBox.getChildren().add(enterButton);
-        vBox.getChildren().addAll(playerOneHBox, playerTwoHBox);
+        vBox.getChildren().addAll(playerOneHBox, playerTwoHBox, maxScoreHBox);
 
         pane.setBackground(new Background(image));
 
         dialog.show();
     }
+
+
 
     public Button getEnterButton() { return enterButton; }
 
@@ -108,5 +145,21 @@ public class StartMenu {
 
     public Stage getDialog() {
         return dialog;
+    }
+
+    public TextField getMaxScoreTextField() {
+        return maxScoreTextField;
+    }
+
+    public Button getArrowLeft() {
+        return arrowLeft;
+    }
+
+    public Button getArrowRight() {
+        return arrowRight;
+    }
+
+    public int getMaxScore() {
+        return maxScore;
     }
 }
