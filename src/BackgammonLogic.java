@@ -34,6 +34,8 @@ public class BackgammonLogic extends UI {
     private int playerTwoScore;         //  Player Two Score
     private int playerOneTotalScore, playerTwoTotalScore;
 
+    private int matchWorth;             //  How much total points this match is worth (Doubling Cube)
+
     Queue<PossibleMove> move = new LinkedList<PossibleMove>();
 
 

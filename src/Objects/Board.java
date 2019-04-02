@@ -17,6 +17,9 @@ public class Board {
     private Color bearOffArea;
     private Color trianglesPlayerOne;
     private Color trianglesPlayerTwo;
+    private Color doublingCubeBack;
+    private Color doublingCubeText;
+
     private Color counterPlayerOne;
     private Color counterPlayerTwo;
 
@@ -26,9 +29,11 @@ public class Board {
     private Spike[] spike;
     private Counter[] playerOne;
     private Counter[] playerTwo;
+    private DoublingCube doubleCube;
 
     public Board(GraphicsContext gc, double width, double height) {
         setColors();
+        doubleCube = new DoublingCube(getDoublingCubeBack(), getDoublingCubeText());
 
         spike = new Spike[28];
         Spike.initSpike(spike);
@@ -54,12 +59,21 @@ public class Board {
     private Color getLogoDiamond() {return logoDiamond;}
     private Color getLogoText() {return logoText;}
 
+    private Color getDoublingCubeBack() {
+        return doublingCubeBack;
+    }
+
+    private Color getDoublingCubeText() {
+        return doublingCubeText;
+    }
+
     public void drawBoard(GraphicsContext gc, double width, double height, byte rev) {
         background(gc, width, height);
         squares(gc, width, height);
         bearOff(gc, width, height);
         spikes(gc, width, height, rev);
         logo(gc, width, height);
+        doublingCube(gc, width, height);
     }
     private void setColors() {
         background = Color.rgb(208,157,93);
@@ -71,6 +85,9 @@ public class Board {
 
         counterPlayerOne = Color.DARKSLATEGRAY;
         counterPlayerTwo = Color.INDIANRED;
+
+        doublingCubeBack = Color.RED;
+        doublingCubeText = Color.BLACK;
     }
 
 //  Method for drawing background (Boarder)
@@ -91,6 +108,10 @@ public class Board {
         gc.setFill(getBearOffArea());
             gc.fillRect(width*0.905, height*0.05, width*0.045, height*0.35);
             gc.fillRect(width*0.905, height*0.6, width*0.045, height*0.35);
+    }
+
+    public void doublingCube(GraphicsContext gc, double width, double height) {
+        doubleCube.drawCube(gc, width, height);
     }
 
 //  Method for drawing the spikes (Triangles)
