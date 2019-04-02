@@ -179,6 +179,10 @@ public class Board {
     }
 
     public Spike[] getSpike() { return spike; }
+
+    public DoublingCube getDoubleCube() {
+        return doubleCube;
+    }
     public Counter[] getPlayerOne() { return playerOne; }
     public Counter[] getPlayerTwo() { return playerTwo; }
 }

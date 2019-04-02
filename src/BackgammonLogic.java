@@ -11,10 +11,7 @@ package src;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import src.Objects.Player;
-import src.Objects.PossibleMove;
-import src.Objects.Spike;
-import src.Objects.moveType;
+import src.Objects.*;
 import src.UI.UI;
 
 import java.util.LinkedList;
@@ -33,8 +30,6 @@ public class BackgammonLogic extends UI {
     private int playerOneScore;         //  Player One Score
     private int playerTwoScore;         //  Player Two Score
     private int playerOneTotalScore, playerTwoTotalScore;
-
-    private int matchWorth;             //  How much total points this match is worth (Doubling Cube)
 
     Queue<PossibleMove> move = new LinkedList<PossibleMove>();
 
@@ -159,6 +154,28 @@ public class BackgammonLogic extends UI {
         } else if (s.equals("roll")) {
             getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight());
             getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight());
+        } else if (s.equals("double")) {
+            DoublingCube d = getBoard().getDoubleCube();
+
+            if (d.canPass(getWhoseGo()) == -1)
+                getInfoPanel().getInfoPanel().appendText("Unable to pass cube");
+            else {
+                getInfoPanel().getInfoPanel().appendText("Accept Pass? (Y/N)");
+
+                if (true) {
+                    d.passCube(getWhoseGo());
+                    getInfoPanel().getInfoPanel().appendText("Cube has been passed.\nMatch now worth " + d.getMatchValue());
+                } else {
+                    getInfoPanel().getInfoPanel().appendText("Cube has not been passed.");
+
+                    if (getWhoseGo() == 0)
+                        getInfoPanel().getInfoPanel().appendText(playerOne.getName() + " has forfeit the match");
+                    else
+                        getInfoPanel().getInfoPanel().appendText(playerTwo.getName() + " has forfeit the match");
+                }
+            }
+
+
         } else {
             chooseMove(s, move);
         }

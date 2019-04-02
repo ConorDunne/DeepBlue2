@@ -17,16 +17,16 @@ public class DoublingCube {
         cubeSide = 0;
     }
 
-    public int passCube(int whoseGo) {
-        if (whoseGo + 1 == cubeSide) {
-            System.out.println("Unable to pass cube");
+    public int canPass(int whoseGo) {
+        if (whoseGo == cubeSide)
             return -1;
-        }
+        else
+            return 1;
+    }
 
+    public void passCube(int whoseGo) {
         cubeSide = whoseGo + 1;
         matchValue += matchValue;
-
-        return matchValue;
     }
 
     public void drawCube(GraphicsContext gc, double width, double height) {
