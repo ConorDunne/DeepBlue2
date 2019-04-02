@@ -18,7 +18,7 @@ public class DoublingCube {
     }
 
     public int canPass(int whoseGo) {
-        if (whoseGo == cubeSide)
+        if (whoseGo + 1 == cubeSide)
             return -1;
         else
             return 1;
