@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -104,6 +105,7 @@ public class StartMenu {
         pane.setCenter(vBox);
         pane.setBottom(buttonHBox);
 
+        //Deals with the choosing of max score the player wants to play to
         arrowLeft.setOnMouseClicked(event -> {
             if(maxScore > 1){
                 maxScore--;
@@ -114,9 +116,9 @@ public class StartMenu {
             maxScore++;
             maxScoreTextField.setText("" + maxScore);
         });
-        maxScoreTextField.onActionProperty().addListener(event ->{
-            maxScore = Integer.parseInt(maxScoreTextField.getText());
-            maxScoreTextField.setText("" + maxScore);
+        maxScoreTextField.setOnKeyPressed(event -> {
+            if(event.getCode() == KeyCode.ENTER)
+                maxScore = Integer.parseInt(maxScoreTextField.getText());
         });
 
         //Layout is composes of HBoxes inside a VBox in the center and button is in the bottom section seperately
@@ -131,35 +133,16 @@ public class StartMenu {
         dialog.show();
     }
 
-
-
     public Button getEnterButton() { return enterButton; }
 
     public TextField getPlayerOneTextField() {
         return playerOneTextField;
     }
 
-    public TextField getPlayerTwoTextField() {
-        return playerTwoTextField;
-    }
-
-    public Stage getDialog() {
-        return dialog;
-    }
-
-    public TextField getMaxScoreTextField() {
-        return maxScoreTextField;
-    }
-
-    public Button getArrowLeft() {
-        return arrowLeft;
-    }
-
-    public Button getArrowRight() {
-        return arrowRight;
-    }
-
-    public int getMaxScore() {
-        return maxScore;
-    }
+    public TextField getPlayerTwoTextField() { return playerTwoTextField; }
+    public Stage getDialog() { return dialog; }
+    public TextField getMaxScoreTextField() { return maxScoreTextField; }
+    public Button getArrowLeft() { return arrowLeft; }
+    public Button getArrowRight() { return arrowRight; }
+    public int getMaxScore() { return maxScore; }
 }

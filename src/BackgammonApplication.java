@@ -18,15 +18,23 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+
 public class BackgammonApplication extends Application {
+    BackgammonLogic logic;
 
     @Override
     //program is started
     public void start(Stage stage) {
-        BackgammonLogic logic = new BackgammonLogic(stage);
+         logic = new BackgammonLogic(stage);
+
     }
     //CALLED WHENEVER WE START MAIN JAVA PROGRAM
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException{
         launch(args);
+
     }
+
 }

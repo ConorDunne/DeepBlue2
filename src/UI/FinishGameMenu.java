@@ -51,14 +51,11 @@ public class FinishGameMenu {
             System.exit(0);
         }));
 
-
         resultsLabel = new Label("PLACEHOLDER");
         resultsLabel.setFont(Font.font("Arial", 20));
 
         restartButton = new Button("New Game");
         restartButton.setPrefWidth(BUTTON_WIDTH);
-
-
 
         VBox buttonsVBox = new VBox();
         buttonsVBox.setAlignment(Pos.CENTER);
@@ -74,18 +71,15 @@ public class FinishGameMenu {
         pane.setCenter(buttonsVBox);
         pane.setTop(resultsHBox);
 
-
         endStage.show();
     }
 
     public Button getExitButton() {
         return exitButton;
     }
-
     public Button getRestartButton() {
         return restartButton;
     }
-
     public Label getResultsLabel() {
         return resultsLabel;
     }

@@ -14,6 +14,11 @@ import javafx.stage.Stage;
 import src.Objects.*;
 import src.UI.UI;
 
+import java.io.File;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -31,8 +36,9 @@ public class BackgammonLogic extends UI {
     private int playerTwoScore;         //  Player Two Score
     private int playerOneTotalScore, playerTwoTotalScore;
 
-    Queue<PossibleMove> move = new LinkedList<PossibleMove>();
+    BackgammonApplication app = new BackgammonApplication();
 
+    Queue<PossibleMove> move = new LinkedList<PossibleMove>();
 
     //constructor to create stage/click options
     public BackgammonLogic(Stage stage) {
@@ -175,7 +181,6 @@ public class BackgammonLogic extends UI {
                 }
             }
 
-
         } else {
             chooseMove(s, move);
         }
@@ -194,22 +199,55 @@ public class BackgammonLogic extends UI {
         draw();
     }
 
-    private void endOfGame(){
+    private void endOfGame() {
         getFinishGameMenu().endOfGame();
-        if (playerOneScore > playerTwoScore) {
-            getFinishGameMenu().getResultsLabel().setText("Congratulations Player 1! You won the game!");
-            playerOneTotalScore++;
-        } else if (playerTwoScore > playerOneScore) {
-            getFinishGameMenu().getResultsLabel().setText("Congratulations Player 2! You won the game!");
-            playerTwoScore++;
-        } else {
-            getFinishGameMenu().getResultsLabel().setText("The game is a draw!");
+        if(playerOneTotalScore < getStartMenu().getMaxScore() && playerTwoTotalScore < getStartMenu().getMaxScore() ) {
+            if (playerOneScore > playerTwoScore) {
+                getFinishGameMenu().getResultsLabel().setText("Congratulations Player 1! You won the match!");
+                playerOneTotalScore++;
+            } else if (playerTwoScore > playerOneScore) {
+                getFinishGameMenu().getResultsLabel().setText("Congratulations Player 2! You won the match!");
+                playerTwoScore++;
+            } else {
+                getFinishGameMenu().getResultsLabel().setText("The match is a draw!");
+            }
         }
         playerOneScore = 0;
         playerTwoScore = 0;
-        getFinishGameMenu().getRestartButton().setOnMouseClicked(event -> {
+        getFinishGameMenu().getRestartButton().setOnMouseClicked(event ->  {
+
+            restartApplication();
         });
 
+    }
+
+    //Restarts game. Works only in JAR file
+    private void restartApplication() {
+        try{
+            final String javaBin = System.getProperty("java.home") + File.separator + "bin" + File.separator + "java";
+            final File currentJar = new File(BackgammonApplication.class.getProtectionDomain().getCodeSource().getLocation().toURI());
+
+            /* is it a jar file? */
+            if(!currentJar.getName().endsWith(".jar"))
+                return;
+
+            /* Build command: java -jar application.jar */
+            final ArrayList<String> command = new ArrayList<String>();
+            command.add(javaBin);
+            command.add("-jar");
+            command.add(currentJar.getPath());
+
+            final ProcessBuilder builder = new ProcessBuilder(command);
+            builder.start();
+        }
+
+        catch (IOException e){
+
+        }
+        catch (URISyntaxException e){
+
+        }
+        System.exit(0);
     }
 
     private void chooseMove(String s, Queue move) {

@@ -54,7 +54,7 @@ public class CommandPanel {
         alert.setContentText("\nEnter the instructions into the command panel to execute the moves\n" +
                 "Move Counters: Enter letter from possible moves\n" +
                 "Exit Program: quit\n" +
-                "Change Player Turns: next" +
+                "Change Player Turns: next\n" +
                 "End Game: finish");
 
         alert.showAndWait();
