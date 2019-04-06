@@ -14,8 +14,7 @@ import javafx.stage.Stage;
 import src.Objects.*;
 import src.UI.UI;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.lang.management.ManagementFactory;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -86,7 +85,7 @@ public class BackgammonLogic extends UI {
     //Initial Roll of the dice to determine which player moves first. Called after the player names are entered
     private void initialRoll() {
         boolean repeat = true;
-
+        retrieveScore();
         //dice will be rolled at least once before values are compared
         do {
             setDice1(getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight()));
@@ -207,13 +206,14 @@ public class BackgammonLogic extends UI {
                 playerOneTotalScore++;
             } else if (playerTwoScore > playerOneScore) {
                 getFinishGameMenu().getResultsLabel().setText("Congratulations Player 2! You won the match!");
-                playerTwoScore++;
+                playerTwoTotalScore++;
             } else {
                 getFinishGameMenu().getResultsLabel().setText("The match is a draw!");
             }
         }
         playerOneScore = 0;
         playerTwoScore = 0;
+        recordScore();
         getFinishGameMenu().getRestartButton().setOnMouseClicked(event ->  {
 
             restartApplication();
@@ -221,6 +221,51 @@ public class BackgammonLogic extends UI {
 
     }
 
+    //Function is called when new game button is called and writes the total scores of the players to a .txt file
+    private void recordScore(){
+        String fileName = "score.txt";
+
+        try{
+            FileWriter fileWriter = new FileWriter(fileName);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+
+            bufferedWriter.write("" + playerOneTotalScore );
+            bufferedWriter.newLine();
+            bufferedWriter.write("" + playerTwoTotalScore);
+
+            bufferedWriter.close();
+        }
+        catch (IOException e){
+
+        }
+    }
+
+    private void retrieveScore(){
+        int i = 0;
+
+        String fileName = "score.txt";
+        String line = null;
+
+        try{
+            FileReader fileReader = new FileReader(fileName);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+            while((line = bufferedReader.readLine()) != null){
+                if(i == 0) {
+                    playerOneTotalScore = Integer.parseInt(line);
+                    i++;
+                }else{
+                    playerTwoTotalScore = Integer.parseInt(line);
+                }
+            }
+        }
+        catch(FileNotFoundException e){
+
+        }
+        catch (IOException e){
+
+        }
+    }
     //Restarts game. Works only in JAR file
     private void restartApplication() {
         try{
