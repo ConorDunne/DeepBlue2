@@ -133,6 +133,10 @@ public class StartMenu {
         dialog.show();
     }
 
+    public void setMaxScore(int maxScore) {
+        this.maxScore = maxScore;
+    }
+
     public Button getEnterButton() { return enterButton; }
 
     public TextField getPlayerOneTextField() {

@@ -64,7 +64,9 @@ public class UI{
         stage.show();
 
         drawStart();
+
         getStartMenu().enterUserNames(stage);
+
 
         //Uses lambda expressions to call draw() every time the window is resized
         canvas.widthProperty().addListener(event -> draw());
@@ -115,4 +117,5 @@ public class UI{
     public void setDice2(int dice2) { this.dice2 = dice2; }
 
     public FinishGameMenu getFinishGameMenu() { return finishGameMenu; }
+
 }

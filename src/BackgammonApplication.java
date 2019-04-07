@@ -30,6 +30,7 @@ public class BackgammonApplication extends Application {
     public void start(Stage stage) {
          logic = new BackgammonLogic(stage);
 
+
     }
     //CALLED WHENEVER WE START MAIN JAVA PROGRAM
     public static void main(String[] args) throws IOException{

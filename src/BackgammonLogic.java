@@ -31,9 +31,13 @@ public class BackgammonLogic extends UI {
     private Player playerOne;           //  Player One Object
     private Player playerTwo;           //  Player Two Object
 
+    private String playerOneName;
+    private String playerTwoName;
+
     private int playerOneScore;         //  Player One Score
     private int playerTwoScore;         //  Player Two Score
     private int playerOneTotalScore, playerTwoTotalScore;
+
 
     BackgammonApplication app = new BackgammonApplication();
 
@@ -41,35 +45,40 @@ public class BackgammonLogic extends UI {
 
     //constructor to create stage/click options
     public BackgammonLogic(Stage stage) {
+
         super(stage);
         playerOneTotalScore = 0;
         playerTwoTotalScore = 0;
+
         enterBtnClick();
         commandBtnClick();
+        retrieveData();
     }
 
     private void enterBtnClick() {
         //When user presses enter the names in the textfields are put into variables and are displayed in information panel
-        getStartMenu().getEnterButton().setOnMouseClicked((event) -> {
-            String playerOneName;
-            String playerTwoName;
 
-            //names entered into fields are stored in player name objects
-            playerOneName = getStartMenu().getPlayerOneTextField().getText();
-            playerTwoName = getStartMenu().getPlayerTwoTextField().getText();
+            getStartMenu().getEnterButton().setOnMouseClicked((event) -> {
 
-            //players are assigned counter colors
-            playerOne = new Player(playerOneName, Color.RED, 25, 0);
-            playerTwo = new Player(playerTwoName, Color.BLUE, 26, 27);
-            //player info is displayed on the info panel
-            getInfoPanel().addPlayerInfo(playerOne, playerTwo);
-            getStartMenu().getDialog().close();
 
-            //first roll of dice
-            initialRoll();
+                //names entered into fields are stored in player name objects
+                playerOneName = getStartMenu().getPlayerOneTextField().getText();
+                playerTwoName = getStartMenu().getPlayerTwoTextField().getText();
 
-        });
-    }
+                //players are assigned counter colors
+                playerOne = new Player(playerOneName, Color.RED, 25, 0);
+                playerTwo = new Player(playerTwoName, Color.BLUE, 26, 27);
+                //player info is displayed on the info panel
+                getInfoPanel().addPlayerInfo(playerOne, playerTwo);
+                getStartMenu().getDialog().close();
+
+                //first roll of dice
+                initialRoll();
+
+            });
+        }
+
+
 
     private void commandBtnClick() {
         //Text entered in command panel is appended to the information panel
@@ -85,7 +94,8 @@ public class BackgammonLogic extends UI {
     //Initial Roll of the dice to determine which player moves first. Called after the player names are entered
     private void initialRoll() {
         boolean repeat = true;
-        retrieveScore();
+
+
         //dice will be rolled at least once before values are compared
         do {
             setDice1(getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight()));
@@ -117,6 +127,7 @@ public class BackgammonLogic extends UI {
         printQueue(move);
         //display possible moves
         displayMoves(move);
+
     }
 
     //  Process Commands entered into Command Panel
@@ -213,7 +224,7 @@ public class BackgammonLogic extends UI {
         }
         playerOneScore = 0;
         playerTwoScore = 0;
-        recordScore();
+        recordData();
         getFinishGameMenu().getRestartButton().setOnMouseClicked(event ->  {
 
             restartApplication();
@@ -222,7 +233,7 @@ public class BackgammonLogic extends UI {
     }
 
     //Function is called when new game button is called and writes the total scores of the players to a .txt file
-    private void recordScore(){
+    private void recordData(){
         String fileName = "score.txt";
 
         try{
@@ -232,15 +243,24 @@ public class BackgammonLogic extends UI {
             bufferedWriter.write("" + playerOneTotalScore );
             bufferedWriter.newLine();
             bufferedWriter.write("" + playerTwoTotalScore);
+            bufferedWriter.newLine();
+            bufferedWriter.write("" + playerOneName);
+            bufferedWriter.newLine();
+            bufferedWriter.write("" + playerTwoName);
+            bufferedWriter.newLine();
+            bufferedWriter.write("" + getStartMenu().getMaxScore());
+            bufferedWriter.newLine();
+        //    bufferedWriter.write("" + isNewGame());
+        //   bufferedWriter.newLine();
 
             bufferedWriter.close();
         }
         catch (IOException e){
-
+            e.printStackTrace();
         }
     }
 
-    private void retrieveScore(){
+    public void retrieveData(){
         int i = 0;
 
         String fileName = "score.txt";
@@ -250,20 +270,40 @@ public class BackgammonLogic extends UI {
             FileReader fileReader = new FileReader(fileName);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-            while((line = bufferedReader.readLine()) != null){
-                if(i == 0) {
-                    playerOneTotalScore = Integer.parseInt(line);
-                    i++;
-                }else{
-                    playerTwoTotalScore = Integer.parseInt(line);
+            while((line = bufferedReader.readLine()) != null) {
+                switch (i) {
+                    case 0:
+                        playerOneTotalScore = Integer.parseInt(line);
+                        break;
+                    case 1:
+                        playerTwoTotalScore = Integer.parseInt(line);
+                        break;
+                    case 2:
+                        playerOneName = line;
+                        getStartMenu().getPlayerOneTextField().setText(line);
+                        break;
+                    case 3:
+                        playerTwoName = line;
+                        getStartMenu().getPlayerTwoTextField().setText(line);
+                        break;
+                    case 4:
+                        getStartMenu().setMaxScore(Integer.parseInt(line));
+                        getStartMenu().getMaxScoreTextField().setText(Integer.toString(getStartMenu().getMaxScore()));
+                        break;
                 }
+
+
+                i++;
             }
+
+
+
         }
         catch(FileNotFoundException e){
-
+            e.printStackTrace();
         }
         catch (IOException e){
-
+            e.printStackTrace();
         }
     }
     //Restarts game. Works only in JAR file
@@ -836,4 +876,5 @@ public class BackgammonLogic extends UI {
 
         return moveType.NotValid;
     }
+
 }
