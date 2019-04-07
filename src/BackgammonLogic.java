@@ -213,6 +213,7 @@ public class BackgammonLogic extends UI {
         //display possible moves
         displayMoves(move);
     }
+    //Displays a window when the current game/match is over allowing the play to play another match or leave the game.
     private void endOfGame() {
         getFinishGameMenu().endOfGame();
         if(playerOneTotalScore < getStartMenu().getMaxScore() && playerTwoTotalScore < getStartMenu().getMaxScore() ) {
@@ -225,12 +226,20 @@ public class BackgammonLogic extends UI {
             } else {
                 getFinishGameMenu().getResultsLabel().setText("The match is a draw!");
             }
+            if(playerOneTotalScore == getStartMenu().getMaxScore() || playerTwoTotalScore == getStartMenu().getMaxScore()){
+                if(playerOneTotalScore > playerTwoTotalScore){
+                    getFinishGameMenu().getResultsLabel().setText("Max score reached! Player 1 has won the game!");
+                }else{
+                    getFinishGameMenu().getResultsLabel().setText("Max score reached! Player 2 has won the game!");
+                }
+                getFinishGameMenu().removeButton();
+            }
         }
+
         playerOneScore = 0;
         playerTwoScore = 0;
         recordData();
         getFinishGameMenu().getRestartButton().setOnMouseClicked(event ->  {
-
             restartApplication();
         });
 
@@ -262,6 +271,7 @@ public class BackgammonLogic extends UI {
         }
     }
 
+    //Takes data from the score .txt file and stores it in the appropriate variables
     public void retrieveData(){
         int i = 0;
 
@@ -293,12 +303,13 @@ public class BackgammonLogic extends UI {
                         getStartMenu().getMaxScoreTextField().setText(Integer.toString(getStartMenu().getMaxScore()));
                         break;
                 }
-
-
                 i++;
+
+
             }
-
-
+            FileWriter fileWriter = new FileWriter(fileName);
+            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+            bufferedWriter.write("");
 
         }
         catch(FileNotFoundException e){
