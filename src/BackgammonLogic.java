@@ -141,25 +141,8 @@ public class BackgammonLogic extends UI {
         else if (s.equals("finish")) {
             endOfGame();
         } else if (s.equals("next")) {
-            //next players turn
-            setWhoseGo(getWhoseGo() + 1);
+            next();
 
-            setDice1(getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight()));
-            setDice2(getD2().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight()));
-
-            getInfoPanel().getInfoPanel().appendText("Dice >" + getDice1() + "|" + getDice2() + "\n");
-
-            if (getWhoseGo() == 1) {
-                setDice1(0 - abs(getDice1()));
-                setDice2(0 - abs(getDice2()));
-            }
-
-            findPossibleMoves(move);
-            System.out.println("-----------------");
-
-            printQueue(move);
-            //display possible moves
-            displayMoves(move);
 
         } else if (s.matches("cheat")) {
             cheat(3);
@@ -209,6 +192,27 @@ public class BackgammonLogic extends UI {
         draw();
     }
 
+    private void next(){
+        //next players turn
+        setWhoseGo(getWhoseGo() + 1);
+
+        setDice1(getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight()));
+        setDice2(getD2().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight()));
+
+        getInfoPanel().getInfoPanel().appendText("Dice >" + getDice1() + "|" + getDice2() + "\n");
+
+        if (getWhoseGo() == 1) {
+            setDice1(0 - abs(getDice1()));
+            setDice2(0 - abs(getDice2()));
+        }
+
+        findPossibleMoves(move);
+        System.out.println("-----------------");
+
+        printQueue(move);
+        //display possible moves
+        displayMoves(move);
+    }
     private void endOfGame() {
         getFinishGameMenu().endOfGame();
         if(playerOneTotalScore < getStartMenu().getMaxScore() && playerTwoTotalScore < getStartMenu().getMaxScore() ) {
@@ -250,8 +254,6 @@ public class BackgammonLogic extends UI {
             bufferedWriter.newLine();
             bufferedWriter.write("" + getStartMenu().getMaxScore());
             bufferedWriter.newLine();
-        //    bufferedWriter.write("" + isNewGame());
-        //   bufferedWriter.newLine();
 
             bufferedWriter.close();
         }
@@ -327,10 +329,10 @@ public class BackgammonLogic extends UI {
         }
 
         catch (IOException e){
-
+            e.printStackTrace();
         }
         catch (URISyntaxException e){
-
+            e.printStackTrace();
         }
         System.exit(0);
     }
@@ -369,6 +371,7 @@ public class BackgammonLogic extends UI {
             for (int i = 0; i < chosenMove.getNumberOfMoves(); i++) {
                 move(getWhoseGo(), chosenMove.getStartSpike(i), chosenMove.getEndSpike(i), chosenMove.getMoveType(i));
             }
+            next();
         }
     }
 
@@ -420,6 +423,7 @@ public class BackgammonLogic extends UI {
         t.addToSpike(f.removeFromSpike());
 
         getInfoPanel().getInfoPanel().appendText("Move " + from + " to " + dest + "\n");
+
     }
 
     //logic for the cheat mode
@@ -719,7 +723,7 @@ public class BackgammonLogic extends UI {
     	//if no moves possible
     	if (moves.isEmpty())	{
     		if (getWhoseGo() == 0)	{
-        		getInfoPanel().getInfoPanel().appendText(playerOne.getName() + " - No Possible Moves" + "\n" + "Continuing to next roll...");
+        		getInfoPanel().getInfoPanel().appendText(playerOneName + " - No Possible Moves" + "\n" + "Continuing to next roll...");
         		try {
         		    Thread.sleep(3000);
         		    return 0;
@@ -729,7 +733,7 @@ public class BackgammonLogic extends UI {
         		}
     		}	
             else	{
-            	getInfoPanel().getInfoPanel().appendText(playerTwo.getName() + " - No Possible Moves" + "\n" + "Continuing to next roll...");
+            	getInfoPanel().getInfoPanel().appendText(playerTwoName + " - No Possible Moves" + "\n" + "Continuing to next roll...");
             	try {
         		    Thread.sleep(3000);
         		    return 0;
@@ -742,10 +746,10 @@ public class BackgammonLogic extends UI {
     	
     	//ensures correct player heading
     	if (getWhoseGo() == 0)	{
-    		getInfoPanel().getInfoPanel().appendText(playerOne.getName() + " - Possible moves:" + "\n");
+    		getInfoPanel().getInfoPanel().appendText(playerOneName + " - Possible moves:" + "\n");
     	}
         else
-        	getInfoPanel().getInfoPanel().appendText(playerTwo.getName() + " - Possible moves:" + "\n");
+        	getInfoPanel().getInfoPanel().appendText(playerTwoName + " - Possible moves:" + "\n");
     	
     	//as long as moves remain to be printed
     	for (i = 0; !moves.isEmpty(); i++)	{
@@ -774,7 +778,7 @@ public class BackgammonLogic extends UI {
     	//if the play is forced - only one move possible
     	if (i == 1)	{
     		if (getWhoseGo() == 0)	{
-        		getInfoPanel().getInfoPanel().appendText(playerOne.getName() + " - Only One Play Possible" + "\n" + "Continuing to next roll...");
+        		getInfoPanel().getInfoPanel().appendText(playerOneName + " - Only One Play Possible" + "\n" + "Continuing to next roll...");
         		try {
         		    Thread.sleep(3000);
         		    return 0;
@@ -784,7 +788,7 @@ public class BackgammonLogic extends UI {
         		}
     		}	
             else	{
-            	getInfoPanel().getInfoPanel().appendText(playerTwo.getName() + " - Only One Play Possible" + "\n" + "Continuing to next roll...");
+            	getInfoPanel().getInfoPanel().appendText(playerTwoName + " - Only One Play Possible" + "\n" + "Continuing to next roll...");
             	try {
         		    Thread.sleep(3000);
         		    return 0;
