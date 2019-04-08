@@ -26,6 +26,8 @@ public class FinishGameMenu {
     private Button restartButton;
     private Label resultsLabel;
 
+    VBox buttonsVBox = new VBox();
+
     public FinishGameMenu(){
 
     }
@@ -57,7 +59,7 @@ public class FinishGameMenu {
         restartButton = new Button("New Game");
         restartButton.setPrefWidth(BUTTON_WIDTH);
 
-        VBox buttonsVBox = new VBox();
+        buttonsVBox = new VBox();
         buttonsVBox.setAlignment(Pos.CENTER);
         buttonsVBox.setSpacing(10);
         buttonsVBox.getChildren().addAll(restartButton,exitButton);
@@ -72,6 +74,9 @@ public class FinishGameMenu {
         pane.setTop(resultsHBox);
 
         endStage.show();
+    }
+    public void removeButton(){
+        buttonsVBox.getChildren().remove(restartButton);
     }
 
     public Button getExitButton() {

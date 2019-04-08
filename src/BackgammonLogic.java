@@ -235,7 +235,7 @@ public class BackgammonLogic extends UI {
             }
 
         }
-        if(playerOneTotalScore == getStartMenu().getMaxScore() || playerTwoTotalScore == getStartMenu().getMaxScore()){
+        if(playerOneTotalScore >= getStartMenu().getMaxScore() || playerTwoTotalScore >= getStartMenu().getMaxScore()){
             if(playerOneTotalScore > playerTwoTotalScore){
                 getFinishGameMenu().getResultsLabel().setText("Max score reached! Player 1 has won the game!");
             }else{
@@ -252,42 +252,6 @@ public class BackgammonLogic extends UI {
         });
 
     }
-    
-   /* private void nextMatchAsk()	{
-    	try {
-		    Thread.sleep(3000);
-		    return 0;
-		} catch(InterruptedException e) {
-		    System.out.println("error");
-		    return 1;
-		}
-    	
-    	getFinishGameMenu().getResultsLabel().setText("Would you like to continue to the next game?\nEnter 'continue' or 'stop' to choose");
-    	
-    	
-    }*/
-    
-    /*private void nextMatchAskContinue()	{
-    	playerOneScore = 0;
-        playerTwoScore = 0;
-        recordData();
-        getFinishGameMenu().getRestartButton().setOnMouseClicked(event ->  {
-            restartApplication();
-        });
-    }*/
-    
- /*   private int nextMatchAskStop()	{
-    	getFinishGameMenu().getResultsLabel().setText("Final score:\n");
-    	try {
-		    Thread.sleep(3000);
-            getFinishGameMenu().getResultsLabel().setText("Player 1: " + playerOneTotalScore + "\nPlayer 2: " + playerTwoTotalScore);
-
-            return 0;
-		} catch(InterruptedException e) {
-		    System.out.println("error");
-		    return 1;
-		}
-    }*/
 
     //Function is called when new game button is called and writes the total scores of the players to a .txt file
     private void recordData(){
@@ -351,11 +315,7 @@ public class BackgammonLogic extends UI {
                 FileWriter fileWriter = new FileWriter(fileName);
                 BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
                 bufferedWriter.write("");
-
-
             }
-
-
         }
         catch(FileNotFoundException e){
             e.printStackTrace();

@@ -16,6 +16,7 @@ import src.BackgammonLogic;
 import src.Objects.Board;
 import src.Objects.Dice;
 
+
 public class UI{
 
     private Board board;
@@ -31,7 +32,6 @@ public class UI{
     private int dice1, dice2;
     private Dice d1 = new Dice(1);
     private Dice d2 = new Dice(2);
-
 
     public UI(Stage stage){
         start(stage);
@@ -53,6 +53,11 @@ public class UI{
         gc = canvas.getGraphicsContext2D();
         board = new Board(gc, canvas.getWidth(), canvas.getHeight());           //  Initialises Board and Counters
 
+        stage.setMaxHeight(500);
+        stage.setMaxWidth(800);
+        stage.setMinWidth(600);
+        stage.setMinHeight(400);
+
         border.setCenter(wrapperPane); //Border at center of screen
         wrapperPane.getChildren().add(canvas); //Adds canvas to wrapper pane
 
@@ -60,13 +65,11 @@ public class UI{
         canvas.widthProperty().bind(wrapperPane.widthProperty());
         canvas.heightProperty().bind(wrapperPane.heightProperty());
 
-
         stage.show();
 
         drawStart();
 
         getStartMenu().enterUserNames(stage);
-
 
         //Uses lambda expressions to call draw() every time the window is resized
         canvas.widthProperty().addListener(event -> draw());

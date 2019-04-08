@@ -23,7 +23,7 @@ public class InformationPanel {
 
         VBox vbox = new VBox();
         infoPanel = new TextArea("Welcome to Backgammon!\n");
-        scorePanel = new TextArea("SCORE\n(Blue) Player 1:\n(Red)  Player 2: ");
+        scorePanel = new TextArea("SCORE\nPlayer 1:\nPlayer 2: ");
 
         infoPanel.setFont(Font.font("Arial", 13));
         scorePanel.setFont(Font.font("Arial", 13));
