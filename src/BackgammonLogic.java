@@ -8,6 +8,7 @@ package src;
 
 //import packages for handling stage, colors
 
+import com.sun.jdi.DoubleValue;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -38,6 +39,7 @@ public class BackgammonLogic extends UI {
     private int playerTwoScore;         //  Player Two Score
     private int playerOneTotalScore, playerTwoTotalScore;
 
+    private DoublingCube d;
 
     BackgammonApplication app = new BackgammonApplication();
 
@@ -143,9 +145,9 @@ public class BackgammonLogic extends UI {
         } else if (s.equals("next")) {
             next();
         } else if (s.equals("continue"))	{ 
-        	nextMatchAskContinue();
+        	//nextMatchAskContinue();
         } else if (s.equals("stop"))	{ 
-        	nextMatchAskStop();
+        	//nextMatchAskStop();
         }
         	
         
@@ -159,7 +161,7 @@ public class BackgammonLogic extends UI {
             getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight());
             getD1().rollDice(getGc(), getCanvas().getWidth(), getCanvas().getHeight());
         } else if (s.equals("double")) {
-            DoublingCube d = getBoard().getDoubleCube();
+            d = getBoard().getDoubleCube();
 
             if (d.canPass(getWhoseGo()) == -1)
                 getInfoPanel().getInfoPanel().appendText("Unable to pass cube");
@@ -224,31 +226,22 @@ public class BackgammonLogic extends UI {
         if(playerOneTotalScore < getStartMenu().getMaxScore() && playerTwoTotalScore < getStartMenu().getMaxScore() ) {
             if (playerOneScore > playerTwoScore) {
                 getFinishGameMenu().getResultsLabel().setText("Congratulations Player 1! You won the match!");
-                playerOneTotalScore++;
-                try {
-        		    Thread.sleep(3000);
-        		    //return 0;
-        		} catch(InterruptedException e) {
-        		    System.out.println("error");
-        		    //return 1;
-        		}
-                nextMatchAsk();
+                playerOneTotalScore+= 1*d.getMatchValue();
             } else if (playerTwoScore > playerOneScore) {
                 getFinishGameMenu().getResultsLabel().setText("Congratulations Player 2! You won the match!");
-                playerTwoTotalScore++;
-                nextMatchAsk();
+                playerTwoTotalScore += 1*d.getMatchValue();
             } else {
                 getFinishGameMenu().getResultsLabel().setText("The match is a draw!");
-                nextMatchAsk();
             }
-            if(playerOneTotalScore == getStartMenu().getMaxScore() || playerTwoTotalScore == getStartMenu().getMaxScore()){
-                if(playerOneTotalScore > playerTwoTotalScore){
-                    getFinishGameMenu().getResultsLabel().setText("Max score reached! Player 1 has won the game!");
-                }else {
-                    getFinishGameMenu().getResultsLabel().setText("Max score reached! Player 2 has won the game!");
-                }
-                //getFinishGameMenu().removeButton();
+
+        }
+        if(playerOneTotalScore == getStartMenu().getMaxScore() || playerTwoTotalScore == getStartMenu().getMaxScore()){
+            if(playerOneTotalScore > playerTwoTotalScore){
+                getFinishGameMenu().getResultsLabel().setText("Max score reached! Player 1 has won the game!");
+            }else{
+                getFinishGameMenu().getResultsLabel().setText("Max score reached! Player 2 has won the game!");
             }
+            getFinishGameMenu().removeButton();
         }
 
         playerOneScore = 0;
@@ -260,31 +253,7 @@ public class BackgammonLogic extends UI {
 
     }
     
-    private void nextMatchAsk()	{
-    	/*try {
-		    Thread.sleep(3000);
-		    return 0;
-		} catch(InterruptedException e) {
-		    System.out.println("error");
-		    return 1;
-		}*/
-    	
-    	getFinishGameMenu().getResultsLabel().setText("Would you like to continue to the next game?\nEnter 'continue' or 'stop' to choose");
-    	
-    	
-    }
-    
-    private void nextMatchAskContinue()	{
-    	playerOneScore = 0;
-        playerTwoScore = 0;
-        recordData();
-        getFinishGameMenu().getRestartButton().setOnMouseClicked(event ->  {
-            restartApplication();
-        });
-    }
-    
-    private int nextMatchAskStop()	{
-    	getFinishGameMenu().getResultsLabel().setText("Final score:\n");
+   /* private void nextMatchAsk()	{
     	try {
 		    Thread.sleep(3000);
 		    return 0;
@@ -292,8 +261,33 @@ public class BackgammonLogic extends UI {
 		    System.out.println("error");
 		    return 1;
 		}
-    	getFinishGameMenu().getResultsLabel().setText("Player 1: " + playerOneTotalScore + "\nPlayer 2: " + playerTwoTotalScore);
-    }
+    	
+    	getFinishGameMenu().getResultsLabel().setText("Would you like to continue to the next game?\nEnter 'continue' or 'stop' to choose");
+    	
+    	
+    }*/
+    
+    /*private void nextMatchAskContinue()	{
+    	playerOneScore = 0;
+        playerTwoScore = 0;
+        recordData();
+        getFinishGameMenu().getRestartButton().setOnMouseClicked(event ->  {
+            restartApplication();
+        });
+    }*/
+    
+ /*   private int nextMatchAskStop()	{
+    	getFinishGameMenu().getResultsLabel().setText("Final score:\n");
+    	try {
+		    Thread.sleep(3000);
+            getFinishGameMenu().getResultsLabel().setText("Player 1: " + playerOneTotalScore + "\nPlayer 2: " + playerTwoTotalScore);
+
+            return 0;
+		} catch(InterruptedException e) {
+		    System.out.println("error");
+		    return 1;
+		}
+    }*/
 
     //Function is called when new game button is called and writes the total scores of the players to a .txt file
     private void recordData(){
@@ -354,12 +348,13 @@ public class BackgammonLogic extends UI {
                         break;
                 }
                 i++;
+                FileWriter fileWriter = new FileWriter(fileName);
+                BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+                bufferedWriter.write("");
 
 
             }
-            FileWriter fileWriter = new FileWriter(fileName);
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write("");
+
 
         }
         catch(FileNotFoundException e){
