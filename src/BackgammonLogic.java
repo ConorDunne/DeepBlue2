@@ -142,9 +142,14 @@ public class BackgammonLogic extends UI {
             endOfGame();
         } else if (s.equals("next")) {
             next();
-
-
-        } else if (s.matches("cheat")) {
+        } else if (s.equals("continue"))	{ 
+        	nextMatchAskContinue();
+        } else if (s.equals("stop"))	{ 
+        	nextMatchAskStop();
+        }
+        	
+        
+        else if (s.matches("cheat")) {
             cheat(3);
         } else if (s.startsWith("cheat")) {
             String[] args = s.split(" ");
@@ -220,19 +225,29 @@ public class BackgammonLogic extends UI {
             if (playerOneScore > playerTwoScore) {
                 getFinishGameMenu().getResultsLabel().setText("Congratulations Player 1! You won the match!");
                 playerOneTotalScore++;
+                try {
+        		    Thread.sleep(3000);
+        		    //return 0;
+        		} catch(InterruptedException e) {
+        		    System.out.println("error");
+        		    //return 1;
+        		}
+                nextMatchAsk();
             } else if (playerTwoScore > playerOneScore) {
                 getFinishGameMenu().getResultsLabel().setText("Congratulations Player 2! You won the match!");
                 playerTwoTotalScore++;
+                nextMatchAsk();
             } else {
                 getFinishGameMenu().getResultsLabel().setText("The match is a draw!");
+                nextMatchAsk();
             }
             if(playerOneTotalScore == getStartMenu().getMaxScore() || playerTwoTotalScore == getStartMenu().getMaxScore()){
                 if(playerOneTotalScore > playerTwoTotalScore){
                     getFinishGameMenu().getResultsLabel().setText("Max score reached! Player 1 has won the game!");
-                }else{
+                }else {
                     getFinishGameMenu().getResultsLabel().setText("Max score reached! Player 2 has won the game!");
                 }
-                getFinishGameMenu().removeButton();
+                //getFinishGameMenu().removeButton();
             }
         }
 
@@ -243,6 +258,41 @@ public class BackgammonLogic extends UI {
             restartApplication();
         });
 
+    }
+    
+    private void nextMatchAsk()	{
+    	/*try {
+		    Thread.sleep(3000);
+		    return 0;
+		} catch(InterruptedException e) {
+		    System.out.println("error");
+		    return 1;
+		}*/
+    	
+    	getFinishGameMenu().getResultsLabel().setText("Would you like to continue to the next game?\nEnter 'continue' or 'stop' to choose");
+    	
+    	
+    }
+    
+    private void nextMatchAskContinue()	{
+    	playerOneScore = 0;
+        playerTwoScore = 0;
+        recordData();
+        getFinishGameMenu().getRestartButton().setOnMouseClicked(event ->  {
+            restartApplication();
+        });
+    }
+    
+    private int nextMatchAskStop()	{
+    	getFinishGameMenu().getResultsLabel().setText("Final score:\n");
+    	try {
+		    Thread.sleep(3000);
+		    return 0;
+		} catch(InterruptedException e) {
+		    System.out.println("error");
+		    return 1;
+		}
+    	getFinishGameMenu().getResultsLabel().setText("Player 1: " + playerOneTotalScore + "\nPlayer 2: " + playerTwoTotalScore);
     }
 
     //Function is called when new game button is called and writes the total scores of the players to a .txt file
