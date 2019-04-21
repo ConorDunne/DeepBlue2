@@ -35,7 +35,6 @@ public class BackgammonApplication extends Application {
     //CALLED WHENEVER WE START MAIN JAVA PROGRAM
     public static void main(String[] args) throws IOException{
         launch(args);
-
     }
 
 }

@@ -29,14 +29,44 @@ public class Bot0 implements BotAPI {
 
     public String getCommand(Plays possiblePlays) {
         // Add your code here
+      //  getDoubleDecision();
         return "1";
     }
 
     public String getDoubleDecision() {
         // Add your code here
+        int chanceOfWinning = calculateChanceOfWinning();
+        System.out.println("" + chanceOfWinning);
+        //If both players 2 points away from winning
+        if(me.getScore() == 13 && opponent.getScore() == 13){
+            if(chanceOfWinning >= 0 && chanceOfWinning <= 50){
+                return "n";
+            }
+            else if(chanceOfWinning >= 50 && chanceOfWinning <= 75){
+                return "y";
+            }
+            else if(chanceOfWinning >= 75 && chanceOfWinning <= 100){
+                return "y";
+            }
+        }
+        else{
+            if(chanceOfWinning >= 0 && chanceOfWinning <= 66){
+                return "n";
+            }
+            else if(chanceOfWinning >= 66 && chanceOfWinning <= 75){
+                return "y";
+            }
+            else if(chanceOfWinning >= 75 && chanceOfWinning <= 80){
+                return "y";
+            }}
+
+
         return "n";
     }
 
+    private int calculateChanceOfWinning(){
+        return me.getScore() / (me.getScore() + opponent.getScore()) * 100;
+    }
 //  Board Feature Calculations for Bot Decision Making
     //  Pip Count Difference (Feature 1)
         //  Input           - Board State
