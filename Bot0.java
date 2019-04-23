@@ -14,7 +14,8 @@ public class Bot0 implements BotAPI {
     private MatchAPI match;
     private InfoPanelAPI info;
     private int[] weights = {1, 1, 1, 1, 1, 1, 1, 1, 1};
-    public int[] myPositions, opponentPositions = new int[26];
+    private int[] myPositions = new int[26];
+    private int[] opponentPositions = new int[26];
 
     Bot0(PlayerAPI me, PlayerAPI opponent, BoardAPI board, CubeAPI cube, MatchAPI match, InfoPanelAPI info) {
         this.me = me;
@@ -26,7 +27,7 @@ public class Bot0 implements BotAPI {
     }
 
     public String getName() {
-        return "DeepBlue2"; // must match the class name
+        return "Bot0"; // must match the class name
     }
 
     public String getCommand(Plays possiblePlays) {
@@ -70,7 +71,7 @@ public class Bot0 implements BotAPI {
 
 
     //  Needs input of list of moves
-    private int bestMove() {
+    private int bestMove(Plays p) {
         int bestMove = 0;
 
         //  Get current positions
@@ -82,6 +83,8 @@ public class Bot0 implements BotAPI {
         /*
             Loop through possible moves and input adjusted position array to getFeatureScore
         */
+
+
 
         //              Change to return of best move
         return bestMove;
