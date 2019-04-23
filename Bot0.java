@@ -32,14 +32,14 @@ public class Bot0 implements BotAPI {
     public String getCommand(Plays possiblePlays) {
         // Add your code here
         int move = 1;
-        System.out.println("" + me.getScore() + " Opp: " + opponent.getScore() + " Chance: " + calculateChanceOfWinning());
+        System.out.println("" + me.getScore() + " Opp: " + opponent.getScore() + " Chance: " + currentWinProbability());
         System.out.println(possiblePlays.plays);
         return Integer.toString(move);
     }
 
     public String getDoubleDecision() {
         // Add your code here
-        int chanceOfWinning = currentWinProbability()*100;
+        int chanceOfWinning = currentWinProbability() * 100;
         System.out.println("" + chanceOfWinning);
         //If both players 2 points away from winning
         if(me.getScore() == 13 && opponent.getScore() == 13){
@@ -68,15 +68,10 @@ public class Bot0 implements BotAPI {
         return "n";
     }
 
-    private int calculateChanceOfWinning(){
-        return me.getScore() / (me.getScore() + opponent.getScore() + 1) * 100;
-    }
-
 
     //  Needs input of list of moves
     private int bestMove() {
         int bestMove = 0;
-
 
         //  Get current positions
         for(int i=0; i<26; i++) {
