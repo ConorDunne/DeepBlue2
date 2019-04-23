@@ -18,7 +18,9 @@ public class Bot0 implements BotAPI {
     private InfoPanelAPI info;
     private int[] myPositions = new int[26];
     private int[] opponentPositions = new int[26];
+
     private int[] weights = {1, 1, 1, 1, 1, 1, 1, 15, 1};
+
         /*
                     Weight Value Position Meanings
             1   Pip-Count Difference
@@ -70,6 +72,7 @@ public class Bot0 implements BotAPI {
             winPercentage = 0;
 
         System.out.println("Chance of Winning: " + winPercentage + "%");
+        System.out.println("Bear Off: " + board.getNumCheckers(me.getId(), 0));
         //If both players 2 points away from winning
         if(board.getNumCheckers(me.getId(), 25) == 13 && board.getNumCheckers(opponent.getId(), 25) == 13){
             if(winPercentage >= 0 && winPercentage <= 50){
@@ -98,7 +101,7 @@ public class Bot0 implements BotAPI {
     }
     //  Needs input of list of moves
     private int bestMove(Plays p) {
-        int bestMove = 1;
+        int bestMove = 0;
         ArrayList<Play> plays = p.plays;
         double[] moveFeatures = new double[plays.size()];
         Arrays.fill(moveFeatures, 0);
@@ -196,7 +199,7 @@ public class Bot0 implements BotAPI {
             P1 += i * opponentCounters[i];
         }
 
-        Pd = P0 - P1;
+        Pd = Math.abs(P0 - P1);
         return Pd;   //  Player Difference divided by 360 (max number of points)
     }
 
@@ -219,7 +222,7 @@ public class Bot0 implements BotAPI {
                 Tx++;
         }
 
-        Sd = Kx - Tx;
+        Sd = Math.abs(Kx - Tx);
         return Sd;   //  Blot-Block Difference divided by 7 (max number of points)
     }
 
