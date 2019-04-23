@@ -1,5 +1,3 @@
-package Sprint5;
-
 import javax.swing.*;
 import java.awt.*;
 

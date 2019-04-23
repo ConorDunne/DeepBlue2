@@ -1,10 +1,5 @@
-package Sprint5;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 
 public class Backgammon {
     // This is the main class for the Backgammon game. It orchestrates the running of the game.

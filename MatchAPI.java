@@ -1,5 +1,3 @@
-package Sprint5;
-
 public interface MatchAPI {
 
     int getLength();

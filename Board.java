@@ -1,5 +1,3 @@
-package Sprint5;
-
 public class Board implements BoardAPI {
     // Board hold the details for the current board positions, performs moves and returns the list of legal moves
 

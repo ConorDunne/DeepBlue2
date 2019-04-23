@@ -1,5 +1,3 @@
-package Sprint5;
-
 public class Cube implements CubeAPI {
 
     private static int value;
