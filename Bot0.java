@@ -53,7 +53,7 @@ public class Bot0 implements BotAPI {
         }
 
         int move = bestMove(possiblePlays);
-        System.out.println("" + me.getScore() + " Opp: " + opponent.getScore() + " Chance: " + currentWinProbability());
+        System.out.println("" + board.getNumCheckers(me.getId(), 25) + " Opp: " + board.getNumCheckers(opponent.getId(), 25) + " Chance: " + currentWinProbability());
         System.out.println(possiblePlays.plays);
         return Integer.toString(move);
     }
@@ -65,22 +65,22 @@ public class Bot0 implements BotAPI {
 
         System.out.println("Chance of Winning: " + winPercentage + "%");
         //If both players 2 points away from winning
-        if(me.getScore() == 13 && opponent.getScore() == 13){
-            if(chanceOfWinning >= 0 && chanceOfWinning <= 50){
+        if(board.getNumCheckers(me.getId(), 25) == 13 && board.getNumCheckers(opponent.getId(), 25) == 13){
+            if(winPercentage >= 0 && winPercentage <= 50){
                 return "n";
             }
-            else if(chanceOfWinning >= 50 && chanceOfWinning <= 75){
+            else if(winPercentage >= 50 && winPercentage <= 75){
                 return "y";
             }
-            else if(chanceOfWinning >= 75 && chanceOfWinning <= 100){
+            else if(winPercentage >= 75 && winPercentage <= 100){
                 return "y";
             }
         }
         else{
-            if(chanceOfWinning >= 0 && chanceOfWinning <= 66){
+            if(winPercentage >= 0 && winPercentage <= 66){
                 return "n";
             }
-            else if(chanceOfWinning >= 66 && chanceOfWinning <= 75){
+            else if(winPercentage >= 66 && winPercentage <= 75){
                 return "y";
             }
             else if(chanceOfWinning >= 75 && chanceOfWinning <= 80){
@@ -90,8 +90,6 @@ public class Bot0 implements BotAPI {
 
         return "n";
     }
-
-
     //  Needs input of list of moves
     private int bestMove(Plays p) {
         int bestMove = 1;
