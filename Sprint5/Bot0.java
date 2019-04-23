@@ -19,6 +19,7 @@ public class Bot0 implements BotAPI {
     private MatchAPI match;
     private InfoPanelAPI info;
     private int[] weights = {1, 1, 1, 1, 1, 1, 1, 1, 1};
+    private int[] myPositions, opponentPositions = new int[26];
 
     Bot0(PlayerAPI me, PlayerAPI opponent, BoardAPI board, CubeAPI cube, MatchAPI match, InfoPanelAPI info) {
         this.me = me;
@@ -74,23 +75,50 @@ public class Bot0 implements BotAPI {
         return me.getScore() / (me.getScore() + opponent.getScore()) * 100;
     }
 
-    //  Gets the average weighted feature score for a possible play
-    private int getFeatureScore(Play possiblePlay) {
-        int featureScore = 0;
+
+    //  Needs input of list of moves
+    private int bestMove() {
+        int bestMove = 0;
+
+        //  Get current positions
+        for(int i=0; i<26; i++) {
+            myPositions[i] = board.getNumCheckers(me.getId(), i);
+            opponentPositions[i] = board.getNumCheckers(opponent.getId(), i);
+        }
 
         /*
-            Move Position to new Position according to possiblePlay
+            Loop through possible moves and input adjusted position array to getFeatureScore
         */
 
-        featureScore += weights[0] * pipCountDifference();
-        featureScore += weights[1] * blockBlotDifference();
-        featureScore += weights[2] * homeboardBlocks();
-        featureScore += weights[3] * capturedPrime();
-        featureScore += weights[4] * AnchorChecker();
-        featureScore += weights[5] * escapedCheckers();
-        featureScore += weights[6] * homeCheckersNumber();
-        featureScore += weights[7] * bearedOffNumber();
-        featureScore += weights[8] * pointsCovered();
+        //              Change to return of best move
+        return bestMove;
+    }
+
+
+    //  Calculates probability of winning by looking at current position and win features
+    int currentWinProbability() {
+        for(int i=0; i<26; i++) {
+            myPositions[i] = board.getNumCheckers(me.getId(), i);
+            opponentPositions[i] = board.getNumCheckers(opponent.getId(), i);
+        }
+
+        return getFeatureScore(myPositions, opponentPositions);
+    }
+
+
+    //  Gets the average weighted feature score for a possible play
+    private int getFeatureScore(int[] myCounter, int[] opponentCounters) {
+        int featureScore = 0;
+
+        featureScore += weights[0] * pipCountDifference(myCounter, opponentCounters);
+        featureScore += weights[1] * blockBlotDifference(myCounter, opponentCounters);
+        featureScore += weights[2] * homeboardBlocks(myCounter);
+        featureScore += weights[3] * capturedPrime(myCounter, opponentCounters);
+        featureScore += weights[4] * AnchorChecker(myCounter);
+        featureScore += weights[5] * escapedCheckers(myCounter, opponentCounters);
+        featureScore += weights[6] * homeCheckersNumber(myCounter);
+        featureScore += weights[7] * bearedOffNumber(myCounter);
+        featureScore += weights[8] * pointsCovered(myCounter);
 
         int totalWeights = IntStream.of(weights).sum();
 
@@ -103,14 +131,14 @@ public class Bot0 implements BotAPI {
         //  Output          - Feature score for feature 1 (between 0 and 1 where 1 is a definite win)
             //  Equations   -   Pd = P0 - P1
             //                  P0 = (25)E(p=0) pC0(p)
-    private int pipCountDifference() {
+    private int pipCountDifference(int[] myCounter, int[] opponentCounters) {
         int Pd;     //  Player Difference Score
         int P0 = 0; //  Player 0 Score
         int P1 = 0; //  Player 1 Score
 
         for(int i=1; i<25; i++) {
-            P0 += i * board.getNumCheckers(me.getId(), i);
-            P1 += i * board.getNumCheckers(opponent.getId(), i);
+            P0 += i * myCounter[i];
+            P1 += i * opponentCounters[i];
         }
 
         Pd = (P0-P1)/360;   //  Player Difference divided by 360 (max number of points)
@@ -121,7 +149,7 @@ public class Bot0 implements BotAPI {
         //  Input           - Board State
         //  Output          - Feature score for feature 2 (between 0 and 1 where 1 is a definite win)
             //  Equations   -   Sd = Kx - Tx
-    private int blockBlotDifference() {
+    private int blockBlotDifference(int[] myCounter, int[] opponentCounters) {
         int Sd;
         int Kx = 0; //  Number of Blocks by Player 0
         int Tx = 0; //  Number of Blots by Player 1
@@ -130,9 +158,9 @@ public class Bot0 implements BotAPI {
             Count board counters to get Kx and Tx
         */
         for(int i=1; i<25; i++) {
-            if(board.getNumCheckers(me.getId(), i) > 1)
+            if(myCounter[i] > 1)
                 Kx++;
-            else if(board.getNumCheckers(opponent.getId(), i) == 1)
+            else if(opponentCounters[i] == 1)
                 Tx++;
         }
 
@@ -144,14 +172,14 @@ public class Bot0 implements BotAPI {
         //  Input           - Board State
         //  Output          - Feature score for feature 3 (between 0 and 1 where 1 is a definite win)
             //  Equations   -   H0 = (6)E(p=1) (P0(p) > 1)
-    private int homeboardBlocks() {
+    private int homeboardBlocks(int[] myCounter) {
         int count = 0;
 
         /*
             Count board counters to get count;
         */
         for(int i=1; i<7; i++) {
-            if(board.getNumCheckers(me.getId(), i) > 1)
+            if(myCounter[i] > 1)
                 count += i;
         }
 
@@ -162,7 +190,7 @@ public class Bot0 implements BotAPI {
     //  Length of Prime with Captured Checker (Feature 4)
         //  Input           - Board State
         //  Output          - Feature score for feature 4 (between 0 and 1 where 1 is a definite win)
-    private int capturedPrime() {
+    private int capturedPrime(int[] myCounter, int[] opponentCounters) {
         int points = 0;
         int sizeOfPrime = 0;
         int numberOfCaptured = 0;
@@ -171,15 +199,15 @@ public class Bot0 implements BotAPI {
             Count board counters to get sizeOfPrime and numberOfCaptured
         */
         for(int i=1; i<25; i++) {
-            if(board.getNumCheckers(me.getId(), i) > 1)
+            if(myCounter[i] > 1)
                sizeOfPrime++;
-            else if(board.getNumCheckers(me.getId(), i) == 0) {
+            else if(myCounter[i] == 0) {
                 points += sizeOfPrime*numberOfCaptured;
                 sizeOfPrime = 0;
             }
 
-            if(board.getNumCheckers(opponent.getId(), i) > 0)
-                numberOfCaptured += board.getNumCheckers(opponent.getId(), i);
+            if(opponentCounters[i] > 0)
+                numberOfCaptured += opponentCounters[i];
         }
 
 //  Recheck max number of points    --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -190,14 +218,14 @@ public class Bot0 implements BotAPI {
     //  Anchor Checker (Feature 5)
         //  Input           - Board State
         //  Output          - Feature score for feature 5 (between 0 and 1 where 1 is a definite win)
-    private int AnchorChecker() {
+    private int AnchorChecker(int[] myCounter) {
         int anchorPoint = 0;
 
         /*
             Count board counters to get anchorPoints
         */
         for(int i=1; i<7; i++) {
-            if(board.getNumCheckers(me.getId(), i) > 1)
+            if(myCounter[i] > 1)
                 anchorPoint += i;
         }
 
@@ -207,7 +235,7 @@ public class Bot0 implements BotAPI {
     //  Number of Escaped Checkers (Feature 6)
         //  Input           - Board State
         //  Output          - Feature score for feature 6 (between 0 and 1 where 1 is a definite win)
-    private int escapedCheckers() {
+    private int escapedCheckers(int[] myCounter, int[] opponentCounters) {
         int escaped = 0;
         int opponentCheckers = 0;
 
@@ -215,9 +243,9 @@ public class Bot0 implements BotAPI {
             Count board counters to get escaped checkers
         */
         for(int i=0; i<25 && opponentCheckers < 15; i++) {
-            if(board.getNumCheckers(opponent.getId(), i) > 0)
-                opponentCheckers += board.getNumCheckers(opponent.getId(), i);
-            else if(board.getNumCheckers(me.getId(), i) > 0)
+            if(opponentCounters[i] > 0)
+                opponentCheckers += opponentCounters[i];
+            else if(myCounter[i] > 0)
                 escaped++;
         }
         escaped = 15 - escaped;
@@ -229,14 +257,14 @@ public class Bot0 implements BotAPI {
     //  Number of Home Checkers (Feature 7)
         //  Input           - Board State
         //  Output          - Feature score for feature 7 (between 0 and 1 where 1 is a definite win)
-    private int homeCheckersNumber() {
+    private int homeCheckersNumber(int[] myCounter) {
         int homeCheckers = 0;
 
         /*
             Count board counters to get home checkers
         */
         for(int i=19; i<25; i++)
-            homeCheckers += board.getNumCheckers(me.getId(), i);
+            homeCheckers += myCounter[i];
 
         homeCheckers /= 15; //  homeCheckers divided by 15 (max number of points)
         return homeCheckers;
@@ -245,13 +273,13 @@ public class Bot0 implements BotAPI {
     //  Number of Beared Off Checkers (Feature 8)
         //  Input           - Board State
         //  Output          - Feature score for feature 8 (between 0 and 1 where 1 is a definite win)
-    private int bearedOffNumber() {
+    private int bearedOffNumber(int[] myCounter) {
         int bearOff = 0;
 
         /*
             Count board counters to get bear off
         */
-        bearOff += board.getNumCheckers(me.getId(), 25);
+        bearOff += myCounter[25];
 
         bearOff /= 15;  //  bearOff divided by 15 (max number of points)
         return bearOff;
@@ -260,14 +288,14 @@ public class Bot0 implements BotAPI {
     //  pointsCoveredNumbers (Feature 9)
         //  Input           - Board State
         //  Output          - Feature score for feature 9 (between 0 and 1 where 1 is a definite win)
-    private int pointsCovered() {
+    private int pointsCovered(int[] myCounter) {
         int pointsCovered = 0;
 
         /*
             Count board counters to get pointsCovered
         */
         for(int i=1; i<25; i++) {
-            if(board.getNumCheckers(me.getId(), i) > 0)
+            if(myCounter[i] > 0)
                 pointsCovered += i;
         }
 
