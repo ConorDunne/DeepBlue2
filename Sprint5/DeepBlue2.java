@@ -1,6 +1,6 @@
 package Sprint5;
 
-public class Bot0 implements BotAPI {
+public class DeepBlue2 implements BotAPI {
 
     // The public API of Bot must not change
     // This is ONLY class that you can edit in the program
@@ -14,7 +14,7 @@ public class Bot0 implements BotAPI {
     private MatchAPI match;
     private InfoPanelAPI info;
 
-    Bot0(PlayerAPI me, PlayerAPI opponent, BoardAPI board, CubeAPI cube, MatchAPI match, InfoPanelAPI info) {
+    DeepBlue2(PlayerAPI me, PlayerAPI opponent, BoardAPI board, CubeAPI cube, MatchAPI match, InfoPanelAPI info) {
         this.me = me;
         this.opponent = opponent;
         this.board = board;
