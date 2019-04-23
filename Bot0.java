@@ -18,7 +18,7 @@ public class Bot0 implements BotAPI {
     private InfoPanelAPI info;
     private int[] myPositions = new int[26];
     private int[] opponentPositions = new int[26];
-    private int[] weights = {1, 1, 1, 1, 1, 1, 1, 1, 1};
+    private int[] weights = {2, 1, 2, 1, 2, 1, 2, 1, 2};
         /*
                     Weight Value Position Meanings
             1   Pip-Count Difference
