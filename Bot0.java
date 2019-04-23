@@ -14,7 +14,7 @@ public class Bot0 implements BotAPI {
     private MatchAPI match;
     private InfoPanelAPI info;
     private int[] weights = {1, 1, 1, 1, 1, 1, 1, 1, 1};
-    private int[] myPositions, opponentPositions = new int[26];
+    public int[] myPositions, opponentPositions = new int[26];
 
     Bot0(PlayerAPI me, PlayerAPI opponent, BoardAPI board, CubeAPI cube, MatchAPI match, InfoPanelAPI info) {
         this.me = me;
@@ -31,12 +31,15 @@ public class Bot0 implements BotAPI {
 
     public String getCommand(Plays possiblePlays) {
         // Add your code here
-        return "A";
+        int move = 1;
+        System.out.println("" + me.getScore() + " Opp: " + opponent.getScore() + " Chance: " + calculateChanceOfWinning());
+        System.out.println(possiblePlays.plays);
+        return Integer.toString(move);
     }
 
     public String getDoubleDecision() {
         // Add your code here
-     /*   int chanceOfWinning = calculateChanceOfWinning();
+        int chanceOfWinning = calculateChanceOfWinning();
         System.out.println("" + chanceOfWinning);
         //If both players 2 points away from winning
         if(me.getScore() == 13 && opponent.getScore() == 13){
@@ -59,14 +62,14 @@ public class Bot0 implements BotAPI {
             }
             else if(chanceOfWinning >= 75 && chanceOfWinning <= 80){
                 return "y";
-            }}*/
+            }}
 
 
         return "n";
     }
 
     private int calculateChanceOfWinning(){
-        return me.getScore() / (me.getScore() + opponent.getScore()) * 100;
+        return me.getScore() / (me.getScore() + opponent.getScore() + 1) * 100;
     }
 
 
