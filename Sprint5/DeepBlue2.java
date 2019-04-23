@@ -1,6 +1,12 @@
 package Sprint5;
 
+<<<<<<< HEAD:Sprint5/DeepBlue2.java
 public class DeepBlue2 implements BotAPI {
+=======
+import java.util.stream.IntStream;
+
+public class Bot0 implements BotAPI {
+>>>>>>> 82ed5a1bb52b0db0c5fa1d68723410b372369181:Sprint5/Bot0.java
 
     // The public API of Bot must not change
     // This is ONLY class that you can edit in the program
@@ -13,6 +19,7 @@ public class DeepBlue2 implements BotAPI {
     private CubeAPI cube;
     private MatchAPI match;
     private InfoPanelAPI info;
+    private int[] weights = {1, 1, 1, 1, 1, 1, 1, 1, 1};
 
     DeepBlue2(PlayerAPI me, PlayerAPI opponent, BoardAPI board, CubeAPI cube, MatchAPI match, InfoPanelAPI info) {
         this.me = me;
@@ -67,13 +74,32 @@ public class DeepBlue2 implements BotAPI {
     private int calculateChanceOfWinning(){
         return me.getScore() / (me.getScore() + opponent.getScore()) * 100;
     }
+
+    private int getFeatureScore(Play possiblePlay) {
+        int featureScore = 0;
+
+        featureScore += weights[0] * pipCountDifference(possiblePlay);
+        featureScore += weights[1] * blockBlotDifference(possiblePlay);
+        featureScore += weights[2] * homeboardBlocks(possiblePlay);
+        featureScore += weights[3] * capturedPrime(possiblePlay);
+        featureScore += weights[4] * AnchorChecker(possiblePlay);
+        featureScore += weights[5] * escapedCheckers(possiblePlay);
+        featureScore += weights[6] * homeCheckersNumber(possiblePlay);
+        featureScore += weights[7] * bearedOffNumber(possiblePlay);
+        featureScore += weights[8] * pointsCovered(possiblePlay);
+
+        int totalWeights = IntStream.of(weights).sum();
+
+        return featureScore / totalWeights;
+    }
+
 //  Board Feature Calculations for Bot Decision Making
     //  Pip Count Difference (Feature 1)
         //  Input           - Board State
         //  Output          - Feature score for feature 1 (between 0 and 1 where 1 is a definite win)
             //  Equations   -   Pd = P0 - P1
             //                  P0 = (25)E(p=0) pC0(p)
-    private int pipCountDifference() {
+    private int pipCountDifference(Play possiblePlay) {
         int Pd;     //  Player Difference Score
         int P0 = 0; //  Player 0 Score
         int P1 = 0; //  Player 1 Score
@@ -90,7 +116,7 @@ public class DeepBlue2 implements BotAPI {
         //  Input           - Board State
         //  Output          - Feature score for feature 2 (between 0 and 1 where 1 is a definite win)
             //  Equations   -   Sd = Kx - Tx
-    private int blockBlotDifference() {
+    private int blockBlotDifference(Play possiblePlay) {
         int Sd;
         int Kx = 0; //  Number of Blocks by Player 0
         int Tx = 0; //  Number of Blots by Player 1
@@ -107,7 +133,7 @@ public class DeepBlue2 implements BotAPI {
         //  Input           - Board State
         //  Output          - Feature score for feature 3 (between 0 and 1 where 1 is a definite win)
             //  Equations   -   H0 = (6)E(p=1) (P0(p) > 1)
-    private int homeboardBlocks() {
+    private int homeboardBlocks(Play possiblePlay) {
         int count = 0;
 
         /*
@@ -121,7 +147,7 @@ public class DeepBlue2 implements BotAPI {
     //  Length of Prime with Captured Checker (Feature 4)
         //  Input           - Board State
         //  Output          - Feature score for feature 4 (between 0 and 1 where 1 is a definite win)
-    private int capturedPrime() {
+    private int capturedPrime(Play possiblePlay) {
         int points;
         int sizeOfPrime = 0;
         int numberOfCaptured = 0;
@@ -139,7 +165,7 @@ public class DeepBlue2 implements BotAPI {
     //  Anchor Checker (Feature 5)
         //  Input           - Board State
         //  Output          - Feature score for feature 5 (between 0 and 1 where 1 is a definite win)
-    private int AnchorChecker() {
+    private int AnchorChecker(Play possiblePlay) {
         int anchorPoint = 0;
 
         /*
@@ -152,7 +178,7 @@ public class DeepBlue2 implements BotAPI {
     //  Number of Escaped Checkers (Feature 6)
         //  Input           - Board State
         //  Output          - Feature score for feature 6 (between 0 and 1 where 1 is a definite win)
-    private int escapedCheckers() {
+    private int escapedCheckers(Play possiblePlay) {
         int escaped = 0;
 
         /*
@@ -166,7 +192,7 @@ public class DeepBlue2 implements BotAPI {
     //  Number of Home Checkers (Feature 7)
         //  Input           - Board State
         //  Output          - Feature score for feature 7 (between 0 and 1 where 1 is a definite win)
-    private int homeCheckersNumber() {
+    private int homeCheckersNumber(Play possiblePlay) {
         int homeCheckers = 0;
 
         /*
@@ -180,7 +206,7 @@ public class DeepBlue2 implements BotAPI {
     //  Number of Beared Off Checkers (Feature 8)
         //  Input           - Board State
         //  Output          - Feature score for feature 8 (between 0 and 1 where 1 is a definite win)
-    private int bearedOffNumber() {
+    private int bearedOffNumber(Play possiblePlay) {
         int bearOff = 0;
 
         /*
@@ -194,7 +220,7 @@ public class DeepBlue2 implements BotAPI {
     //  pointsCoveredNumbers (Feature 9)
         //  Input           - Board State
         //  Output          - Feature score for feature 9 (between 0 and 1 where 1 is a definite win)
-    private int pointsCovered() {
+    private int pointsCovered(Play possiblePlay) {
         int pointsCovered = 0;
 
         /*
