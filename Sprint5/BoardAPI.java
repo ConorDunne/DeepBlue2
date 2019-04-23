@@ -4,7 +4,7 @@ public interface BoardAPI {
 
     int[][] get();
 
-    int getNumCheckers(int player, int pip);
+    int getNumCheckers(int playerId, int pip);
 
     Plays getPossiblePlays(Player player, Dice dice);
 
@@ -15,4 +15,14 @@ public interface BoardAPI {
     boolean allCheckersOff(Player player);
 
     boolean hasCheckerOff(Player player);
+
+    Plays getPossiblePlays(int playerId, Dice dice);
+
+    boolean lastCheckerInInnerBoard(int playerId);
+
+    boolean lastCheckerInOpponentsInnerBoard(int playerId);
+
+    boolean allCheckersOff(int playerId);
+
+    boolean hasCheckerOff(int playerId);
 }

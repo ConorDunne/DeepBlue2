@@ -11,4 +11,6 @@ public interface PlayerAPI {
     Color getColor();
 
     int getScore();
+
+    Dice getDuplicateDice();
 }

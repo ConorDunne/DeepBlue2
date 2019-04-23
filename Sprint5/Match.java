@@ -80,4 +80,7 @@ public class Match implements MatchAPI {
             crawfordDone = false;
         }
 
+        public boolean canDouble(int playerId) {
+            return canDouble(players.get(playerId));
+        }
     }
