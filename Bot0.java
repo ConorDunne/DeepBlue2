@@ -75,7 +75,7 @@ public class Bot0 implements BotAPI {
 
     //  Needs input of list of moves
     private int bestMove(Plays p) {
-        int bestMove = 0;
+        int bestMove = 1;
         ArrayList<Play> plays = p.plays;
         double[] moveFeatures = new double[plays.size()];
         Arrays.fill(moveFeatures, 0);
