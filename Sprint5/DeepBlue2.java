@@ -1,13 +1,9 @@
 package Sprint5;
 
-<<<<<<< HEAD:Sprint5/DeepBlue2.java
-public class DeepBlue2 implements BotAPI {
-=======
 import java.util.stream.IntStream;
 
-public class Bot0 implements BotAPI {
->>>>>>> 82ed5a1bb52b0db0c5fa1d68723410b372369181:Sprint5/Bot0.java
-
+public class DeepBlue2 implements BotAPI {
+	
     // The public API of Bot must not change
     // This is ONLY class that you can edit in the program
     // Rename Bot to the name of your team. Use camel case.
