@@ -31,18 +31,17 @@ public class DeepBlue2 implements BotAPI {
     }
 
     public String getName() {
-        return "Bot0"; // must match the class name
+        return "DeepBlue2"; // must match the class name
     }
 
     public String getCommand(Plays possiblePlays) {
         // Add your code here
-      //  getDoubleDecision();
-        return "1";
+        return "A";
     }
 
     public String getDoubleDecision() {
         // Add your code here
-        int chanceOfWinning = calculateChanceOfWinning();
+     /*   int chanceOfWinning = calculateChanceOfWinning();
         System.out.println("" + chanceOfWinning);
         //If both players 2 points away from winning
         if(me.getScore() == 13 && opponent.getScore() == 13){
@@ -65,7 +64,7 @@ public class DeepBlue2 implements BotAPI {
             }
             else if(chanceOfWinning >= 75 && chanceOfWinning <= 80){
                 return "y";
-            }}
+            }}*/
 
 
         return "n";
