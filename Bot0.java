@@ -53,7 +53,9 @@ public class Bot0 implements BotAPI {
         }
 
         int move = bestMove(possiblePlays);
-        System.out.println("" + board.getNumCheckers(me.getId(), 25) + " Opp: " + board.getNumCheckers(opponent.getId(), 25) + " Chance: " + currentWinProbability());
+        System.out.println("" + board.getNumCheckers(me.getId(), 25) + " Opp: " + board.getNumCheckers(opponent.getId(), 25));
+        System.out.println("Pip 0 25 24" + board.getNumCheckers(me.getId(), 25) + " " +
+                board.getNumCheckers(me.getId(), 25) + " " + board.getNumCheckers(me.getId(), 25));
         System.out.println(possiblePlays.plays);
         return Integer.toString(move);
     }
@@ -62,6 +64,10 @@ public class Bot0 implements BotAPI {
         double chanceOfWinning = currentWinProbability();
         double chanceOfLosing = currentLoseProbability();
         double winPercentage = chanceOfWinning / (chanceOfWinning + chanceOfLosing) * 100;
+        if(winPercentage > 100)
+            winPercentage = 100;
+        else if(winPercentage < 0)
+            winPercentage = 0;
 
         System.out.println("Chance of Winning: " + winPercentage + "%");
         //If both players 2 points away from winning
