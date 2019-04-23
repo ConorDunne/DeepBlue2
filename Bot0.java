@@ -16,9 +16,22 @@ public class Bot0 implements BotAPI {
     private CubeAPI cube;
     private MatchAPI match;
     private InfoPanelAPI info;
-    private int[] weights = {1, 1, 1, 1, 1, 1, 1, 1, 1};
     private int[] myPositions = new int[26];
     private int[] opponentPositions = new int[26];
+    private int[] weights = {1, 1, 1, 1, 1, 1, 1, 1, 1};
+        /*
+                    Weight Value Position Meanings
+            1   Pip-Count Difference
+            2   Block-Blot Difference
+            3   Number Home Board Blocks
+            4   Length of Prime
+            5   Anchor in Opponents Home Board
+            6   Escaped Checkers
+            7   Home Board Checkers
+            8   Checkers Taken off
+            9   Number Points Covered
+        */
+
 
     Bot0(PlayerAPI me, PlayerAPI opponent, BoardAPI board, CubeAPI cube, MatchAPI match, InfoPanelAPI info) {
         this.me = me;
@@ -108,7 +121,7 @@ public class Bot0 implements BotAPI {
         }
 
         System.out.println("Best Move Index: " + bestMove + "\tBest Move Percentage: " + (moveFeatures[bestMove]));
-        return bestMove;
+        return bestMove+1;
     }
 
     private ArrayList<int[]> getCurrentPosition() {
