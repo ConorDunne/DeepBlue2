@@ -5,8 +5,8 @@ import javafx.geometry.Pos;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
-public class Bot0 implements BotAPI {
-
+public class DeepBlue2 implements BotAPI {
+	
     // The public API of Bot must not change
     // This is ONLY class that you can edit in the program
     // Rename Bot to the name of your team. Use camel case.
@@ -21,7 +21,7 @@ public class Bot0 implements BotAPI {
     private int[] weights = {1, 1, 1, 1, 1, 1, 1, 1, 1};
     private int[] myPositions, opponentPositions = new int[26];
 
-    Bot0(PlayerAPI me, PlayerAPI opponent, BoardAPI board, CubeAPI cube, MatchAPI match, InfoPanelAPI info) {
+    DeepBlue2(PlayerAPI me, PlayerAPI opponent, BoardAPI board, CubeAPI cube, MatchAPI match, InfoPanelAPI info) {
         this.me = me;
         this.opponent = opponent;
         this.board = board;
