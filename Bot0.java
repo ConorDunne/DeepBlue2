@@ -1,3 +1,6 @@
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class Bot0 implements BotAPI {
@@ -32,7 +35,7 @@ public class Bot0 implements BotAPI {
 
     public String getCommand(Plays possiblePlays) {
         // Add your code here
-        int move = 1;
+        int move = bestMove(possiblePlays);
         System.out.println("" + me.getScore() + " Opp: " + opponent.getScore() + " Chance: " + currentWinProbability());
         System.out.println(possiblePlays.plays);
         return Integer.toString(move);
@@ -40,7 +43,7 @@ public class Bot0 implements BotAPI {
 
     public String getDoubleDecision() {
         // Add your code here
-        int chanceOfWinning = currentWinProbability() * 100;
+        double chanceOfWinning = currentWinProbability();
         System.out.println("" + chanceOfWinning);
         //If both players 2 points away from winning
         if(me.getScore() == 13 && opponent.getScore() == 13){
@@ -73,38 +76,65 @@ public class Bot0 implements BotAPI {
     //  Needs input of list of moves
     private int bestMove(Plays p) {
         int bestMove = 0;
-
-        //  Get current positions
-        for(int i=0; i<26; i++) {
-            myPositions[i] = board.getNumCheckers(me.getId(), i);
-            opponentPositions[i] = board.getNumCheckers(opponent.getId(), i);
-        }
+        ArrayList<Play> plays = p.plays;
+        double[] moveFeatures = new double[plays.size()];
+        Arrays.fill(moveFeatures, 0);
 
         /*
             Loop through possible moves and input adjusted position array to getFeatureScore
         */
+        for(int i=0; i<plays.size(); i++) {
+            ArrayList<int[]> positions = getCurrentPosition();
+            myPositions = positions.get(0);
+            opponentPositions = positions.get(1);
 
+            Play play = plays.get(i);
 
+            for(int j=0; j<play.numberOfMoves(); j++) {
+                Move m = play.getMove(j);
 
-        //              Change to return of best move
+                myPositions[m.getFromPip()]--;
+                myPositions[m.getToPip()]++;
+
+                if(m.isHit()) {
+                    opponentPositions[m.getToPip()]--;
+                    opponentPositions[0]++;
+                }
+            }
+
+            moveFeatures[i] = getFeatureScore(myPositions, opponentPositions);
+            if(moveFeatures[i] > moveFeatures[bestMove])
+                bestMove = i;
+        }
+
+        System.out.println("Best Move Index: " + bestMove + "\tBest Move Percentage: " + (moveFeatures[bestMove]));
         return bestMove;
     }
 
+    private ArrayList<int[]> getCurrentPosition() {
+        ArrayList<int[]> positions = new ArrayList<>();
 
-    //  Calculates probability of winning by looking at current position and win features
-    int currentWinProbability() {
         for(int i=0; i<26; i++) {
             myPositions[i] = board.getNumCheckers(me.getId(), i);
             opponentPositions[i] = board.getNumCheckers(opponent.getId(), i);
         }
 
-        return getFeatureScore(myPositions, opponentPositions);
+        positions.add(0, myPositions);
+        positions.add(1, opponentPositions);
+        return positions;
+    }
+
+    //  Calculates probability of winning by looking at current position and win features
+    private double currentWinProbability() {
+        ArrayList<int[]> positions = getCurrentPosition();
+
+        return getFeatureScore(positions.get(0), positions.get(1));
     }
 
 
     //  Gets the average weighted feature score for a possible play
-    private int getFeatureScore(int[] myCounter, int[] opponentCounters) {
-        int featureScore = 0;
+    private double getFeatureScore(int[] myCounter, int[] opponentCounters) {
+        double featureScore = 0;
 
         featureScore += weights[0] * pipCountDifference(myCounter, opponentCounters);
         featureScore += weights[1] * blockBlotDifference(myCounter, opponentCounters);
@@ -127,7 +157,7 @@ public class Bot0 implements BotAPI {
         //  Output          - Feature score for feature 1 (between 0 and 1 where 1 is a definite win)
             //  Equations   -   Pd = P0 - P1
             //                  P0 = (25)E(p=0) pC0(p)
-    private int pipCountDifference(int[] myCounter, int[] opponentCounters) {
+    private double pipCountDifference(int[] myCounter, int[] opponentCounters) {
         int Pd;     //  Player Difference Score
         int P0 = 0; //  Player 0 Score
         int P1 = 0; //  Player 1 Score
@@ -137,15 +167,15 @@ public class Bot0 implements BotAPI {
             P1 += i * opponentCounters[i];
         }
 
-        Pd = (P0-P1)/360;   //  Player Difference divided by 360 (max number of points)
-        return Pd;
+        Pd = P0 - P1;
+        return Pd;   //  Player Difference divided by 360 (max number of points)
     }
 
     //  Block-Blot Difference (Feature 2)
         //  Input           - Board State
         //  Output          - Feature score for feature 2 (between 0 and 1 where 1 is a definite win)
             //  Equations   -   Sd = Kx - Tx
-    private int blockBlotDifference(int[] myCounter, int[] opponentCounters) {
+    private double blockBlotDifference(int[] myCounter, int[] opponentCounters) {
         int Sd;
         int Kx = 0; //  Number of Blocks by Player 0
         int Tx = 0; //  Number of Blots by Player 1
@@ -160,15 +190,15 @@ public class Bot0 implements BotAPI {
                 Tx++;
         }
 
-        Sd = (Kx - Tx) / 7; //  Blot-Block Difference divided by 7 (max number of points)
-        return Sd;
+        Sd = Kx - Tx;
+        return Sd;   //  Blot-Block Difference divided by 7 (max number of points)
     }
 
     //  Number of Homeboard Blocks (Feature 3)
         //  Input           - Board State
         //  Output          - Feature score for feature 3 (between 0 and 1 where 1 is a definite win)
             //  Equations   -   H0 = (6)E(p=1) (P0(p) > 1)
-    private int homeboardBlocks(int[] myCounter) {
+    private double homeboardBlocks(int[] myCounter) {
         int count = 0;
 
         /*
@@ -179,14 +209,13 @@ public class Bot0 implements BotAPI {
                 count += i;
         }
 
-        count /= 21;    //  Home board Block count divided by 21 (Max number of points)
-        return count;
+        return count;    //  Home board Block count divided by 21 (Max number of points)
     }
 
     //  Length of Prime with Captured Checker (Feature 4)
         //  Input           - Board State
         //  Output          - Feature score for feature 4 (between 0 and 1 where 1 is a definite win)
-    private int capturedPrime(int[] myCounter, int[] opponentCounters) {
+    private double capturedPrime(int[] myCounter, int[] opponentCounters) {
         int points = 0;
         int sizeOfPrime = 0;
         int numberOfCaptured = 0;
@@ -207,14 +236,13 @@ public class Bot0 implements BotAPI {
         }
 
 //  Recheck max number of points    --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        points /= 105; //  capturedPrime points divided by 105 (max number of points)
-        return points;
+        return points; //  capturedPrime points divided by 105 (max number of points)
     }
 
     //  Anchor Checker (Feature 5)
         //  Input           - Board State
         //  Output          - Feature score for feature 5 (between 0 and 1 where 1 is a definite win)
-    private int AnchorChecker(int[] myCounter) {
+    private double AnchorChecker(int[] myCounter) {
         int anchorPoint = 0;
 
         /*
@@ -225,13 +253,13 @@ public class Bot0 implements BotAPI {
                 anchorPoint += i;
         }
 
-        return anchorPoint/21; //   anchorPoints divided by 21 (max number of points)
+        return anchorPoint; //   anchorPoints divided by 21 (max number of points)
     }
 
     //  Number of Escaped Checkers (Feature 6)
         //  Input           - Board State
         //  Output          - Feature score for feature 6 (between 0 and 1 where 1 is a definite win)
-    private int escapedCheckers(int[] myCounter, int[] opponentCounters) {
+    private double escapedCheckers(int[] myCounter, int[] opponentCounters) {
         int escaped = 0;
         int opponentCheckers = 0;
 
@@ -246,14 +274,13 @@ public class Bot0 implements BotAPI {
         }
         escaped = 15 - escaped;
 
-        escaped /= 15;  //  escaped divided by 15 (max number of points)
-        return escaped;
+        return escaped;  //  escaped divided by 15 (max number of points)
     }
 
     //  Number of Home Checkers (Feature 7)
         //  Input           - Board State
         //  Output          - Feature score for feature 7 (between 0 and 1 where 1 is a definite win)
-    private int homeCheckersNumber(int[] myCounter) {
+    private double homeCheckersNumber(int[] myCounter) {
         int homeCheckers = 0;
 
         /*
@@ -262,14 +289,13 @@ public class Bot0 implements BotAPI {
         for(int i=19; i<25; i++)
             homeCheckers += myCounter[i];
 
-        homeCheckers /= 15; //  homeCheckers divided by 15 (max number of points)
-        return homeCheckers;
+        return homeCheckers; //  homeCheckers divided by 15 (max number of points)
     }
 
     //  Number of Beared Off Checkers (Feature 8)
         //  Input           - Board State
         //  Output          - Feature score for feature 8 (between 0 and 1 where 1 is a definite win)
-    private int bearedOffNumber(int[] myCounter) {
+    private double bearedOffNumber(int[] myCounter) {
         int bearOff = 0;
 
         /*
@@ -277,14 +303,13 @@ public class Bot0 implements BotAPI {
         */
         bearOff += myCounter[25];
 
-        bearOff /= 15;  //  bearOff divided by 15 (max number of points)
-        return bearOff;
+        return bearOff;  //  bearOff divided by 15 (max number of points)
     }
 
     //  pointsCoveredNumbers (Feature 9)
         //  Input           - Board State
         //  Output          - Feature score for feature 9 (between 0 and 1 where 1 is a definite win)
-    private int pointsCovered(int[] myCounter) {
+    private double pointsCovered(int[] myCounter) {
         int pointsCovered = 0;
 
         /*
@@ -295,7 +320,6 @@ public class Bot0 implements BotAPI {
                 pointsCovered += i;
         }
 
-        pointsCovered /= 300; // pointsCovered divided by 225 (max number of points)
         return pointsCovered;
     }
 }
