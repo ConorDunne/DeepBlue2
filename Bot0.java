@@ -39,7 +39,7 @@ public class Bot0 implements BotAPI {
 
     public String getDoubleDecision() {
         // Add your code here
-        int chanceOfWinning = calculateChanceOfWinning();
+        int chanceOfWinning = currentWinProbability()*100;
         System.out.println("" + chanceOfWinning);
         //If both players 2 points away from winning
         if(me.getScore() == 13 && opponent.getScore() == 13){
@@ -76,6 +76,7 @@ public class Bot0 implements BotAPI {
     //  Needs input of list of moves
     private int bestMove() {
         int bestMove = 0;
+
 
         //  Get current positions
         for(int i=0; i<26; i++) {
