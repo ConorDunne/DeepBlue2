@@ -18,7 +18,7 @@ public class Bot0 implements BotAPI {
     private InfoPanelAPI info;
     private int[] myPositions = new int[26];
     private int[] opponentPositions = new int[26];
-    private int[] weights = {1, 1, 1, 1, 1, 1, 1, 1, 1};
+    private int[] weights = {1, 1, 1, 1, 1, 1, 1, 15, 1};
         /*
                     Weight Value Position Meanings
             1   Pip-Count Difference
@@ -48,6 +48,10 @@ public class Bot0 implements BotAPI {
 
     public String getCommand(Plays possiblePlays) {
         // Add your code here
+        if(getDoubleDecision() == "y") {
+            return "double";
+        }
+
         int move = bestMove(possiblePlays);
         System.out.println("" + me.getScore() + " Opp: " + opponent.getScore() + " Chance: " + currentWinProbability());
         System.out.println(possiblePlays.plays);
@@ -55,9 +59,11 @@ public class Bot0 implements BotAPI {
     }
 
     public String getDoubleDecision() {
-        // Add your code here
         double chanceOfWinning = currentWinProbability();
-        System.out.println("" + chanceOfWinning);
+        double chanceOfLosing = currentLoseProbability();
+        double winPercentage = chanceOfWinning / (chanceOfWinning + chanceOfLosing) * 100;
+
+        System.out.println("Chance of Winning: " + winPercentage + "%");
         //If both players 2 points away from winning
         if(me.getScore() == 13 && opponent.getScore() == 13){
             if(chanceOfWinning >= 0 && chanceOfWinning <= 50){
@@ -142,6 +148,12 @@ public class Bot0 implements BotAPI {
         ArrayList<int[]> positions = getCurrentPosition();
 
         return getFeatureScore(positions.get(0), positions.get(1));
+    }
+
+    private double currentLoseProbability() {
+        ArrayList<int[]> positions = getCurrentPosition();
+
+        return getFeatureScore(positions.get(1), positions.get(0));
     }
 
 
