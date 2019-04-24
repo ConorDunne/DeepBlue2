@@ -17,7 +17,9 @@ public class Bot1 implements BotAPI {
     private InfoPanelAPI info;
     private int[] myPositions = new int[26];
     private int[] opponentPositions = new int[26];
-    private int[] weights = {1, 2, 1, 2, 1, 2, 1, 2, 1};
+
+    private int[] weights = {100, 10, 50, 100, 50, 30, 100, 30, 100};
+
         /*
                     Weight Value Position Meanings
             1   Pip-Count Difference
@@ -41,39 +43,46 @@ public class Bot1 implements BotAPI {
         this.info = info;
     }
 
-    public String getName() {
-        return "Bot0"; // must match the class name
+    public String getName(){
+        return "Bot1"; // must match the class name
     }
 
     public String getCommand(Plays possiblePlays) {
         // Add your code here
+        if(getDoubleDecision() == "y") {
+            return "double";
+        }
+
         int move = bestMove(possiblePlays);
-        System.out.println("" + me.getScore() + " Opp: " + opponent.getScore() + " Chance: " + currentWinProbability());
-        System.out.println(possiblePlays.plays);
         return Integer.toString(move);
     }
 
     public String getDoubleDecision() {
-        // Add your code here
         double chanceOfWinning = currentWinProbability();
-        System.out.println("" + chanceOfWinning);
+        double chanceOfLosing = currentLoseProbability();
+        double winPercentage = chanceOfWinning / (chanceOfWinning + chanceOfLosing) * 100;
+        if(winPercentage > 100)
+            winPercentage = 100;
+        else if(winPercentage < 0)
+            winPercentage = 0;
+
         //If both players 2 points away from winning
-        if(me.getScore() == 13 && opponent.getScore() == 13){
-            if(chanceOfWinning >= 0 && chanceOfWinning <= 50){
+        if(getCurrentScore(me) == 13 && getCurrentScore(opponent) == 13){
+            if(winPercentage >= 0 && winPercentage <= 50){
                 return "n";
             }
-            else if(chanceOfWinning >= 50 && chanceOfWinning <= 75){
+            else if(winPercentage >= 50 && winPercentage <= 75){
                 return "y";
             }
-            else if(chanceOfWinning >= 75 && chanceOfWinning <= 100){
+            else if(winPercentage >= 75 && winPercentage <= 100){
                 return "y";
             }
         }
         else{
-            if(chanceOfWinning >= 0 && chanceOfWinning <= 66){
+            if(winPercentage >= 0 && winPercentage <= 66){
                 return "n";
             }
-            else if(chanceOfWinning >= 66 && chanceOfWinning <= 75){
+            else if(winPercentage >= 66 && winPercentage <= 75){
                 return "y";
             }
             else if(chanceOfWinning >= 75 && chanceOfWinning <= 80){
@@ -83,8 +92,6 @@ public class Bot1 implements BotAPI {
 
         return "n";
     }
-
-
     //  Needs input of list of moves
     private int bestMove(Plays p) {
         int bestMove = 0;
@@ -119,8 +126,17 @@ public class Bot1 implements BotAPI {
                 bestMove = i;
         }
 
-        System.out.println("Best Move Index: " + bestMove + "\tBest Move Percentage: " + (moveFeatures[bestMove]));
         return bestMove+1;
+    }
+
+    private int getCurrentScore(PlayerAPI player){
+        int score = 15;
+        int counters = 0;
+        for (int i = 1; i < 26; i++) {
+            counters = board.getNumCheckers(player.getId(), i);
+            score -= counters;
+        }
+        return score;
     }
 
     private ArrayList<int[]> getCurrentPosition() {
@@ -143,32 +159,38 @@ public class Bot1 implements BotAPI {
         return getFeatureScore(positions.get(0), positions.get(1));
     }
 
+    private double currentLoseProbability() {
+        ArrayList<int[]> positions = getCurrentPosition();
+
+        return getFeatureScore(positions.get(1), positions.get(0));
+    }
+
 
     //  Gets the average weighted feature score for a possible play
     private double getFeatureScore(int[] myCounter, int[] opponentCounters) {
         double featureScore = 0;
 
-        featureScore += weights[0] * pipCountDifference(myCounter, opponentCounters);
-        featureScore += weights[1] * blockBlotDifference(myCounter, opponentCounters);
-        featureScore += weights[2] * homeboardBlocks(myCounter);
-        featureScore += weights[3] * capturedPrime(myCounter, opponentCounters);
-        featureScore += weights[4] * AnchorChecker(myCounter);
-        featureScore += weights[5] * escapedCheckers(myCounter, opponentCounters);
-        featureScore += weights[6] * homeCheckersNumber(myCounter);
-        featureScore += weights[7] * bearedOffNumber(myCounter);
-        featureScore += weights[8] * pointsCovered(myCounter);
+        featureScore += Math.abs(weights[0] * pipCountDifference(myCounter, opponentCounters));
+        featureScore += Math.abs(weights[1] * blockBlotDifference(myCounter, opponentCounters));
+        featureScore += Math.abs(weights[2] * homeboardBlocks(myCounter));
+        featureScore += Math.abs(weights[3] * capturedPrime(myCounter, opponentCounters));
+        featureScore += Math.abs(weights[4] * AnchorChecker(myCounter));
+        featureScore += Math.abs(weights[5] * escapedCheckers(myCounter, opponentCounters));
+        featureScore += Math.abs(weights[6] * homeCheckersNumber(myCounter));
+        featureScore += Math.abs(weights[7] * bearedOffNumber(myCounter));
+        featureScore += Math.abs(weights[8] * pointsCovered(myCounter));
 
         int totalWeights = IntStream.of(weights).sum();
 
         return featureScore / totalWeights;
     }
 
-//  Board Feature Calculations for Bot Decision Making
+    //  Board Feature Calculations for Bot Decision Making
     //  Pip Count Difference (Feature 1)
-        //  Input           - Board State
-        //  Output          - Feature score for feature 1 (between 0 and 1 where 1 is a definite win)
-            //  Equations   -   Pd = P0 - P1
-            //                  P0 = (25)E(p=0) pC0(p)
+    //  Input           - Board State
+    //  Output          - Feature score for feature 1 (between 0 and 1 where 1 is a definite win)
+    //  Equations   -   Pd = P0 - P1
+    //                  P0 = (25)E(p=0) pC0(p)
     private double pipCountDifference(int[] myCounter, int[] opponentCounters) {
         int Pd;     //  Player Difference Score
         int P0 = 0; //  Player 0 Score
@@ -179,14 +201,14 @@ public class Bot1 implements BotAPI {
             P1 += i * opponentCounters[i];
         }
 
-        Pd = P0 - P1;
+        Pd = Math.abs(P0 - P1);
         return Pd;   //  Player Difference divided by 360 (max number of points)
     }
 
     //  Block-Blot Difference (Feature 2)
-        //  Input           - Board State
-        //  Output          - Feature score for feature 2 (between 0 and 1 where 1 is a definite win)
-            //  Equations   -   Sd = Kx - Tx
+    //  Input           - Board State
+    //  Output          - Feature score for feature 2 (between 0 and 1 where 1 is a definite win)
+    //  Equations   -   Sd = Kx - Tx
     private double blockBlotDifference(int[] myCounter, int[] opponentCounters) {
         int Sd;
         int Kx = 0; //  Number of Blocks by Player 0
@@ -202,14 +224,14 @@ public class Bot1 implements BotAPI {
                 Tx++;
         }
 
-        Sd = Kx - Tx;
+        Sd = Math.abs(Kx - Tx);
         return Sd;   //  Blot-Block Difference divided by 7 (max number of points)
     }
 
     //  Number of Homeboard Blocks (Feature 3)
-        //  Input           - Board State
-        //  Output          - Feature score for feature 3 (between 0 and 1 where 1 is a definite win)
-            //  Equations   -   H0 = (6)E(p=1) (P0(p) > 1)
+    //  Input           - Board State
+    //  Output          - Feature score for feature 3 (between 0 and 1 where 1 is a definite win)
+    //  Equations   -   H0 = (6)E(p=1) (P0(p) > 1)
     private double homeboardBlocks(int[] myCounter) {
         int count = 0;
 
@@ -225,8 +247,8 @@ public class Bot1 implements BotAPI {
     }
 
     //  Length of Prime with Captured Checker (Feature 4)
-        //  Input           - Board State
-        //  Output          - Feature score for feature 4 (between 0 and 1 where 1 is a definite win)
+    //  Input           - Board State
+    //  Output          - Feature score for feature 4 (between 0 and 1 where 1 is a definite win)
     private double capturedPrime(int[] myCounter, int[] opponentCounters) {
         int points = 0;
         int sizeOfPrime = 0;
@@ -237,7 +259,7 @@ public class Bot1 implements BotAPI {
         */
         for(int i=1; i<25; i++) {
             if(myCounter[i] > 1)
-               sizeOfPrime++;
+                sizeOfPrime++;
             else if(myCounter[i] == 0) {
                 points += sizeOfPrime*numberOfCaptured;
                 sizeOfPrime = 0;
@@ -252,8 +274,8 @@ public class Bot1 implements BotAPI {
     }
 
     //  Anchor Checker (Feature 5)
-        //  Input           - Board State
-        //  Output          - Feature score for feature 5 (between 0 and 1 where 1 is a definite win)
+    //  Input           - Board State
+    //  Output          - Feature score for feature 5 (between 0 and 1 where 1 is a definite win)
     private double AnchorChecker(int[] myCounter) {
         int anchorPoint = 0;
 
@@ -269,8 +291,8 @@ public class Bot1 implements BotAPI {
     }
 
     //  Number of Escaped Checkers (Feature 6)
-        //  Input           - Board State
-        //  Output          - Feature score for feature 6 (between 0 and 1 where 1 is a definite win)
+    //  Input           - Board State
+    //  Output          - Feature score for feature 6 (between 0 and 1 where 1 is a definite win)
     private double escapedCheckers(int[] myCounter, int[] opponentCounters) {
         int escaped = 0;
         int opponentCheckers = 0;
@@ -284,14 +306,14 @@ public class Bot1 implements BotAPI {
             else if(myCounter[i] > 0)
                 escaped++;
         }
-        escaped = 15 - escaped;
+        escaped = Math.abs(15 - escaped);
 
         return escaped;  //  escaped divided by 15 (max number of points)
     }
 
     //  Number of Home Checkers (Feature 7)
-        //  Input           - Board State
-        //  Output          - Feature score for feature 7 (between 0 and 1 where 1 is a definite win)
+    //  Input           - Board State
+    //  Output          - Feature score for feature 7 (between 0 and 1 where 1 is a definite win)
     private double homeCheckersNumber(int[] myCounter) {
         int homeCheckers = 0;
 
@@ -305,8 +327,8 @@ public class Bot1 implements BotAPI {
     }
 
     //  Number of Beared Off Checkers (Feature 8)
-        //  Input           - Board State
-        //  Output          - Feature score for feature 8 (between 0 and 1 where 1 is a definite win)
+    //  Input           - Board State
+    //  Output          - Feature score for feature 8 (between 0 and 1 where 1 is a definite win)
     private double bearedOffNumber(int[] myCounter) {
         int bearOff = 0;
 
@@ -319,8 +341,8 @@ public class Bot1 implements BotAPI {
     }
 
     //  pointsCoveredNumbers (Feature 9)
-        //  Input           - Board State
-        //  Output          - Feature score for feature 9 (between 0 and 1 where 1 is a definite win)
+    //  Input           - Board State
+    //  Output          - Feature score for feature 9 (between 0 and 1 where 1 is a definite win)
     private double pointsCovered(int[] myCounter) {
         int pointsCovered = 0;
 

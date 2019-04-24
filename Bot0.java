@@ -1,4 +1,5 @@
-import java.lang.reflect.Array;
+    //      Bot/Team Name:          DeepBlue2
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.IntStream;
@@ -19,15 +20,17 @@ public class Bot0 implements BotAPI {
     private int[] myPositions = new int[26];
     private int[] opponentPositions = new int[26];
 
-    private int[] weights = {1, 1, 1, 1, 1, 1, 1, 1, 1};
+    private int move = 0;
+
+    private int[] weights = {60, 41, 44, 52, 38, 30, 50, 53, 45};
 
         /*
                     Weight Value Position Meanings
             1   Pip-Count Difference
             2   Block-Blot Difference
             3   Number Home Board Blocks
-            4   Length of Prime
-            5   Anchor in Opponents Home Board
+            4   Length of Prime/
+            5   Anchor in Opponents Home Board/
             6   Escaped Checkers
             7   Home Board Checkers
             8   Checkers Taken off
@@ -50,13 +53,12 @@ public class Bot0 implements BotAPI {
 
     public String getCommand(Plays possiblePlays) {
         // Add your code here
-        if(getDoubleDecision() == "y") {
+        if(getDoubleDecision() == "y" && match.canDouble(me.getId())) {
             return "double";
         }
 
+        System.out.println("Move Number " + ++move);
         int move = bestMove(possiblePlays);
-   //     System.out.println("" + board.getNumCheckers(me.getId(), 25) + " Opp: " + board.getNumCheckers(opponent.getId(), 25));
-        System.out.println("ME: " + getCurrentScore(me) + "Opp " + getCurrentScore(opponent));
         System.out.println(possiblePlays.plays);
         return Integer.toString(move);
     }
@@ -177,15 +179,15 @@ public class Bot0 implements BotAPI {
     private double getFeatureScore(int[] myCounter, int[] opponentCounters) {
         double featureScore = 0;
 
-        featureScore += weights[0] * pipCountDifference(myCounter, opponentCounters);
-        featureScore += weights[1] * blockBlotDifference(myCounter, opponentCounters);
-        featureScore += weights[2] * homeboardBlocks(myCounter);
-        featureScore += weights[3] * capturedPrime(myCounter, opponentCounters);
-        featureScore += weights[4] * AnchorChecker(myCounter);
-        featureScore += weights[5] * escapedCheckers(myCounter, opponentCounters);
-        featureScore += weights[6] * homeCheckersNumber(myCounter);
-        featureScore += weights[7] * bearedOffNumber(myCounter);
-        featureScore += weights[8] * pointsCovered(myCounter);
+        featureScore += Math.abs(weights[0] * pipCountDifference(myCounter, opponentCounters));
+        featureScore += Math.abs(weights[1] * blockBlotDifference(myCounter, opponentCounters));
+        featureScore += Math.abs(weights[2] * homeboardBlocks(myCounter));
+        featureScore += Math.abs(weights[3] * capturedPrime(myCounter, opponentCounters));
+        featureScore += Math.abs(weights[4] * AnchorChecker(myCounter));
+        featureScore += Math.abs(weights[5] * escapedCheckers(myCounter, opponentCounters));
+        featureScore += Math.abs(weights[6] * homeCheckersNumber(myCounter));
+        featureScore += Math.abs(weights[7] * bearedOffNumber(myCounter));
+        featureScore += Math.abs(weights[8] * pointsCovered(myCounter));
 
         int totalWeights = IntStream.of(weights).sum();
 
@@ -313,7 +315,7 @@ public class Bot0 implements BotAPI {
             else if(myCounter[i] > 0)
                 escaped++;
         }
-        escaped = 15 - escaped;
+        escaped = Math.abs(15 - escaped);
 
         return escaped;  //  escaped divided by 15 (max number of points)
     }
