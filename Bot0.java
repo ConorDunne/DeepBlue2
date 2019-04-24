@@ -19,7 +19,7 @@ public class Bot0 implements BotAPI {
     private int[] myPositions = new int[26];
     private int[] opponentPositions = new int[26];
 
-    private int[] weights = {1, 1, 1, 1, 1, 1, 1, 15, 1};
+    private int[] weights = {1, 1, 1, 1, 1, 1, 1, 1, 1};
 
         /*
                     Weight Value Position Meanings
@@ -55,9 +55,8 @@ public class Bot0 implements BotAPI {
         }
 
         int move = bestMove(possiblePlays);
-        System.out.println("" + board.getNumCheckers(me.getId(), 25) + " Opp: " + board.getNumCheckers(opponent.getId(), 25));
-        System.out.println("Pip 0 25 24" + board.getNumCheckers(me.getId(), 25) + " " +
-                board.getNumCheckers(me.getId(), 25) + " " + board.getNumCheckers(me.getId(), 25));
+   //     System.out.println("" + board.getNumCheckers(me.getId(), 25) + " Opp: " + board.getNumCheckers(opponent.getId(), 25));
+        System.out.println("ME: " + getCurrentScore(me) + "Opp " + getCurrentScore(opponent));
         System.out.println(possiblePlays.plays);
         return Integer.toString(move);
     }
@@ -74,7 +73,7 @@ public class Bot0 implements BotAPI {
         System.out.println("Chance of Winning: " + winPercentage + "%");
         System.out.println("Bear Off: " + board.getNumCheckers(me.getId(), 0));
         //If both players 2 points away from winning
-        if(board.getNumCheckers(me.getId(), 25) == 13 && board.getNumCheckers(opponent.getId(), 25) == 13){
+        if(getCurrentScore(me) == 13 && getCurrentScore(opponent) == 13){
             if(winPercentage >= 0 && winPercentage <= 50){
                 return "n";
             }
@@ -135,6 +134,16 @@ public class Bot0 implements BotAPI {
 
         System.out.println("Best Move Index: " + bestMove + "\tBest Move Percentage: " + (moveFeatures[bestMove]));
         return bestMove+1;
+    }
+
+    private int getCurrentScore(PlayerAPI player){
+        int score = 15;
+        int counters = 0;
+        for (int i = 1; i < 26; i++) {
+            counters = board.getNumCheckers(player.getId(), i);
+            score -= counters;
+        }
+        return score;
     }
 
     private ArrayList<int[]> getCurrentPosition() {
